@@ -79,8 +79,8 @@ class BTCTransaction(object):
         self.confirmations = None
         self.time = None
         self.blocktime = None
-        self.vout = None
-        self.vin = None
+        self.vout = []
+        self.vin = []
 
 
 # {
