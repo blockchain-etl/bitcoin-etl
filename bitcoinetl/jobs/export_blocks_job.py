@@ -25,9 +25,9 @@ import json
 
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
-from blockchainetl.json_rpc_requests import generate_get_block_by_number_json_rpc
 from blockchainetl.utils import rpc_response_batch_to_results, validate_range
 from bitcoinetl.mappers.block_mapper import BtcBlockMapper
+from bitcoinetl.json_rpc_requests import generate_get_block_by_hash_json_rpc, generate_get_block_hash_by_number_json_rpc
 from bitcoinetl.mappers.transaction_mapper import BtcTransactionMapper
 
 
@@ -38,7 +38,7 @@ class ExportBlocksJob(BaseJob):
             start_block,
             end_block,
             batch_size,
-            batch_web3_provider,
+            rpc_provider,
             max_workers,
             item_exporter,
             export_blocks=True,
@@ -47,7 +47,7 @@ class ExportBlocksJob(BaseJob):
         self.start_block = start_block
         self.end_block = end_block
 
-        self.batch_web3_provider = batch_web3_provider
+        self.rpc_provider = rpc_provider
 
         self.batch_work_executor = BatchWorkExecutor(batch_size, max_workers)
         self.item_exporter = item_exporter
@@ -57,8 +57,8 @@ class ExportBlocksJob(BaseJob):
         if not self.export_blocks and not self.export_transactions:
             raise ValueError('At least one of export_blocks or export_transactions must be True')
 
-        self.block_mapper = EthBlockMapper()
-        self.transaction_mapper = EthTransactionMapper()
+        self.block_mapper = BtcBlockMapper()
+        self.transaction_mapper = BtcTransactionMapper()
 
     def _start(self):
         self.item_exporter.open()
@@ -71,10 +71,21 @@ class ExportBlocksJob(BaseJob):
         )
 
     def _export_batch(self, block_number_batch):
-        blocks_rpc = list(generate_get_block_by_number_json_rpc(block_number_batch, self.export_transactions))
-        response = self.batch_web3_provider.make_request(json.dumps(blocks_rpc))
-        results = rpc_response_batch_to_results(response)
-        blocks = [self.block_mapper.json_dict_to_block(result) for result in results]
+        print("block number batch")
+        print(block_number_batch)
+        
+        block_hash_rpc = list(generate_get_block_hash_by_number_json_rpc(block_number_batch))
+        block_hashes_response = self.rpc_provider.execute(block_hash_rpc)
+        block_hashes_results = rpc_response_batch_to_results(block_hashes_response)
+        block_hashes = [self.block_mapper.json_dict_to_block(block_hashes_result) for block_hashes_result in block_hashes_results]
+        
+        # get block details by hash
+        block_detail_rpc = list(generate_get_block_by_hash_json_rpc(block_hashes, self.export_transactions))
+        block_detail_response = self.rpc_provider.execute(block_detail_rpc)
+        block_detail_results = rpc_response_batch_to_results(block_detail_response)
+
+        blocks = [self.block_mapper.json_dict_to_block(block_detail_result) for block_detail_result in block_detail_results]
+
 
         for block in blocks:
             self._export_block(block)

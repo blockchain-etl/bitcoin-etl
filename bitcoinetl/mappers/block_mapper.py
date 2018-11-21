@@ -22,40 +22,40 @@
 
 
 from bitcoinetl.domain.block import BtcBlock
-from ethereumetl.mappers.transaction_mapper import EthTransactionMapper
-from ethereumetl.utils import hex_to_dec, to_normalized_address
+from bitcoinetl.mappers.transaction_mapper import BtcTransactionMapper
+from blockchainetl.utils import hex_to_dec, to_normalized_address
 
 
 class BtcBlockMapper(object):
     def __init__(self, transaction_mapper=None):
         if transaction_mapper is None:
-            self.transaction_mapper = EthTransactionMapper()
+            self.transaction_mapper = BtcTransactionMapper()
         else:
             self.transaction_mapper = transaction_mapper
 
     def json_dict_to_block(self, json_dict):
-        block = EthBlock()
-        block.number = hex_to_dec(json_dict.get('number'))
+        block = BtcBlock()
         block.hash = json_dict.get('hash')
-        block.parent_hash = json_dict.get('parentHash')
+        block.confirmations = json_dict.get('confirmations')
+        block.size = json_dict.get('size')
+        block.strippedsize = json_dict.get('strippedsize')
+        block.weight = json_dict.get('weight')
+        block.height = json_dict.get('height')
+        block.version = json_dict.get('version')
+        block.versionHex = json_dict.get('versionHex')
+        block.merkleroot = json_dict.get('merkleroot')
+        block.time = json_dict.get('time')
+        block.mediantime = json_dict.get('mediantime')
         block.nonce = json_dict.get('nonce')
-        block.sha3_uncles = json_dict.get('sha3Uncles')
-        block.logs_bloom = json_dict.get('logsBloom')
-        block.transactions_root = json_dict.get('transactionsRoot')
-        block.state_root = json_dict.get('stateRoot')
-        block.receipts_root = json_dict.get('receiptsRoot')
-        block.miner = to_normalized_address(json_dict.get('miner'))
-        block.difficulty = hex_to_dec(json_dict.get('difficulty'))
-        block.total_difficulty = hex_to_dec(json_dict.get('totalDifficulty'))
-        block.size = hex_to_dec(json_dict.get('size'))
-        block.extra_data = json_dict.get('extraData')
-        block.gas_limit = hex_to_dec(json_dict.get('gasLimit'))
-        block.gas_used = hex_to_dec(json_dict.get('gasUsed'))
-        block.timestamp = hex_to_dec(json_dict.get('timestamp'))
+        block.bits = json_dict.get('bits')
+        block.difficulty = json_dict.get('difficulty')
+        block.chainwork = json_dict.get('chainwork')
+        block.previousblockhash = json_dict.get('previousblockhash')
+        block.nextblockhash = json_dict.get('nextblockhash')
 
-        if 'transactions' in json_dict:
+        if 'tx' in json_dict:
             block.transactions = [
-                self.transaction_mapper.json_dict_to_transaction(tx) for tx in json_dict['transactions']
+                self.transaction_mapper.json_dict_to_transaction(tx) for tx in json_dict['tx']
                 if isinstance(tx, dict)
             ]
 

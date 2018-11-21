@@ -23,10 +23,10 @@
 from requests.exceptions import Timeout as RequestsTimeout, HTTPError, TooManyRedirects
 from web3.utils.threads import Timeout as Web3Timeout
 
-from ethereumetl.executors.bounded_executor import BoundedExecutor
-from ethereumetl.executors.fail_safe_executor import FailSafeExecutor
-from ethereumetl.progress_logger import ProgressLogger
-from ethereumetl.utils import dynamic_batch_iterator
+from blockchainetl.executors.bounded_executor import BoundedExecutor
+from blockchainetl.executors.fail_safe_executor import FailSafeExecutor
+from blockchainetl.progress_logger import ProgressLogger
+from blockchainetl.utils import dynamic_batch_iterator
 
 RETRY_EXCEPTIONS = (ConnectionError, HTTPError, RequestsTimeout, TooManyRedirects, Web3Timeout, OSError)
 

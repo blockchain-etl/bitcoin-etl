@@ -23,7 +23,7 @@
 
 import click
 
-from ethereumetl.jobs.export_blocks_job import ExportBlocksJob
+from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from ethereumetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from ethereumetl.logging_utils import logging_basic_config
 from ethereumetl.providers.auto import get_provider_from_uri

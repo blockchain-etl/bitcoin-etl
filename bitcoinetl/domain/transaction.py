@@ -66,7 +66,7 @@
 # }
 
 
-class BTCTransaction(object):
+class BtcTransaction(object):
     def __init__(self):
         self.hex = None
         self.txid = None
@@ -94,14 +94,14 @@ class BTCTransaction(object):
 #        "txinwitness": ["hex", ...] (array of string) hex-encoded witness data (if any)
 #      }
 
-class Vin(object):
-    def __init__(self):
-        txid = None
-        vout = None
-        asm = None
-        hex = None
-        sequence = None
-        txinwitness = None
+# class Vin(object):
+#     def __init__(self):
+#         txid = None
+#         vout = None
+#         asm = None
+#         hex = None
+#         sequence = None
+#         txinwitness = None
 
 # "vout" : [              (array of json objects)
 #      {
@@ -120,12 +120,12 @@ class Vin(object):
 #      }
 #      ,...
 #   ],
-class Vout(object):
-   def __init__(self):
-       self.value = None
-       self.n = None
-       self.asm = None
-       self.hex = None
-       self.reqSigs = None
-       self.type = None
-       self.addresses = None # array of btc addresses
+# class Vout(object):
+#    def __init__(self):
+#        self.value = None
+#        self.n = None
+#        self.asm = None
+#        self.hex = None
+#        self.reqSigs = None
+#        self.type = None
+#        self.addresses = None # array of btc addresses

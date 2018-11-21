@@ -21,38 +21,41 @@
 # SOFTWARE.
 
 
-from ethereumetl.domain.transaction import EthTransaction
-from ethereumetl.utils import hex_to_dec, to_normalized_address
+from bitcoinetl.domain.transaction import BtcTransaction
+from blockchainetl.utils import hex_to_dec, to_normalized_address
 
 
-class EthTransactionMapper(object):
+class BtcTransactionMapper(object):
     def json_dict_to_transaction(self, json_dict):
-        transaction = EthTransaction()
+        transaction = BtcTransaction()
+        transaction.hex = json_dict.get('hex')
         transaction.hash = json_dict.get('hash')
-        transaction.nonce = hex_to_dec(json_dict.get('nonce'))
-        transaction.block_hash = json_dict.get('blockHash')
-        transaction.block_number = hex_to_dec(json_dict.get('blockNumber'))
-        transaction.transaction_index = hex_to_dec(json_dict.get('transactionIndex'))
-        transaction.from_address = to_normalized_address(json_dict.get('from'))
-        transaction.to_address = to_normalized_address(json_dict.get('to'))
-        transaction.value = hex_to_dec(json_dict.get('value'))
-        transaction.gas = hex_to_dec(json_dict.get('gas'))
-        transaction.gas_price = hex_to_dec(json_dict.get('gasPrice'))
-        transaction.input = json_dict.get('input')
+        transaction.size = json_dict.get('size')
+        transaction.vsize = json_dict.get('vsize')
+        transaction.version = json_dict.get('version')
+        transaction.locktime = json_dict.get('locktime')
+        transaction.blockhash = json_dict.get('blockhash')
+        transaction.confirmations = json_dict.get('confirmations')
+        transaction.time = json_dict.get('time')
+        transaction.blocktime = json_dict.get('blocktime')
+        transaction.vout = json_dict.get('vout')
+        transaction.vin = json_dict.get('vin')
+
         return transaction
 
     def transaction_to_dict(self, transaction):
         return {
             'type': 'transaction',
+            'hex': transaction.hex,
             'hash': transaction.hash,
-            'nonce': transaction.nonce,
-            'block_hash': transaction.block_hash,
-            'block_number': transaction.block_number,
-            'transaction_index': transaction.transaction_index,
-            'from_address': transaction.from_address,
-            'to_address': transaction.to_address,
-            'value': transaction.value,
-            'gas': transaction.gas,
-            'gas_price': transaction.gas_price,
-            'input': transaction.input,
+            'size': transaction.size,
+            'vsize': transaction.vsize,
+            'version': transaction.version,
+            'locktime': transaction.locktime,
+            'blockhash': transaction.blockhash,
+            'confirmations': transaction.confirmations,
+            'time': transaction.time,
+            'blocktime': transaction.blocktime,
+            'vout': transaction.vout,
+            'vin': transaction.vin
         }

@@ -47,6 +47,7 @@
 
 
 class BtcBlock(object):
+    
     def __init__(self):
         self.hash = None
         self.confirmations = None
@@ -67,4 +68,5 @@ class BtcBlock(object):
         self.nextblockhash = None
         
         self.tx = []
+        self.transaction_count = None
 
