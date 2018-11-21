@@ -23,7 +23,7 @@
 import logging
 from datetime import datetime
 
-from ethereumetl.atomic_counter import AtomicCounter
+from blockchainetl.atomic_counter import AtomicCounter
 
 
 # Thread safe progress logger.

@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, Omidiora Samuel evge.medvedev@gmail.com, samparsky@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -36,8 +36,8 @@ logging_basic_config()
 @click.option('-e', '--end-block', required=True, type=int, help='End block')
 @click.option('-b', '--batch-size', default=100, type=int, help='The number of blocks to export at a time.')
 @click.option('-h', '--rpc-host', default='localhost', type=str, help='The URI of the remote bitcoin node')
-@click.option('-u', '--rpc-user', default=None, type=str, help='The rpc username of the bitcion node')
-@click.option('-p', '--rpc-pass', default=None, type=str, help='The RPC password of the bitcoin node')
+@click.option('-u', '--rpc-user', required=True, default=None, type=str, help='The RPC username of the bitcoin node')
+@click.option('-p', '--rpc-pass', required=True, default=None, type=str, help='The RPC password of the bitcoin node')
 @click.option('-o', '--rpc-port', default=8332, type=int, help='The RPC port of the bitcoin node')
 @click.option('-w', '--max-workers', default=5, type=int, help='The maximum number of workers.')
 @click.option('--blocks-output', default=None, type=str, help='The output file for blocks. If not provided blocks will not be exported. Use "-" for stdout')
@@ -45,10 +45,15 @@ logging_basic_config()
 
 def export_blocks_and_transactions(start_block, end_block, batch_size, rpc_host, rpc_user, rpc_pass, rpc_port, max_workers, blocks_output, transactions_output):
     """Export blocks and transactions."""
-    
+    print("in export block and transactions")
+
     if blocks_output is None and transactions_output is None:
         raise ValueError('Either --blocks-output or --transactions-output options must be provided')
     
+    if rpc_user is None or rpc_pass is None:
+        raise ValueError('Both the --rpc-user and --rpc-pass must be provided')
+
+
     job = ExportBlocksJob(
         start_block=start_block,
         end_block=end_block,

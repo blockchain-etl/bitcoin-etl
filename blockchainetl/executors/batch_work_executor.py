@@ -20,14 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from web3.utils.threads import Timeout as Web3Timeout
 from requests.exceptions import Timeout as RequestsTimeout, HTTPError, TooManyRedirects
 from blockchainetl.executors.bounded_executor import BoundedExecutor
 from blockchainetl.executors.fail_safe_executor import FailSafeExecutor
 from blockchainetl.progress_logger import ProgressLogger
 from blockchainetl.utils import dynamic_batch_iterator
 
-RETRY_EXCEPTIONS = (ConnectionError, HTTPError, RequestsTimeout, TooManyRedirects, Web3Timeout, OSError)
+RETRY_EXCEPTIONS = (ConnectionError, HTTPError, RequestsTimeout, TooManyRedirects, OSError)
 
 
 # Executes the given work in batches, reducing the batch size exponentially in case of errors.
