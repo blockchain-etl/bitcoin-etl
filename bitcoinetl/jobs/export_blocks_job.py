@@ -38,7 +38,7 @@ class ExportBlocksJob(BaseJob):
             start_block,
             end_block,
             batch_size,
-            rpc_provider,
+            batch_rpc_provider,
             max_workers,
             item_exporter,
             export_blocks=True,
@@ -47,7 +47,7 @@ class ExportBlocksJob(BaseJob):
         self.start_block = start_block
         self.end_block = end_block
 
-        self.rpc_provider = rpc_provider
+        self.rpc_provider = batch_rpc_provider
 
         self.batch_work_executor = BatchWorkExecutor(batch_size, max_workers)
         self.item_exporter = item_exporter
@@ -73,7 +73,7 @@ class ExportBlocksJob(BaseJob):
     def _export_batch(self, block_number_batch):
         print("block number batch")
         print(block_number_batch)
-        
+
         block_hash_rpc = list(generate_get_block_hash_by_number_json_rpc(block_number_batch))
         block_hashes_response = self.rpc_provider.execute(block_hash_rpc)
         block_hashes_results = rpc_response_batch_to_results(block_hashes_response)

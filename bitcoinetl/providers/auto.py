@@ -20,53 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from bitcoinetl.providers.rpc import BatchRPCProvider
 
-from blockchainetl.jobs.exporters.composite_item_exporter import CompositeItemExporter
-
-BLOCK_FIELDS_TO_EXPORT = [
-    'number',
-    'hash',
-    'parent_hash',
-    'nonce',
-    'sha3_uncles',
-    'logs_bloom',
-    'transactions_root',
-    'state_root',
-    'receipts_root',
-    'miner',
-    'difficulty',
-    'total_difficulty',
-    'size',
-    'extra_data',
-    'gas_limit',
-    'gas_used',
-    'timestamp',
-    'transaction_count'
-]
-
-TRANSACTION_FIELDS_TO_EXPORT = [
-    'hash',
-    'nonce',
-    'block_hash',
-    'block_number',
-    'transaction_index',
-    'from_address',
-    'to_address',
-    'value',
-    'gas',
-    'gas_price',
-    'input'
-]
+DEFAULT_IPC_TIMEOUT = 60
+DEFAULT_HTTP_REQUEST_KWARGS = {'timeout': 60}
 
 
-def blocks_and_transactions_item_exporter(blocks_output=None, transactions_output=None):
-    return CompositeItemExporter(
-        filename_mapping={
-            'block': blocks_output,
-            'transaction': transactions_output
-        },
-        field_mapping={
-            'block': BLOCK_FIELDS_TO_EXPORT,
-            'transaction': TRANSACTION_FIELDS_TO_EXPORT
-        }
-    )
+def get_provider(rpc_host="127.0.0.1", rpc_port="8332", rpc_username="", rpc_password=""):
+    return BatchRPCProvider(rpc_username, rpc_password, rpc_host, rpc_port)

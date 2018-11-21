@@ -18,17 +18,57 @@
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-
-import click
-
-from bitcoinetl.cli.export_blocks_and_transactions import export_blocks_and_transactions
-
-@click.group()
-@click.version_option(version='1.2.0')
-@click.pass_context
-def cli(ctx):
-    pass
+# SOFTWARE.
 
 
-# export
-cli.add_command(export_blocks_and_transactions, "export_blocks_and_transactions")
+from blockchainetl.jobs.exporters.composite_item_exporter import CompositeItemExporter
+
+BLOCK_FIELDS_TO_EXPORT = [
+    'hash'
+    'confirmations',
+    'size',
+    'strippedsize',
+    'weight',
+    'height',
+    'version',
+    'versionHex',
+    'merkleroot',
+    'time',
+    'mediantime',
+    'nonce',
+    'bits',
+    'difficulty',
+    'chainwork',
+    'previousblockhash',
+    'nextblockhash'    
+    'tx',
+    'transaction_count'
+]
+
+TRANSACTION_FIELDS_TO_EXPORT = [
+    'hex',
+    'hash',
+    'size',
+    'vsize',
+    'version',
+    'locktime',
+    'blockhash',
+    'confirmations',
+    'time',
+    'blocktime',
+    'vout',
+    'vin',
+]
+
+
+def blocks_and_transactions_item_exporter(blocks_output=None, transactions_output=None):
+    return CompositeItemExporter(
+        filename_mapping={
+            'block': blocks_output,
+            'transaction': transactions_output
+        },
+        field_mapping={
+            'block': BLOCK_FIELDS_TO_EXPORT,
+            'transaction': TRANSACTION_FIELDS_TO_EXPORT
+        }
+    )

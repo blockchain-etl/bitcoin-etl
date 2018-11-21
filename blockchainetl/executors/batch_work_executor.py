@@ -20,9 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from requests.exceptions import Timeout as RequestsTimeout, HTTPError, TooManyRedirects
 from web3.utils.threads import Timeout as Web3Timeout
-
+from requests.exceptions import Timeout as RequestsTimeout, HTTPError, TooManyRedirects
 from blockchainetl.executors.bounded_executor import BoundedExecutor
 from blockchainetl.executors.fail_safe_executor import FailSafeExecutor
 from blockchainetl.progress_logger import ProgressLogger
