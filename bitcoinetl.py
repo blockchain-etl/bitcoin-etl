@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
+# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,6 @@
 # SOFTWARE.
 
 
-from cli.export_blocks_and_transactions import cli
+from bitcoinetl.cli import cli
 
 cli()
