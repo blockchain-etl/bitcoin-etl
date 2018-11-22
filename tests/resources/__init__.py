@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,19 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import pytest
 
-import tests.resources
-
-RESOURCE_GROUP = 'test_export_blocks_job'
-
-def read_resource(resource_group, file_name):
-    return tests.resources.read_resource([RESOURCE_GROUP, resource_group], file_name)
+import os
 
 
-@pytest.mark.parametrize("start_block,end_block,batch_size,resource_group,web3_provider_type", [
-    (0, 0, 1, 'block_without_transactions', 'mock'),
-    (47218, 47219, 2, 'blocks_with_transactions', 'mock'),
-])
-def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_group, web3_provider_type):
-    pass
+def read_resource(groups, file_name):
+    current_file_dir = os.path.dirname(__file__)
+    fixture_file_name = os.path.join(current_file_dir, *groups, file_name)
+
+    if not os.path.exists(fixture_file_name):
+        raise ValueError('File does not exist: ' + fixture_file_name)
+
+    with open(fixture_file_name) as file_handle:
+        return file_handle.read()

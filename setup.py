@@ -32,7 +32,7 @@ setup(
     python_requires='>=3.5.3,<3.8.0',
     install_requires=[
         'python-dateutil==2.7.0',
-        'click==6.7',
+        'click==7.0',
         'python-bitcoinrpc==1.0'
     ],
     extras_require={

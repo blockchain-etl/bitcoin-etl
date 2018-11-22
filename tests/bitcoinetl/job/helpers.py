@@ -20,19 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import pytest
+from bitcoinetl.providers.rpc import BatchRPCProvider
 
-import tests.resources
-
-RESOURCE_GROUP = 'test_export_blocks_job'
-
-def read_resource(resource_group, file_name):
-    return tests.resources.read_resource([RESOURCE_GROUP, resource_group], file_name)
+DEFAULT_IPC_TIMEOUT = 60
+DEFAULT_HTTP_REQUEST_KWARGS = {'timeout': 60}
 
 
-@pytest.mark.parametrize("start_block,end_block,batch_size,resource_group,web3_provider_type", [
-    (0, 0, 1, 'block_without_transactions', 'mock'),
-    (47218, 47219, 2, 'blocks_with_transactions', 'mock'),
-])
-def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_group, web3_provider_type):
-    pass
+def get_provider(rpc_host="127.0.0.1", rpc_port="8332", rpc_username="", rpc_password=""):
+    return BatchRPCProvider(rpc_username, rpc_password, rpc_host, rpc_port)

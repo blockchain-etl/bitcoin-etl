@@ -22,9 +22,11 @@
 import click
 
 from bitcoinetl.cli.export_blocks_and_transactions import export_blocks_and_transactions
+from bitcoinetl.cli.get_block_range_for_date import get_block_range_for_date
+from bitcoinetl.cli.get_block_range_for_timestamps import get_block_range_for_timestamps
 
 @click.group()
-@click.version_option(version='1.2.0')
+@click.version_option(version='1.0.0')
 @click.pass_context
 def cli(ctx):
     pass
@@ -32,3 +34,7 @@ def cli(ctx):
 
 # export
 cli.add_command(export_blocks_and_transactions, "export_blocks_and_transactions")
+
+# utils
+cli.add_command(get_block_range_for_date, "get_block_range_for_date")
+cli.add_command(get_block_range_for_timestamps, "get_block_range_for_timestamps")
