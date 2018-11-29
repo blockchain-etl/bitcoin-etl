@@ -44,13 +44,10 @@ logging_basic_config()
               help='The date e.g. 2018-01-01.')
 @click.option('-o', '--output', default='-', type=str, help='The output file. If not specified stdout is used.')
 
-def get_block_range_for_date(rpc_host, rpc_user, rpc_pass, rpc_port, date, output, chain):
+def get_block_range_for_date(rpc_host, rpc_user, rpc_pass, rpc_port, date, output):
     """Outputs start and end blocks for given date."""
-    # provider_uri = check_classic_provider_uri(chain, provider_uri)
-    # provider = get_provider_from_uri(provider_uri)
-    # web3 = Web3(provider)
-
-    rpc_connection = get_provider(rpc_user, rpc_pass, rpc_host, rpc_port)
+   
+    rpc_connection = get_provider(rpc_host, rpc_port, rpc_user, rpc_pass)
     btc_service = BtcService(rpc_connection)
 
     start_block, end_block = btc_service.get_block_range_for_date(date)

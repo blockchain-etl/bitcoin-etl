@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 #
-# Copyright (c) 2018 Omidiora Samuel
+# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,31 +26,26 @@ import logging
 logging.basicConfig()
 logging.getLogger("BitcoinRPC").setLevel(logging.DEBUG)
 
-# from web3 import HTTPProvider
-# from web3.utils.request import make_post_request
 
-# from pythonbitconi
-
-# Mostly copied from web3.py/providers/rpc.py. Supports batch requests.
-# Will be removed once batch feature is added to web3.py https://github.com/ethereum/web3.py/issues/832
 class BatchRPCProvider():
     def __init__(self, rpc_user, rpc_password, rpc_host, rpc_port ):
         self.rpc_connection = AuthServiceProxy("http://%s:%s@%s:%s"%(rpc_user, rpc_password, rpc_host, rpc_port))
 
     def make_request(self, commands):
-        print(self.rpc_connection.getinfo())
         response = self.rpc_connection.batch_(commands)
         return response
 
-        # self.logger.debug("Making request HTTP. URI: %s, Request: %s",
-        #                   self.endpoint_uri, text)
-        # request_data = text.encode('utf-8')
-        # raw_response = make_post_request(
-        #     self.endpoint_uri,
-        #     request_data,
-        #     **self.get_request_kwargs()
-        # )
-        # response = self.decode_rpc_response(raw_response)
-        # self.logger.debug("Getting response HTTP. URI: %s, "
-        #                   "Request: %s, Response: %s",
-        #                   self.endpoint_uri, text, response)
+    def getblockhash(self, param):
+        response = self.rpc_connection.getblockhash(param)
+        return response
+    
+    def getblock(self, *param):
+        response = self.rpc_connection.getblock(*param)
+        return response
+
+    def getblockcount(self, *param):
+        response = self.rpc_connection.getblockcount(*param)
+        return response
+
+
+

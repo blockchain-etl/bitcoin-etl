@@ -45,14 +45,11 @@ logging_basic_config()
 
 def export_blocks_and_transactions(start_block, end_block, batch_size, rpc_host, rpc_user, rpc_pass, rpc_port, max_workers, blocks_output, transactions_output):
     """Export blocks and transactions."""
-    print("in export block and transactions")
-
     if blocks_output is None and transactions_output is None:
         raise ValueError('Either --blocks-output or --transactions-output options must be provided')
     
     if rpc_user is None or rpc_pass is None:
         raise ValueError('Both the --rpc-user and --rpc-pass must be provided')
-
 
     job = ExportBlocksJob(
         start_block=start_block,

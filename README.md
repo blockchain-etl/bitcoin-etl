@@ -10,12 +10,12 @@ Install Bitcoin ETL:
 pip install bitcoin-etl
 ```
 
-Export blocks and transactions ([Schema](#blockscsv), [Reference](#export_blocks_and_transactions)):
+Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_blocks_and_transactions)):
 
 ```bash
 > bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
 --rpc-pass 'test' --rpc-host 'localhost' --rpc-user 'test' \
- --blocks-output blocks.csv --transactions-output transactions.csv
+ --blocks-output blocks.json --transactions-output transactions.json
 ```
 
 For the latest version, check out the repo and call 
@@ -29,8 +29,8 @@ For the latest version, check out the repo and call
 ## Table of Contents
 
 - [Schema](#schema)
-  - [blocks.csv](#blockscsv)
-  - [transactions.csv](#transactionscsv)
+  - [blocks.json](#blocksjson)
+  - [transactions.json](#transactionsjson)
 - [Exporting the Blockchain](#exporting-the-blockchain)
   - [Export in 2 Hours](#export-in-2-hours)
   - [Command Reference](#command-reference)
@@ -42,44 +42,66 @@ For the latest version, check out the repo and call
 
 ## Schema
 
-### blocks.csv
-
+### blocks.json
 Column                  | Type               |
 ------------------------|--------------------|
-number            | bigint             |
-hash              | hex_string         |
-parent_hash       | hex_string         |
-nonce             | hex_string         |
-sha3_uncles       | hex_string         |
-logs_bloom        | hex_string         |
-transactions_root | hex_string         |
-state_root        | hex_string         |
-receipts_root     | hex_string         |
-miner             | address            |
-difficulty        | numeric            |
-total_difficulty  | numeric            |
-size              | bigint             |
-extra_data        | hex_string         |
-gas_limit         | bigint             |
-gas_used          | bigint             |
-timestamp         | bigint             |
-transaction_count | bigint             |
+hash              | string          | 
+confirmations     | numeric         |
+size              | numeric         |
+strippedsize      | numeric         |
+weight            | numeric         |
+height            | numeric         |
+version           | numeric         |
+versionHex        | hex_string      |
+merkleroot        | string          |
+time              | numeric         |
+mediantime        | numeric         |
+nonce             | numeric         |
+bits              | string          |
+difficulty        | numeric         |
+chainwork         | string          |
+previousblockhash | string          |
+nextblockhash     | string          |
 
-### transactions.csv
+### transactions.json
+Column                  | Type                  |
+------------------------|-----------------------|
+hex                     | string                | 
+hash                    | string                | 
+size                    | numeric               |
+vsize                   | numeric               |
+version                 | numeric               |
+locktime                | numeric               |
+blockhash               | string                |
+confirmations           | numeric               |
+time                    | numeric               |
+blocktime               | numeric               |
+vout                    | []transactionOutput   |
+vin                     | []transactionInput    |
 
-Column              |    Type     |
---------------------|-------------|
-hash             | hex_string  |
-nonce            | bigint      |
-block_hash       | hex_string  |
-block_number     | bigint      |
-transaction_index| bigint      |
-from_address     | address     |
-to_address       | address     |
-value            | numeric     |
-gas              | bigint      |
-gas_price        | bigint      |
-input            | hex_string  |
+### transactionOutput
+
+Column                  | Type                  |
+------------------------|-----------------------|
+value                   | string                | 
+n                       | string                | 
+asm                     | numeric               |
+hex                     | numeric               |
+reqSigs                 | numeric               |
+type                    | numeric               |
+addresses               | string                |
+
+### transactionInput
+
+Column                  | Type                  |
+------------------------|-----------------------|
+txid                    | string                | 
+vout                    | numeric               | 
+asm                     | string                |
+hex                     | string                |
+coinbase                | string                |
+sequence                | numeric               |
+txinwitness             | string                |
 
 You can find column descriptions in [https://github.com/medvedev1088/ethereum-etl-airflow](https://github.com/medvedev1088/ethereum-etl-airflow/tree/master/dags/resources/stages/raw/schemas)
 
@@ -92,6 +114,35 @@ Note: for the `address` type all hex characters are lower-cased.
 ## Exporting the Blockchain
 
 1. Install python 3.5.3+ https://www.python.org/downloads/
+
+1. Install Bitcoin node https://hackernoon.com/a-complete-beginners-guide-to-installing-a-bitcoin-full-node-on-linux-2018-edition-cb8e384479ea
+
+1. Start Bitcoin.
+Make sure it downloaded the blocks that you need by executing `$ bitcoin-cli getblockchaininfo` in the terminal.
+You can export blocks below `blocks`, there is no need to wait until the full sync
+
+1. Install Bitcoin ETL:
+
+    ```bash
+    > pip install bitcoin-etl
+    ```
+
+1. Export all:
+
+    ```bash
+    > bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
+    --rpc-pass '' --rpc-host 'localhost' --rpc-user '' \
+    --blocks-output blocks.json --transactions-output transactions.json
+    ```
+    In case `bitcoinetl` command is not available in PATH, use `python -m bitcoinetl` instead.
+
+    The result will be in the `output` subdirectory, partitioned in Hive style:
+
+    ```bash
+    output/blocks/start_block=00000000/end_block=00099999/blocks_00000000_00099999.json
+    output/blocks/start_block=00100000/end_block=00199999/blocks_00100000_00199999.json
+    ...
+    output/transactions/start_block=00000000/end_block=00099999/transactions_00000000_00099999.json
 
 
 ### Export in 2 Hours
@@ -109,14 +160,15 @@ Note: for the `address` type all hex characters are lower-cased.
 
 1. Run a container out of the image
     ```bash
-    > docker run -v $HOME/output:/bitcoin-etl/output bitcoin-etl:latest export_all -s 0 -e 5499999 -b 100000 -p https://mainnet.infura.io
-    > docker run -v $HOME/output:/bitcoin-etl/output bitcoin-etl:latest export_all -s 2018-01-01 -e 2018-01-01 -p https://mainnet.infura.io
+    > docker run -v $HOME/output:/bitcoin-etl/output bitcoin-etl:latest export_blocks_and_transactions --start-block 0 --end-block 500000 \
+        --rpc-pass '' --rpc-host 'localhost' --rpc-user '' --blocks-output blocks.json --transactions-output transactions.json
     ```
 
 ### Command Reference
 
 - [export_blocks_and_transactions](#export_blocks_and_transactions)
-
+- [get_block_range_for_timestamps](#get_block_range_for_timestamps)
+- [get_block_range_for_date](#get_block_range_for_date)
 
 All the commands accept `-h` parameter for help, e.g.:
 
@@ -143,25 +195,39 @@ Options:
   --help                      Show this message and exit.
 ```
 
-For the `--output` parameters the supported types are csv and json. The format type is inferred from the output file name.
+For the `--output` parameters the supported type is json. The format type is inferred from the output file name.
 
 #### export_blocks_and_transactions
 
 ```bash
 > bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
---rpc-pass 'test' --rpc-host 'localhost' --rpc-user 'test' \
- --blocks-output blocks.csv --transactions-output transactions.csv
+  --rpc-pass 'test' --rpc-host 'localhost' --rpc-user 'test' \
+  --blocks-output blocks.json --transactions-output transactions.json
 ```
 
 Omit `--blocks-output` or `--transactions-output` options if you want to export only transactions/blocks.
 
 You can tune `--batch-size`, `--max-workers` for performance.
 
+#### get_block_range_for_timestamps
+```bash
+> bitcoinetl get_block_range_for_timestamps --rpc-host= 'localhost' \
+  --rpc-user='' --rpc-pass='' --start-timestamp=1325376000 --end-timestamp=1325377000
+```
+
+#### get_block_range_for_date
+```bash
+> bitcoinetl get_block_range_for_date --rpc-host='localhost' --rpc-user='' --rpc-pass='' --date=2017-03-01
+```
+
+
+
 ### Running Tests
 
 ```bash
 > pip install -e .[dev]
-> export ETHEREUM_ETL_RUN_SLOW_TESTS=True
+> export BITCOIN_ETL_RUN_SLOW_TESTS=True
+> export RPC_USERNAME="" RPC_PASSWORD="" RPC_HOST="" RPC_PORT=""
 > pytest -vv
 ```
 
@@ -173,16 +239,16 @@ You can tune `--batch-size`, `--max-workers` for performance.
 ```
 
 ### Bitcoin Cash Support
-[Coming Soon]
+Coming Soon...
 
 ## Querying in Amazon Athena
-[Coming Soon]
+Coming Soon...
 
 ### Tables for Parquet Files
-[Coming Soon]
+Coming Soon...
 
 ## Querying in Google BigQuery
-[Coming Soon]
+Coming Soon...
 
 ### Public Dataset
-[Coming Soon]
+Coming Soon...

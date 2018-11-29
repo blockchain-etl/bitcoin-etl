@@ -20,52 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# {
-#   "in_active_chain": b, (bool) Whether specified block is in the active chain or not (only present with explicit "blockhash" argument)
-#   "hex" : "data",       (string) The serialized, hex-encoded data for 'txid'
-#   "txid" : "id",        (string) The transaction id (same as provided)
-#   "hash" : "id",        (string) The transaction hash (differs from txid for witness transactions)
-#   "size" : n,             (numeric) The serialized transaction size
-#   "vsize" : n,            (numeric) The virtual transaction size (differs from size for witness transactions)
-#   "version" : n,          (numeric) The version
-#   "locktime" : ttt,       (numeric) The lock time
-#   "vin" : [               (array of json objects)
-#      {
-#        "txid": "id",    (string) The transaction id
-#        "vout": n,         (numeric) 
-#        "scriptSig": {     (json object) The script
-#          "asm": "asm",  (string) asm
-#          "hex": "hex"   (string) hex
-#        },
-#        "sequence": n      (numeric) The script sequence number
-#        "txinwitness": ["hex", ...] (array of string) hex-encoded witness data (if any)
-#      }
-#      ,...
-#   ],
-#   "vout" : [              (array of json objects)
-#      {
-#        "value" : x.xxx,            (numeric) The value in BTC
-#        "n" : n,                    (numeric) index
-#        "scriptPubKey" : {          (json object)
-#          "asm" : "asm",          (string) the asm
-#          "hex" : "hex",          (string) the hex
-#          "reqSigs" : n,            (numeric) The required sigs
-#          "type" : "pubkeyhash",  (string) The type, eg 'pubkeyhash'
-#          "addresses" : [           (json array of string)
-#            "address"        (string) bitcoin address
-#            ,...
-#          ]
-#        }
-#      }
-#      ,...
-#   ],
-#   "blockhash" : "hash",   (string) the block hash
-#   "confirmations" : n,      (numeric) The confirmations
-#   "time" : ttt,             (numeric) The transaction time in seconds since epoch (Jan 1 1970 GMT)
-#   "blocktime" : ttt         (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)
-# }
-
-
 class BtcTransaction(object):
     def __init__(self):
         self.hex = None
@@ -81,51 +35,24 @@ class BtcTransaction(object):
         self.blocktime = None
         self.vout = []
         self.vin = []
+    
 
+class TxnOutput(object):
+    def __init__(self):
+        self.value = None
+        self.n = None
+        self.asm = None
+        self.hex = None
+        self.reqSigs = None
+        self.type = None
+        self.addresses = []
 
-# {
-#        "txid": "id",    (string) The transaction id
-#        "vout": n,         (numeric) 
-#        "scriptSig": {     (json object) The script
-#          "asm": "asm",  (string) asm
-#          "hex": "hex"   (string) hex
-#        },
-#        "sequence": n      (numeric) The script sequence number
-#        "txinwitness": ["hex", ...] (array of string) hex-encoded witness data (if any)
-#      }
-
-# class Vin(object):
-#     def __init__(self):
-#         txid = None
-#         vout = None
-#         asm = None
-#         hex = None
-#         sequence = None
-#         txinwitness = None
-
-# "vout" : [              (array of json objects)
-#      {
-#        "value" : x.xxx,            (numeric) The value in BTC
-#        "n" : n,                    (numeric) index
-#        "scriptPubKey" : {          (json object)
-#          "asm" : "asm",          (string) the asm
-#          "hex" : "hex",          (string) the hex
-#          "reqSigs" : n,            (numeric) The required sigs
-#          "type" : "pubkeyhash",  (string) The type, eg 'pubkeyhash'
-#          "addresses" : [           (json array of string)
-#            "address"        (string) bitcoin address
-#            ,...
-#          ]
-#        }
-#      }
-#      ,...
-#   ],
-# class Vout(object):
-#    def __init__(self):
-#        self.value = None
-#        self.n = None
-#        self.asm = None
-#        self.hex = None
-#        self.reqSigs = None
-#        self.type = None
-#        self.addresses = None # array of btc addresses
+class TxnInput(object):
+    def __init__(self):
+        self.txid = None
+        self.vout = None
+        self.asm = None
+        self.hex = None
+        self.coinbase = None
+        self.sequence = None
+        self.txinwitness = []

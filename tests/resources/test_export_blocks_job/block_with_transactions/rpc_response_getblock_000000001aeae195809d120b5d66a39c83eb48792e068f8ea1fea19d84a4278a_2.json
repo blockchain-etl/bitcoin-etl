@@ -1,0 +1,54 @@
+{
+
+        "bits": "1c2a1115",
+        "chainwork": "00000000000000000000000000000000000000000000000000014a426593e15b",
+        "confirmations": 501930,
+        "difficulty": 6.085476906000794,
+        "hash": "000000001aeae195809d120b5d66a39c83eb48792e068f8ea1fea19d84a4278a",
+        "height": 50000,
+        "mediantime": 1270915355,
+        "merkleroot": "27f1d66f8a1ee5280f4e92508dcb647e954d53004905d08a75574daee4988360",
+        "nTx": 1,
+        "nextblockhash": "000000001c920d495e1eeef2452b6d1c6c229a919b28196c103ecffebabee141",
+        "nonce": 58489010,
+        "previousblockhash": "000000000845517b31c6820d83f25cff46429bf136a7515fe504116427e60f8e",
+        "size": 216,
+        "strippedsize": 216,
+        "time": 1270916538,
+        "tx": [
+            {
+                "hash": "27f1d66f8a1ee5280f4e92508dcb647e954d53004905d08a75574daee4988360",
+                "hex": "01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff080415112a1c02c100ffffffff0100f2052a01000000434104a9d6840fdd1497b3067b8066db783acf90bf42071a38fe2cf6d2d8a04835d0b5c45716d8d6012ab5d56c7824c39718f7bc7486d389cd0047f53785f9a63c0c9dac00000000",
+                "locktime": 0,
+                "size": 135,
+                "txid": "27f1d66f8a1ee5280f4e92508dcb647e954d53004905d08a75574daee4988360",
+                "version": 1,
+                "vin": [
+                    {
+                        "coinbase": "0415112a1c02c100",
+                        "sequence": 4294967295
+                    }
+                ],
+                "vout": [
+                    {
+                        "n": 0,
+                        "scriptPubKey": {
+                            "addresses": [
+                                "1ND5TQ2AnQatxqmHrdMT8utb3aWgLKsc9w"
+                            ],
+                            "asm": "04a9d6840fdd1497b3067b8066db783acf90bf42071a38fe2cf6d2d8a04835d0b5c45716d8d6012ab5d56c7824c39718f7bc7486d389cd0047f53785f9a63c0c9d OP_CHECKSIG",
+                            "hex": "4104a9d6840fdd1497b3067b8066db783acf90bf42071a38fe2cf6d2d8a04835d0b5c45716d8d6012ab5d56c7824c39718f7bc7486d389cd0047f53785f9a63c0c9dac",
+                            "reqSigs": 1,
+                            "type": "pubkey"
+                        },
+                        "value": 50.0
+                    }
+                ],
+                "vsize": 135
+            }
+        ],
+        "version": 1,
+        "versionHex": "00000001",
+        "weight": 864
+    
+}

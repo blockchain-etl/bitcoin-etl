@@ -24,8 +24,6 @@
 from blockchainetl.jobs.exporters.composite_item_exporter import CompositeItemExporter
 
 BLOCK_FIELDS_TO_EXPORT = [
-    'hash'
-    'confirmations',
     'size',
     'strippedsize',
     'weight',
@@ -40,9 +38,11 @@ BLOCK_FIELDS_TO_EXPORT = [
     'difficulty',
     'chainwork',
     'previousblockhash',
-    'nextblockhash'    
+    'nextblockhash',
     'tx',
-    'transaction_count'
+    'transaction_count',
+    'hash',
+    'confirmations',
 ]
 
 TRANSACTION_FIELDS_TO_EXPORT = [

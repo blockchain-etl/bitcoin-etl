@@ -67,8 +67,8 @@ class NoopFile:
     def __enter__(self):
         pass
 
-    def __exit__(self):
-        pass
+    # def __exit__(self):
+    #     pass
 
     def readable(self):
         pass

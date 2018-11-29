@@ -29,7 +29,6 @@ from blockchainetl.file_utils import smart_open
 from blockchainetl.logging_utils import logging_basic_config
 from bitcoinetl.providers.auto import get_provider
 from bitcoinetl.service.bitcoin_service import BtcService
-# from ethereumetl.utils import check_classic_provider_uri 
 
 logging_basic_config()
 
@@ -42,17 +41,13 @@ logging_basic_config()
 @click.option('-s', '--start-timestamp', required=True, type=int, help='Start unix timestamp, in seconds.')
 @click.option('-e', '--end-timestamp', required=True, type=int, help='End unix timestamp, in seconds.')
 @click.option('-o', '--output', default='-', type=str, help='The output file. If not specified stdout is used.')
-# when switch to support other bitcoin forks like litecoin etc
+# switch to support other bitcoin forks like litecoin etc
 # @click.option('-c', '--chain', default='bitcoin', type=str, help='The chain network to connect to.')
 
 def get_block_range_for_timestamps(rpc_host, rpc_user, rpc_pass, rpc_port, start_timestamp, end_timestamp, output ):
     """Outputs start and end blocks for given timestamps."""
-    # provider_uri = check_classic_provider_uri(chain, provider_uri)
-    # provider = get_provider_from_uri(provider_uri)
-    # web3 = Web3(provider)
-    # eth_service = EthService(web3)
 
-    rpc_connection = get_provider(rpc_user, rpc_pass, rpc_host, rpc_port)
+    rpc_connection = get_provider(rpc_host, rpc_port, rpc_user, rpc_pass)
     btc_service = BtcService(rpc_connection)
 
     start_block, end_block = btc_service.get_block_range_for_timestamps(start_timestamp, end_timestamp)

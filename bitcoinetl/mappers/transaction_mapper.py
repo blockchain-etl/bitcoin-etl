@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
+# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
 
 
 from bitcoinetl.domain.transaction import BtcTransaction
-from blockchainetl.utils import hex_to_dec, to_normalized_address
-
+from bitcoinetl.mappers.txn_input_mapper import BtcTransactionInputMapper
+from bitcoinetl.mappers.txn_output_mapper import BtcTransactionOutputMapper
 
 class BtcTransactionMapper(object):
     def json_dict_to_transaction(self, json_dict):
@@ -38,13 +38,14 @@ class BtcTransactionMapper(object):
         transaction.confirmations = json_dict.get('confirmations')
         transaction.time = json_dict.get('time')
         transaction.blocktime = json_dict.get('blocktime')
-        transaction.vout = json_dict.get('vout')
-        transaction.vin = json_dict.get('vin')
+
+        transaction.vin = BtcTransactionInputMapper().json_dict_to_input(json_dict)
+        transaction.vout = BtcTransactionOutputMapper().json_dict_to_output(json_dict)
 
         return transaction
 
     def transaction_to_dict(self, transaction):
-        return {
+        result = {
             'type': 'transaction',
             'hex': transaction.hex,
             'hash': transaction.hash,
@@ -56,6 +57,8 @@ class BtcTransactionMapper(object):
             'confirmations': transaction.confirmations,
             'time': transaction.time,
             'blocktime': transaction.blocktime,
-            'vout': transaction.vout,
-            'vin': transaction.vin
+
+            'vout': BtcTransactionOutputMapper().output_to_dict(transaction.vout),
+            'vin': BtcTransactionInputMapper().input_to_dict(transaction.vin)
         }
+        return result

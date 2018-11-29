@@ -14,10 +14,10 @@ setup(
     version='1.0.0',
     author='Omidiora Samuel',
     author_email='samparsky@gmail.com',
-    description='Tools for exporting Bitcoin blockchain data to CSV or JSON',
+    description='Tools for exporting Bitcoin blockchain data to JSON',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/blockchain-etl/bitcoiin-etl',
+    url='https://github.com/blockchain-etl/bitcoin-etl',
     packages=find_packages(exclude=['schemas', 'tests']),
     classifiers=[
         'Development Status :: 5 - Production/Stable',

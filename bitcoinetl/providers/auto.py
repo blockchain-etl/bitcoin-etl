@@ -22,9 +22,6 @@
 
 from bitcoinetl.providers.rpc import BatchRPCProvider
 
-DEFAULT_IPC_TIMEOUT = 60
-DEFAULT_HTTP_REQUEST_KWARGS = {'timeout': 60}
-
 
 def get_provider(rpc_host="127.0.0.1", rpc_port="8332", rpc_username="", rpc_password=""):
     return BatchRPCProvider(rpc_username, rpc_password, rpc_host, rpc_port)

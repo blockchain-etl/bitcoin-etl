@@ -71,17 +71,14 @@ class ExportBlocksJob(BaseJob):
         )
 
     def _export_batch(self, block_number_batch):
-        print("block number batch")
-        print(block_number_batch)
-
+        # get block
         block_hash_rpc = list(generate_get_block_hash_by_number_json_rpc(block_number_batch))
-        block_hashes_response = self.rpc_provider.execute(block_hash_rpc)
-        block_hashes_results = rpc_response_batch_to_results(block_hashes_response)
-        block_hashes = [self.block_mapper.json_dict_to_block(block_hashes_result) for block_hashes_result in block_hashes_results]
+        block_hashes_response = self.rpc_provider.make_request(block_hash_rpc)
+        block_hashes = rpc_response_batch_to_results(block_hashes_response)
         
         # get block details by hash
         block_detail_rpc = list(generate_get_block_by_hash_json_rpc(block_hashes, self.export_transactions))
-        block_detail_response = self.rpc_provider.execute(block_detail_rpc)
+        block_detail_response = self.rpc_provider.make_request(block_detail_rpc)
         block_detail_results = rpc_response_batch_to_results(block_detail_response)
 
         blocks = [self.block_mapper.json_dict_to_block(block_detail_result) for block_detail_result in block_detail_results]

@@ -35,6 +35,7 @@ import io
 import threading
 from json import JSONEncoder
 
+import decimal
 import six
 
 
@@ -157,6 +158,10 @@ class CsvItemExporter(BaseItemExporter):
             row = list(self._build_row(self.fields_to_export))
             self.csv_writer.writerow(row)
 
+def EncodeDecimal(o):
+    if isinstance(o, decimal.Decimal):
+        return float(round(o, 8))
+    raise TypeError(repr(o) + " is not JSON serializable")
 
 class JsonLinesItemExporter(BaseItemExporter):
 
@@ -164,7 +169,8 @@ class JsonLinesItemExporter(BaseItemExporter):
         self._configure(kwargs, dont_fail=True)
         self.file = file
         kwargs.setdefault('ensure_ascii', not self.encoding)
-        self.encoder = JSONEncoder(**kwargs)
+        # kwargs.setdefault('default', EncodeDecimal)
+        self.encoder = JSONEncoder(default=EncodeDecimal, **kwargs)
 
     def export_item(self, item):
         itemdict = dict(self._get_serialized_fields(item))

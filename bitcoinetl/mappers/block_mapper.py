@@ -59,29 +59,28 @@ class BtcBlockMapper(object):
                 if isinstance(tx, dict)
             ]
 
-            block.transaction_count = len(json_dict['transactions'])
+            block.transaction_count = len(json_dict['tx'])
 
         return block
 
     def block_to_dict(self, block):
         return {
             'type': 'block',
-            'number': block.number,
             'hash': block.hash,
-            'parent_hash': block.parent_hash,
-            'nonce': block.nonce,
-            'sha3_uncles': block.sha3_uncles,
-            'logs_bloom': block.logs_bloom,
-            'transactions_root': block.transactions_root,
-            'state_root': block.state_root,
-            'receipts_root': block.receipts_root,
-            'miner': block.miner,
-            'difficulty': block.difficulty,
-            'total_difficulty': block.total_difficulty,
             'size': block.size,
-            'extra_data': block.extra_data,
-            'gas_limit': block.gas_limit,
-            'gas_used': block.gas_used,
-            'timestamp': block.timestamp,
-            'transaction_count': block.transaction_count,
+            'strippedsize': block.strippedsize,
+            'weight': block.weight,
+            'height': block.height,
+            'version': block.version,
+            'versionHex': block.versionHex,
+            'merkleroot': block.merkleroot,
+            'time': block.time,
+            'mediantime': block.mediantime,
+            'nonce': block.nonce,
+            'bits': block.bits,
+            'difficulty': block.difficulty,
+            'chainwork': block.chainwork,
+            'previousblockhash': block.previousblockhash,
+            'nextblockhash': block.nextblockhash,
+            'confirmations': block.confirmations,
         }
