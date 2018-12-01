@@ -38,6 +38,9 @@ class MockRPCProvider():
             elif method == 'getblockhash':
                 height = req[1]
                 file_name = 'rpc_response_{}_{}.json'.format(method, height)
+            elif method == 'getrawtransaction':
+                txid = req[1]
+                file_name = 'rpc_response_{}_{}.json'.format(method, txid)
             else:
                 raise ValueError('Request method {} is unexpected'.format(method))
             file_content = self.read_resource(file_name)

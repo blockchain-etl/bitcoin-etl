@@ -35,6 +35,7 @@ class BtcTransactionInputMapper(object):
                 vin.coinbase      = item.get('coinbase')
                 vin.txinwitness   = item.get('txinwitness')
                 vin.sequence      = item.get('sequence')
+                vin.value         = item.get('value')
                 if "scriptSig" in item:
                     vin.asm           = (item.get('scriptSig')).get('asm')
                     vin.hex           = (item.get('scriptSig')).get('hex')
@@ -53,6 +54,7 @@ class BtcTransactionInputMapper(object):
                     "coinbase": item.coinbase,
                     "txinwitness": item.txinwitness,
                     "sequence": item.sequence,
+                    "value": item.value,
                 }
                 result.append(vin)
             return result

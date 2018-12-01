@@ -27,7 +27,7 @@ from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
 from blockchainetl.utils import rpc_response_batch_to_results, validate_range
 from bitcoinetl.mappers.block_mapper import BtcBlockMapper
-from bitcoinetl.json_rpc_requests import generate_get_block_by_hash_json_rpc, generate_get_block_hash_by_number_json_rpc
+from bitcoinetl.json_rpc_requests import generate_get_block_by_hash_json_rpc, generate_get_block_hash_by_number_json_rpc, generate_get_transaction_by_id_json_rpc
 from bitcoinetl.mappers.transaction_mapper import BtcTransactionMapper
 
 
@@ -70,7 +70,24 @@ class ExportBlocksJob(BaseJob):
             total_items=self.end_block - self.start_block + 1
         )
 
+    def add_input_values(self, block):
+        for blockIndex, tx in enumerate(block['tx']):
+            txids = list(map(lambda vin: vin["txid"] if "txid" in vin else "", tx['vin']))
+
+            transaction_detail_rpc = list(generate_get_transaction_by_id_json_rpc(txids))
+            transaction_detail_response = self.rpc_provider.make_request(transaction_detail_rpc)
+
+            for index, response in enumerate(transaction_detail_response):
+                n = tx['vin'][index]['vout']
+                tx['vin'][index]['value'] = response['vout'][n]['value']
+
+            block['tx'][blockIndex] = tx
+
+        return block
+
+
     def _export_batch(self, block_number_batch):
+
         # get block
         block_hash_rpc = list(generate_get_block_hash_by_number_json_rpc(block_number_batch))
         block_hashes_response = self.rpc_provider.make_request(block_hash_rpc)
@@ -81,8 +98,11 @@ class ExportBlocksJob(BaseJob):
         block_detail_response = self.rpc_provider.make_request(block_detail_rpc)
         block_detail_results = rpc_response_batch_to_results(block_detail_response)
 
+        # get all the transactions in input
+        if self.export_transactions:
+            block_detail_results = [self.add_input_values(block_detail_result) for block_detail_result in block_detail_results]
+        
         blocks = [self.block_mapper.json_dict_to_block(block_detail_result) for block_detail_result in block_detail_results]
-
 
         for block in blocks:
             self._export_block(block)

@@ -56,3 +56,4 @@ class TxnInput(object):
         self.coinbase = None
         self.sequence = None
         self.txinwitness = []
+        self.value = None
