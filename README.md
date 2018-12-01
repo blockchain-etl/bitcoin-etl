@@ -102,6 +102,8 @@ hex                     | string                |
 coinbase                | string                |
 sequence                | numeric               |
 txinwitness             | string                |
+value                   | float                 |
+
 
 You can find column descriptions in [https://github.com/medvedev1088/ethereum-etl-airflow](https://github.com/medvedev1088/ethereum-etl-airflow/tree/master/dags/resources/stages/raw/schemas)
 
@@ -127,7 +129,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     > pip install bitcoin-etl
     ```
 
-1. Export all:
+1. Export blocks & transactions:
 
     ```bash
     > bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 500000 \

@@ -71,7 +71,7 @@ class ExportBlocksJob(BaseJob):
         )
 
     def add_input_values(self, block):
-        for blockIndex, tx in enumerate(block['tx']):
+        for txIndex, tx in enumerate(block['tx']):
             txids = list(map(lambda vin: vin["txid"] if "txid" in vin else "", tx['vin']))
 
             transaction_detail_rpc = list(generate_get_transaction_by_id_json_rpc(txids))
@@ -81,7 +81,7 @@ class ExportBlocksJob(BaseJob):
                 n = tx['vin'][index]['vout']
                 tx['vin'][index]['value'] = response['vout'][n]['value']
 
-            block['tx'][blockIndex] = tx
+            block['tx'][txIndex] = tx
 
         return block
 
