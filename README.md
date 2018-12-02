@@ -45,23 +45,23 @@ For the latest version, check out the repo and call
 ### blocks.json
 Column                  | Type               |
 ------------------------|--------------------|
-hash              | string          | 
-confirmations     | numeric         |
-size              | numeric         |
-strippedsize      | numeric         |
-weight            | numeric         |
-height            | numeric         |
-version           | numeric         |
-versionHex        | hex_string      |
-merkleroot        | string          |
-time              | numeric         |
-mediantime        | numeric         |
-nonce             | numeric         |
-bits              | string          |
-difficulty        | numeric         |
-chainwork         | string          |
-previousblockhash | string          |
-nextblockhash     | string          |
+hash                | string          | 
+confirmations       | numeric         |
+size                | numeric         |
+stripped_size       | numeric         |
+weight              | numeric         |
+height              | numeric         |
+version             | numeric         |
+version_hex         | hex_string      |
+merkle_root         | string          |
+time                | numeric         |
+median_time         | numeric         |
+nonce               | numeric         |
+bits                | string          |
+difficulty          | numeric         |
+chain_work          | string          |
+previous_block_hash | string          |
+next_block_hash     | string          |
 
 ### transactions.json
 Column                  | Type                  |
@@ -71,11 +71,11 @@ hash                    | string                |
 size                    | numeric               |
 vsize                   | numeric               |
 version                 | numeric               |
-locktime                | numeric               |
-blockhash               | string                |
+lock_time                | numeric               |
+block_hash               | string                |
 confirmations           | numeric               |
 time                    | numeric               |
-blocktime               | numeric               |
+block_time               | numeric               |
 vout                    | []transactionOutput   |
 vin                     | []transactionInput    |
 
@@ -83,11 +83,11 @@ vin                     | []transactionInput    |
 
 Column                  | Type                  |
 ------------------------|-----------------------|
-value                   | string                | 
+value                   | numeric               | 
 n                       | string                | 
 asm                     | numeric               |
 hex                     | numeric               |
-reqSigs                 | numeric               |
+req_sigs                | numeric               |
 type                    | numeric               |
 addresses               | string                |
 
@@ -101,8 +101,8 @@ asm                     | string                |
 hex                     | string                |
 coinbase                | string                |
 sequence                | numeric               |
-txinwitness             | string                |
-value                   | float                 |
+tx_in_witness           | string                |
+value                   | numeric               |
 
 
 You can find column descriptions in [https://github.com/medvedev1088/ethereum-etl-airflow](https://github.com/medvedev1088/ethereum-etl-airflow/tree/master/dags/resources/stages/raw/schemas)

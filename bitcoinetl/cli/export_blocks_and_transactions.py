@@ -47,9 +47,6 @@ def export_blocks_and_transactions(start_block, end_block, batch_size, rpc_host,
     """Export blocks and transactions."""
     if blocks_output is None and transactions_output is None:
         raise ValueError('Either --blocks-output or --transactions-output options must be provided')
-    
-    if rpc_user is None or rpc_pass is None:
-        raise ValueError('Both the --rpc-user and --rpc-pass must be provided')
 
     job = ExportBlocksJob(
         start_block=start_block,

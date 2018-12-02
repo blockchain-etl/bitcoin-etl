@@ -32,10 +32,6 @@ def sort_json(json_string):
 
 
 def compare_lines_ignore_order(expected, actual, online=False):
-    print('expected')
-    print(expected)
-    print('acutal')
-    print(actual)
     expected_lines = expected.splitlines()
     actual_lines = actual.splitlines()
     assert len(expected_lines) == len(actual_lines)

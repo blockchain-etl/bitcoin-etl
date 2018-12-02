@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
+import math
 from bitcoinetl.domain.transaction import TxnInput, TxnOutput
 
 class BtcTransactionOutputMapper(object):
@@ -48,7 +48,7 @@ class BtcTransactionOutputMapper(object):
                 "hex": item.hex,
                 "txinwitness": item.txinwitness,
                 "sequence": item.sequence,
-                "value": item.value,
+                "value": int(item.value * math.pow(10, 8)),
                 "n": item.n
             }
             result.append(vout)

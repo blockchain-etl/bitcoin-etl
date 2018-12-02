@@ -26,20 +26,20 @@ class BtcBlock(object):
         self.hash = None
         self.confirmations = None
         self.size = None
-        self.strippedsize = None
+        self.stripped_size = None
         self.weight = None
         self.height = None
         self.version = None
-        self.versionHex = None
-        self.merkleroot = None
+        self.version_hex = None
+        self.merkle_root = None
         self.time = None
-        self.mediantime = None
+        self.median_time = None
         self.nonce = None
         self.bits = None
         self.difficulty = None
-        self.chainwork = None
-        self.previousblockhash = None
-        self.nextblockhash = None
+        self.chain_work = None
+        self.previous_block_hash = None
+        self.next_block_hash = None
         
         self.tx = []
         self.transaction_count = None

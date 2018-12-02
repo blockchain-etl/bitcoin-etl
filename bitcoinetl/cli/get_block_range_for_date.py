@@ -30,7 +30,6 @@ from blockchainetl.file_utils import smart_open
 from blockchainetl.logging_utils import logging_basic_config
 from bitcoinetl.providers.auto import get_provider
 from bitcoinetl.service.bitcoin_service import BtcService
-# from bitcoinetl.utils import check_classic_provider_uri
 
 logging_basic_config()
 

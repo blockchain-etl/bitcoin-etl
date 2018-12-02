@@ -28,11 +28,11 @@ class BtcTransaction(object):
         self.size = None
         self.vsize = None
         self.version = None
-        self.locktime = None
-        self.blockhash = None
+        self.lock_time = None
+        self.block_hash = None
         self.confirmations = None
         self.time = None
-        self.blocktime = None
+        self.block_time = None
         self.vout = []
         self.vin = []
     
@@ -43,7 +43,7 @@ class TxnOutput(object):
         self.n = None
         self.asm = None
         self.hex = None
-        self.reqSigs = None
+        self.req_sigs = None
         self.type = None
         self.addresses = []
 
@@ -55,5 +55,5 @@ class TxnInput(object):
         self.hex = None
         self.coinbase = None
         self.sequence = None
-        self.txinwitness = []
+        self.tx_in_witness = []
         self.value = None

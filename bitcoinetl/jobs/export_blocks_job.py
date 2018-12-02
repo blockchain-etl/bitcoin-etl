@@ -22,6 +22,7 @@
 
 
 import json
+import math
 
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
@@ -71,7 +72,7 @@ class ExportBlocksJob(BaseJob):
         )
 
     def add_input_values(self, block):
-        for txIndex, tx in enumerate(block['tx']):
+        for tx_index, tx in enumerate(block['tx']):
             txids = list(map(lambda vin: vin["txid"] if "txid" in vin else "", tx['vin']))
 
             transaction_detail_rpc = list(generate_get_transaction_by_id_json_rpc(txids))
@@ -79,9 +80,9 @@ class ExportBlocksJob(BaseJob):
 
             for index, response in enumerate(transaction_detail_response):
                 n = tx['vin'][index]['vout']
-                tx['vin'][index]['value'] = response['vout'][n]['value']
+                tx['vin'][index]['value'] = int(response['vout'][n]['value'] * math.pow(10, 8))
 
-            block['tx'][txIndex] = tx
+            block['tx'][tx_index] = tx
 
         return block
 
