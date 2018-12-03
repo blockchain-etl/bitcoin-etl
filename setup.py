@@ -33,7 +33,6 @@ setup(
     install_requires=[
         'python-dateutil==2.7.0',
         'click==7.0',
-        'python-bitcoinrpc==1.0'
     ],
     extras_require={
         'dev': [

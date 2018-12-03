@@ -80,7 +80,7 @@ class ExportBlocksJob(BaseJob):
 
             for index, response in enumerate(transaction_detail_response):
                 n = tx['vin'][index]['vout']
-                tx['vin'][index]['value'] = int(response['vout'][n]['value'] * math.pow(10, 8))
+                tx['vin'][index]['value'] = int(int(response['vout'][n]['value']) * math.pow(10, 8))
 
             block['tx'][tx_index] = tx
 

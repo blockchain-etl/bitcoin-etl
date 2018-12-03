@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+from bitcoinetl.providers.authproxy import AuthServiceProxy
 import logging
 
 logging.basicConfig()

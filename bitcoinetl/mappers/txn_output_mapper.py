@@ -48,7 +48,7 @@ class BtcTransactionOutputMapper(object):
                 "hex": item.hex,
                 "txinwitness": item.txinwitness,
                 "sequence": item.sequence,
-                "value": int(item.value * math.pow(10, 8)),
+                "value": int(int(item.value) * math.pow(10, 8)),
                 "n": item.n
             }
             result.append(vout)
