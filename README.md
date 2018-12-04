@@ -1,7 +1,7 @@
 # Bitcoin ETL
 
 [![Join the chat at https://gitter.im/ethereum-eth](https://badges.gitter.im/ethereum-etl.svg)](https://gitter.im/ethereum-etl/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/blockchain-etl/ethereum-etl.png)](https://travis-ci.org/blockchain-etl/ethereum-etl)
+[![Build Status](https://travis-ci.org/blockchain-etl/bitcoin-etl.png)](https://travis-ci.org/blockchain-etl/bitcoin-etl)
 [Join Telegram Group](https://t.me/joinchat/GsMpbA3mv1OJ6YMp3T5ORQ)
 
 Install Bitcoin ETL:
@@ -32,9 +32,9 @@ For the latest version, check out the repo and call
   - [blocks.json](#blocksjson)
   - [transactions.json](#transactionsjson)
 - [Exporting the Blockchain](#exporting-the-blockchain)
-  - [Export in 2 Hours](#export-in-2-hours)
+  - [Running in Docker](#running-in-docker)
   - [Command Reference](#command-reference)
-- [Bitcoin Cash Support](#ethereum-classic-support)
+- [Bitcoin Cash Support](#bitcoin-cash-support)
 - [Querying in Amazon Athena](#querying-in-amazon-athena)
 - [Querying in Google BigQuery](#querying-in-google-bigquery)
   - [Public Dataset](#public-dataset)
@@ -43,20 +43,20 @@ For the latest version, check out the repo and call
 ## Schema
 
 ### blocks.json
-Column                  | Type               |
-------------------------|--------------------|
+Column              | Type            |
+--------------------|-----------------|
 hash                | string          | 
-confirmations       | numeric         |
-size                | numeric         |
-stripped_size       | numeric         |
-weight              | numeric         |
-height              | numeric         |
-version             | numeric         |
+confirmations       | bigint          |
+size                | bigint          |
+stripped_size       | bigint          |
+weight              | bigint          |
+height              | bigint          |
+version             | bigint          |
 version_hex         | hex_string      |
 merkle_root         | string          |
-time                | numeric         |
-median_time         | numeric         |
-nonce               | numeric         |
+time                | bigint          |
+median_time         | bigint          |
+nonce               | bigint          |
 bits                | string          |
 difficulty          | numeric         |
 chain_work          | string          |
@@ -68,14 +68,14 @@ Column                  | Type                  |
 ------------------------|-----------------------|
 hex                     | string                | 
 hash                    | string                | 
-size                    | numeric               |
-vsize                   | numeric               |
-version                 | numeric               |
-lock_time                | numeric               |
-block_hash               | string                |
-confirmations           | numeric               |
-time                    | numeric               |
-block_time               | numeric               |
+size                    | bigint                |
+vsize                   | bigint                |
+version                 | bigint                |
+lock_time               | bigint                |
+block_hash              | string                |
+confirmations           | bigint                |
+time                    | bigint                |
+block_time              | bigint                |
 vout                    | []transactionOutput   |
 vin                     | []transactionInput    |
 
@@ -83,12 +83,12 @@ vin                     | []transactionInput    |
 
 Column                  | Type                  |
 ------------------------|-----------------------|
-value                   | numeric               | 
-n                       | string                | 
-asm                     | numeric               |
-hex                     | numeric               |
-req_sigs                | numeric               |
-type                    | numeric               |
+value                   | bigint                | 
+n                       | bigint                | 
+asm                     | string                |
+hex                     | string                |
+req_sigs                | bigint                |
+type                    | string                |
 addresses               | string                |
 
 ### transactionInput
@@ -96,22 +96,16 @@ addresses               | string                |
 Column                  | Type                  |
 ------------------------|-----------------------|
 txid                    | string                | 
-vout                    | numeric               | 
+vout                    | bigint                | 
 asm                     | string                |
 hex                     | string                |
 coinbase                | string                |
-sequence                | numeric               |
+sequence                | bigint                |
 tx_in_witness           | string                |
-value                   | numeric               |
+value                   | bigint                |
 
 
-You can find column descriptions in [https://github.com/medvedev1088/ethereum-etl-airflow](https://github.com/medvedev1088/ethereum-etl-airflow/tree/master/dags/resources/stages/raw/schemas)
-
-Note: for the `address` type all hex characters are lower-cased.
-`boolean` type can have 2 values: `True` or `False`.
-
-## LIMITATIONS
-[Coming Soon]
+You can find column descriptions in [TODO](https://github.com/medvedev1088/bitcoin-etl-airflow/tree/master/dags/resources/stages/raw/schemas)
 
 ## Exporting the Blockchain
 
@@ -145,10 +139,6 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     output/blocks/start_block=00100000/end_block=00199999/blocks_00100000_00199999.json
     ...
     output/transactions/start_block=00000000/end_block=00099999/transactions_00000000_00099999.json
-
-
-### Export in 2 Hours
-[Coming Soon]
 
 ### Running in Docker
 
@@ -244,9 +234,6 @@ You can tune `--batch-size`, `--max-workers` for performance.
 Coming Soon...
 
 ## Querying in Amazon Athena
-Coming Soon...
-
-### Tables for Parquet Files
 Coming Soon...
 
 ## Querying in Google BigQuery

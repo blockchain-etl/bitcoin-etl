@@ -1,6 +1,6 @@
-# The MIT License (MIT)
+# MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,28 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from bitcoinetl.providers.authproxy import AuthServiceProxy
-import logging
 
-logging.getLogger("BitcoinRPC").setLevel(logging.INFO)
+from bitcoinetl.cli import cli
 
-
-class BatchRPCProvider():
-    def __init__(self, rpc_user, rpc_password, rpc_host, rpc_port):
-        self.rpc_connection = AuthServiceProxy("http://%s:%s@%s:%s" % (rpc_user, rpc_password, rpc_host, rpc_port))
-
-    def make_request(self, commands):
-        response = self.rpc_connection.batch_(commands)
-        return response
-
-    def getblockhash(self, param):
-        response = self.rpc_connection.getblockhash(param)
-        return response
-
-    def getblock(self, *param):
-        response = self.rpc_connection.getblock(*param)
-        return response
-
-    def getblockcount(self, *param):
-        response = self.rpc_connection.getblockcount(*param)
-        return response
+cli()

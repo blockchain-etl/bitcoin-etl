@@ -1,4 +1,4 @@
- # MIT License
+# MIT License
 #
 # Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
 #
@@ -21,15 +21,17 @@
 # SOFTWARE.
 
 def generate_get_block_by_hash_json_rpc(block_hashes, include_transactions):
-        for _, block_hash in enumerate(block_hashes):
-                verbosity = 2 if include_transactions else 1
-                yield ["getblock", block_hash, verbosity]
-        
+    for _, block_hash in enumerate(block_hashes):
+        verbosity = 2 if include_transactions else 1
+        yield ["getblock", block_hash, verbosity]
+
+
 def generate_get_block_hash_by_number_json_rpc(block_numbers):
-        for _, block_number in enumerate(block_numbers):
-                yield ["getblockhash", block_number]
+    for _, block_number in enumerate(block_numbers):
+        yield ["getblockhash", block_number]
+
 
 def generate_get_transaction_by_id_json_rpc(txids):
-        for txid in txids:
-                if txid != "":
-                        yield ["getrawtransaction", txid, 1]
+    for txid in txids:
+        if txid != "":
+            yield ["getrawtransaction", txid, 1]

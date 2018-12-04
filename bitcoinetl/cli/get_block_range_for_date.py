@@ -21,15 +21,14 @@
 # SOFTWARE.
 
 
+from datetime import datetime
+
 import click
 
-from datetime import datetime
-from web3 import Web3
-
-from blockchainetl.file_utils import smart_open
-from blockchainetl.logging_utils import logging_basic_config
 from bitcoinetl.providers.auto import get_provider
 from bitcoinetl.service.bitcoin_service import BtcService
+from blockchainetl.file_utils import smart_open
+from blockchainetl.logging_utils import logging_basic_config
 
 logging_basic_config()
 

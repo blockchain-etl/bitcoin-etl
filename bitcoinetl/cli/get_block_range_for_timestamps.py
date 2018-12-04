@@ -23,12 +23,10 @@
 
 import click
 
-from web3 import Web3
-
-from blockchainetl.file_utils import smart_open
-from blockchainetl.logging_utils import logging_basic_config
 from bitcoinetl.providers.auto import get_provider
 from bitcoinetl.service.bitcoin_service import BtcService
+from blockchainetl.file_utils import smart_open
+from blockchainetl.logging_utils import logging_basic_config
 
 logging_basic_config()
 
@@ -41,10 +39,7 @@ logging_basic_config()
 @click.option('-s', '--start-timestamp', required=True, type=int, help='Start unix timestamp, in seconds.')
 @click.option('-e', '--end-timestamp', required=True, type=int, help='End unix timestamp, in seconds.')
 @click.option('-o', '--output', default='-', type=str, help='The output file. If not specified stdout is used.')
-# switch to support other bitcoin forks like litecoin etc
-# @click.option('-c', '--chain', default='bitcoin', type=str, help='The chain network to connect to.')
-
-def get_block_range_for_timestamps(rpc_host, rpc_user, rpc_pass, rpc_port, start_timestamp, end_timestamp, output ):
+def get_block_range_for_timestamps(rpc_host, rpc_user, rpc_pass, rpc_port, start_timestamp, end_timestamp, output):
     """Outputs start and end blocks for given timestamps."""
 
     rpc_connection = get_provider(rpc_host, rpc_port, rpc_user, rpc_pass)
