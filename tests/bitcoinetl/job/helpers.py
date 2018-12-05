@@ -23,12 +23,13 @@ import os
 from bitcoinetl.providers.rpc import BatchRPCProvider
 from tests.bitcoinetl.job.mock_rpc_provider import MockRPCProvider
 
+
 def get_provider(provider_type, read_resource_lambda=None):
     if provider_type == "mock":
         if read_resource_lambda is None:
             raise ValueError('read_resource_lambda must not be None for provider type {}'.format(provider_type))
         provider = MockRPCProvider(read_resource_lambda)
-        
+
     elif provider_type == "online":
 
         rpc_username = os.environ.get("RPC_USERNAME")

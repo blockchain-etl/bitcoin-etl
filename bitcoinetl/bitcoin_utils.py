@@ -1,8 +1,12 @@
 import math
+from decimal import Decimal
 
 
 def bitcoin_to_satoshi(bitcoin_value):
     if bitcoin_value is None:
         return bitcoin_value
 
-    return int(bitcoin_value * math.pow(10, 8))
+    if isinstance(bitcoin_value, Decimal):
+        return int(bitcoin_value * (Decimal(10) ** 8))
+    else:
+        return int(bitcoin_value * math.pow(10, 8))

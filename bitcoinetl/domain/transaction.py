@@ -21,8 +21,10 @@
 # SOFTWARE.
 
 
+# https://bitcoin.org/en/developer-reference#raw-transaction-format
 class BtcTransaction(object):
     def __init__(self):
+        # https://bitcoin.stackexchange.com/questions/77699/whats-the-difference-between-txid-and-hash-getrawtransaction-bitcoind
         self.id = None
         self.hash = None
         self.size = None

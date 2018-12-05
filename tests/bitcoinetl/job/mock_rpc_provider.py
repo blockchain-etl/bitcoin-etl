@@ -19,9 +19,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-
+import decimal
 import json
+
 
 class MockRPCProvider():
     def __init__(self, read_resource):
@@ -44,21 +44,25 @@ class MockRPCProvider():
             else:
                 raise ValueError('Request method {} is unexpected'.format(method))
             file_content = self.read_resource(file_name)
-            rpc_response.append(json.loads(file_content))
+            rpc_response.append(json_loads(file_content))
         return rpc_response
-    
+
     def getblock(self, blockhash, verbosity):
         file_name = 'rpc_response_{}_{}_{}.json'.format("geblock", blockhash, verbosity)
         file_content = self.read_resource(file_name)
-        return json.loads(file_content)
-    
+        return json_loads(file_content)
+
     def getblockcount(self):
         pass
         # file_name = 'rpc_response_{}_{}_{}.json'.format("geblock", blockhash, verbosity)
         # file_content = self.read_resource(file_name)
         # return json.loads(file_content)
-    
+
     def getblockhash(self, block_height):
         file_name = 'rpc_response_{}_{}.json'.format("getblockhash", block_height)
         file_content = self.read_resource(file_name)
-        return json.loads(file_content)
+        return json_loads(file_content)
+
+
+def json_loads(s):
+    return json.loads(s, parse_float=decimal.Decimal)
