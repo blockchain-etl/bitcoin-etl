@@ -23,7 +23,7 @@
 
 class BtcTransaction(object):
     def __init__(self):
-        self.txid = None
+        self.id = None
         self.hash = None
         self.size = None
         self.virtual_size = None

@@ -27,6 +27,6 @@ class BtcTransactionInput(object):
         self.vout = None
         self.asm = None
         self.hex = None
-        self.coinbase = None
+        self.coinbase_param = None
         self.sequence = None
         self.value = None

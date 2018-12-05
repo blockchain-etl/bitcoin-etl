@@ -46,7 +46,7 @@ For the latest version, check out the repo and call
 
 Column              | Type            |
 --------------------|-----------------|
-hash                | string          | 
+hash                | hex_string      | 
 size                | bigint          |
 stripped_size       | bigint          |
 weight              | bigint          |
@@ -61,12 +61,12 @@ bits                | hex_string      |
 
 Column                  | Type                  |
 ------------------------|-----------------------|
-hash                    | string                | 
+hash                    | hex_string            | 
 size                    | bigint                |
 virtual_size            | bigint                |
 version                 | bigint                |
 lock_time               | bigint                |
-block_hash              | string                |
+block_hash              | hex_string            |
 block_time              | bigint                |
 inputs                  | []transactionInput    |
 outputs                 | []transactionOutput   |
@@ -75,11 +75,11 @@ outputs                 | []transactionOutput   |
 
 Column                  | Type                  |
 ------------------------|-----------------------|
-txid                    | string                | 
+txid                    | hex_string            | 
 vout                    | bigint                | 
 asm                     | string                |
-hex                     | string                |
-coinbase                | string                |
+hex                     | hex_string            |
+coinbase_param          | hex_string            |
 sequence                | bigint                |
 value                   | bigint                |
 
@@ -90,7 +90,7 @@ Column                  | Type                  |
 value                   | bigint                | 
 n                       | bigint                | 
 asm                     | string                |
-hex                     | string                |
+hex                     | hex_string            |
 req_sigs                | bigint                |
 type                    | string                |
 addresses               | string                |

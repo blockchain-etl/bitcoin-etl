@@ -33,8 +33,7 @@ class BtcTransactionInputMapper(object):
 
             input.txid = item.get('txid')
             input.vout = item.get('vout')
-            input.coinbase = item.get('coinbase')
-            input.txinwitness = item.get('txinwitness')
+            input.coinbase_param = item.get('coinbase')
             input.sequence = item.get('sequence')
             input.value = item.get('value')
             if "scriptSig" in item:
@@ -52,7 +51,7 @@ class BtcTransactionInputMapper(object):
                 "vout": input.vout,
                 "asm": input.asm,
                 "hex": input.hex,
-                "coinbase": input.coinbase,
+                "coinbase_param": input.coinbase_param,
                 "sequence": input.sequence,
                 "value": input.value,
             }
