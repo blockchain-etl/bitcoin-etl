@@ -51,7 +51,6 @@ stripped_size       | bigint          |
 weight              | bigint          |
 height              | bigint          |
 version             | bigint          |
-version_hex         | hex_string      |
 merkle_root         | string          |
 time                | bigint          |
 median_time         | bigint          |

@@ -41,7 +41,6 @@ class BtcBlockMapper(object):
         block.weight = json_dict.get('weight')
         block.height = json_dict.get('height')
         block.version = json_dict.get('version')
-        block.version_hex = json_dict.get('versionHex')
         block.merkle_root = json_dict.get('merkleroot')
         block.time = json_dict.get('time')
         block.median_time = json_dict.get('mediantime')
@@ -69,7 +68,6 @@ class BtcBlockMapper(object):
             'weight': block.weight,
             'height': block.height,
             'version': block.version,
-            'version_hex': block.version_hex,
             'merkle_root': block.merkle_root,
             'time': block.time,
             'median_time': block.median_time,

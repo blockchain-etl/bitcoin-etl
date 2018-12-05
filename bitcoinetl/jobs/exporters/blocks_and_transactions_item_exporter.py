@@ -29,7 +29,6 @@ BLOCK_FIELDS_TO_EXPORT = [
     'weight',
     'height',
     'version',
-    'version_hex',
     'merkle_root',
     'time',
     'median_time',

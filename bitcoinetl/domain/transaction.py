@@ -34,7 +34,7 @@ class BtcTransaction(object):
         self.block_time = None
         self.vout = []
         self.vin = []
-    
+
 
 class TxnOutput(object):
     def __init__(self):
@@ -45,6 +45,7 @@ class TxnOutput(object):
         self.req_sigs = None
         self.type = None
         self.addresses = []
+
 
 class TxnInput(object):
     def __init__(self):
