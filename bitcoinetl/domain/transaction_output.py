@@ -21,15 +21,12 @@
 # SOFTWARE.
 
 
-class BtcTransaction(object):
+class BtcTransactionOutput(object):
     def __init__(self):
-        self.txid = None
-        self.hash = None
-        self.size = None
-        self.vsize = None
-        self.version = None
-        self.lock_time = None
-        self.block_hash = None
-        self.block_time = None
-        self.vout = []
-        self.vin = []
+        self.value = None
+        self.n = None
+        self.asm = None
+        self.hex = None
+        self.req_sigs = None
+        self.type = None
+        self.addresses = []

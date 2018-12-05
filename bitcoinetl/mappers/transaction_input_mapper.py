@@ -19,39 +19,43 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-import math
-
-from bitcoinetl.domain.transaction import TxnOutput
 
 
-class BtcTransactionOutputMapper(object):
-    def json_dict_to_output(self, json_dict):
+from bitcoinetl.domain.transaction_input import BtcTransactionInput
+
+
+class BtcTransactionInputMapper(object):
+    def json_dict_to_input(self, json_dict):
         result = []
-        for item in json_dict.get('vout'):
-            vout = TxnOutput()
 
-            vout.addresses = item.get('addresses')
-            vout.txinwitness = item.get('txinwitness')
-            vout.sequence = item.get('sequence')
-            vout.value = item.get('value')
-            vout.n = item.get('n')
+        for item in json_dict.get('vin'):
+            vin = BtcTransactionInput()
+
+            vin.txid = item.get('txid')
+            vin.vout = item.get('vout')
+            vin.coinbase = item.get('coinbase')
+            vin.txinwitness = item.get('txinwitness')
+            vin.sequence = item.get('sequence')
+            vin.value = item.get('value')
             if "scriptSig" in item:
-                vout.asm = (item.get('scriptSig')).get('asm')
-                vout.hex = (item.get('scriptSig')).get('hex')
-            result.append(vout)
+                vin.asm = (item.get('scriptSig')).get('asm')
+                vin.hex = (item.get('scriptSig')).get('hex')
+            result.append(vin)
+
         return result
 
-    def output_to_dict(self, outputs):
+    def input_to_dict(self, vins):
         result = []
-        for item in outputs:
-            vout = {
-                "addresses": item.addresses,
+        for item in vins:
+            vin = {
+                "txid": item.txid,
+                "vout": item.vout,
                 "asm": item.asm,
                 "hex": item.hex,
-                "txinwitness": item.txinwitness,
+                "coinbase": item.coinbase,
+                "tx_in_witness": item.txinwitness,
                 "sequence": item.sequence,
-                "value": int(int(item.value) * math.pow(10, 8)),
-                "n": item.n
+                "value": item.value,
             }
-            result.append(vout)
+            result.append(vin)
         return result

@@ -22,10 +22,12 @@
 
 
 from bitcoinetl.domain.transaction import BtcTransaction
-from bitcoinetl.mappers.txn_input_mapper import BtcTransactionInputMapper
-from bitcoinetl.mappers.txn_output_mapper import BtcTransactionOutputMapper
+from bitcoinetl.mappers.transaction_input_mapper import BtcTransactionInputMapper
+from bitcoinetl.mappers.transaction_output_mapper import BtcTransactionOutputMapper
 
 
+# http://chainquery.com/bitcoin-api/getblock
+# http://chainquery.com/bitcoin-api/getrawtransaction
 class BtcTransactionMapper(object):
     def json_dict_to_transaction(self, json_dict, block=None):
         transaction = BtcTransaction()
