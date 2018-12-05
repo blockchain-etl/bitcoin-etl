@@ -20,7 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 import math
-from bitcoinetl.domain.transaction import TxnInput, TxnOutput
+
+from bitcoinetl.domain.transaction import TxnOutput
+
 
 class BtcTransactionOutputMapper(object):
     def json_dict_to_output(self, json_dict):
@@ -28,14 +30,14 @@ class BtcTransactionOutputMapper(object):
         for item in json_dict.get('vout'):
             vout = TxnOutput()
 
-            vout.addresses     = item.get('addresses')
-            vout.txinwitness   = item.get('txinwitness')
-            vout.sequence      = item.get('sequence')
-            vout.value         = item.get('value')
-            vout.n             = item.get('n')
+            vout.addresses = item.get('addresses')
+            vout.txinwitness = item.get('txinwitness')
+            vout.sequence = item.get('sequence')
+            vout.value = item.get('value')
+            vout.n = item.get('n')
             if "scriptSig" in item:
-                vout.asm           = (item.get('scriptSig')).get('asm')
-                vout.hex           = (item.get('scriptSig')).get('hex')
+                vout.asm = (item.get('scriptSig')).get('asm')
+                vout.hex = (item.get('scriptSig')).get('hex')
             result.append(vout)
         return result
 
@@ -53,6 +55,3 @@ class BtcTransactionOutputMapper(object):
             }
             result.append(vout)
         return result
-
-
-

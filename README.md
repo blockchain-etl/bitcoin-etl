@@ -66,7 +66,6 @@ vsize                   | bigint                |
 version                 | bigint                |
 lock_time               | bigint                |
 block_hash              | string                |
-time                    | bigint                |
 block_time              | bigint                |
 vout                    | []transactionOutput   |
 vin                     | []transactionInput    |

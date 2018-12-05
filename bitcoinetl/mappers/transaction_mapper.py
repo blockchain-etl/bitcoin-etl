@@ -25,18 +25,24 @@ from bitcoinetl.domain.transaction import BtcTransaction
 from bitcoinetl.mappers.txn_input_mapper import BtcTransactionInputMapper
 from bitcoinetl.mappers.txn_output_mapper import BtcTransactionOutputMapper
 
+
 class BtcTransactionMapper(object):
-    def json_dict_to_transaction(self, json_dict):
+    def json_dict_to_transaction(self, json_dict, block=None):
         transaction = BtcTransaction()
         transaction.hex = json_dict.get('hex')
         transaction.hash = json_dict.get('hash')
         transaction.size = json_dict.get('size')
         transaction.vsize = json_dict.get('vsize')
         transaction.version = json_dict.get('version')
-        transaction.locktime = json_dict.get('locktime')
-        transaction.blockhash = json_dict.get('blockhash')
-        transaction.time = json_dict.get('time')
-        transaction.blocktime = json_dict.get('blocktime')
+        transaction.lock_time = json_dict.get('locktime')
+
+        transaction.block_hash = json_dict.get('blockhash')
+        if block is not None:
+            transaction.block_hash = block.hash
+
+        transaction.block_time = json_dict.get('blocktime')
+        if block is not None:
+            transaction.block_time = block.time
 
         transaction.vin = BtcTransactionInputMapper().json_dict_to_input(json_dict)
         transaction.vout = BtcTransactionOutputMapper().json_dict_to_output(json_dict)
@@ -51,10 +57,9 @@ class BtcTransactionMapper(object):
             'size': transaction.size,
             'vsize': transaction.vsize,
             'version': transaction.version,
-            'locktime': transaction.locktime,
-            'blockhash': transaction.blockhash,
-            'time': transaction.time,
-            'blocktime': transaction.blocktime,
+            'lock_time': transaction.lock_time,
+            'block_hash': transaction.block_hash,
+            'block_time': transaction.block_time,
 
             'vout': BtcTransactionOutputMapper().output_to_dict(transaction.vout),
             'vin': BtcTransactionInputMapper().input_to_dict(transaction.vin)

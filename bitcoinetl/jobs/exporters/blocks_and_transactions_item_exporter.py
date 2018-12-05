@@ -46,7 +46,6 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'version',
     'lock_time',
     'block_hash',
-    'time',
     'block_time',
     'vout',
     'vin',

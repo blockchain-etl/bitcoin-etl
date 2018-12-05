@@ -21,41 +21,41 @@
 # SOFTWARE.
 
 
-from bitcoinetl.domain.transaction import TxnInput, TxnOutput
+from bitcoinetl.domain.transaction import TxnInput
+
 
 class BtcTransactionInputMapper(object):
-        def json_dict_to_input(self, json_dict):
-            result = []
+    def json_dict_to_input(self, json_dict):
+        result = []
 
-            for item in json_dict.get('vin'):
-                vin = TxnInput()
-                
-                vin.txid          = item.get('txid')
-                vin.vout          = item.get('vout')
-                vin.coinbase      = item.get('coinbase')
-                vin.txinwitness   = item.get('txinwitness')
-                vin.sequence      = item.get('sequence')
-                vin.value         = item.get('value')
-                if "scriptSig" in item:
-                    vin.asm           = (item.get('scriptSig')).get('asm')
-                    vin.hex           = (item.get('scriptSig')).get('hex')
-                result.append(vin)
-            
-            return result
-        
-        def input_to_dict(self, vins):
-            result = []
-            for item in vins:
-                vin = {
-                    "txid": item.txid,
-                    "vout": item.vout,
-                    "asm": item.asm,
-                    "hex": item.hex,
-                    "coinbase": item.coinbase,
-                    "tx_in_witness": item.txinwitness,
-                    "sequence": item.sequence,
-                    "value": item.value,
-                }
-                result.append(vin)
-            return result
+        for item in json_dict.get('vin'):
+            vin = TxnInput()
 
+            vin.txid = item.get('txid')
+            vin.vout = item.get('vout')
+            vin.coinbase = item.get('coinbase')
+            vin.txinwitness = item.get('txinwitness')
+            vin.sequence = item.get('sequence')
+            vin.value = item.get('value')
+            if "scriptSig" in item:
+                vin.asm = (item.get('scriptSig')).get('asm')
+                vin.hex = (item.get('scriptSig')).get('hex')
+            result.append(vin)
+
+        return result
+
+    def input_to_dict(self, vins):
+        result = []
+        for item in vins:
+            vin = {
+                "txid": item.txid,
+                "vout": item.vout,
+                "asm": item.asm,
+                "hex": item.hex,
+                "coinbase": item.coinbase,
+                "tx_in_witness": item.txinwitness,
+                "sequence": item.sequence,
+                "value": item.value,
+            }
+            result.append(vin)
+        return result

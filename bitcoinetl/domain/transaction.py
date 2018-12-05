@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 class BtcTransaction(object):
     def __init__(self):
         self.hex = None
@@ -30,7 +31,6 @@ class BtcTransaction(object):
         self.version = None
         self.lock_time = None
         self.block_hash = None
-        self.time = None
         self.block_time = None
         self.vout = []
         self.vin = []

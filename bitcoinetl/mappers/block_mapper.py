@@ -23,7 +23,6 @@
 
 from bitcoinetl.domain.block import BtcBlock
 from bitcoinetl.mappers.transaction_mapper import BtcTransactionMapper
-from blockchainetl.utils import hex_to_dec, to_normalized_address
 
 
 class BtcBlockMapper(object):
@@ -48,7 +47,7 @@ class BtcBlockMapper(object):
 
         if 'tx' in json_dict:
             block.transactions = [
-                self.transaction_mapper.json_dict_to_transaction(tx) for tx in json_dict['tx']
+                self.transaction_mapper.json_dict_to_transaction(tx, block) for tx in json_dict['tx']
                 if isinstance(tx, dict)
             ]
 
