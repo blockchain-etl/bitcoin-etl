@@ -51,9 +51,8 @@ stripped_size       | bigint          |
 weight              | bigint          |
 height              | bigint          |
 version             | bigint          |
-merkle_root         | string          |
+merkle_root         | hex_string      |
 time                | bigint          |
-median_time         | bigint          |
 nonce               | bigint          |
 bits                | string          |
 difficulty          | numeric         |

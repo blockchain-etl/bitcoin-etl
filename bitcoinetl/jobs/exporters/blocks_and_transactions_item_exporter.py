@@ -31,7 +31,6 @@ BLOCK_FIELDS_TO_EXPORT = [
     'version',
     'merkle_root',
     'time',
-    'median_time',
     'nonce',
     'bits',
     'difficulty',
