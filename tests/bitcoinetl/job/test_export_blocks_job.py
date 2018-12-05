@@ -37,14 +37,13 @@ def read_resource(resource_group, file_name):
     return tests.resources.read_resource([RESOURCE_GROUP, resource_group], file_name)
 
 
-@pytest.mark.parametrize("start_block, end_block, batch_size, resource_group, export_transactions ,provider_type,", [
-    (50000, 50002, 2, 'block_without_transactions', False, 'mock'),
-    (50000, 50002, 2, 'block_with_transactions', True, 'mock'),
-    skip_if_slow_tests_disabled([50000, 50002, 2, 'block_without_transactions', False, 'online']),
-    skip_if_slow_tests_disabled([50000, 50002, 2, 'block_with_transactions', True, 'online']),
+@pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type", [
+    (50000, 50000, 1, 'block_without_transactions', 'mock'),
+    (50001, 50002, 2, 'block_with_transactions', 'mock'),
+    skip_if_slow_tests_disabled([50000, 50000, 1, 'block_without_transactions', 'online']),
+    skip_if_slow_tests_disabled([50001, 50002, 2, 'block_with_transactions', 'online']),
 ])
-def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_group, export_transactions,
-                           provider_type):
+def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_group, provider_type):
     blocks_output_file = str(tmpdir.join('actual_block.json'))
     transactions_output_file = str(tmpdir.join("actual_transactions.json"))
 
@@ -57,7 +56,7 @@ def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_
         max_workers=5,
         item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file),
         export_blocks=blocks_output_file is not None,
-        export_transactions=export_transactions)
+        export_transactions=transactions_output_file is not None)
     job.run()
 
     compare_lines_ignore_order(
