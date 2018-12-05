@@ -45,7 +45,6 @@ class BtcBlockMapper(object):
         block.time = json_dict.get('time')
         block.nonce = json_dict.get('nonce')
         block.bits = json_dict.get('bits')
-        block.chain_work = json_dict.get('chainwork')
 
         if 'tx' in json_dict:
             block.transactions = [
@@ -69,6 +68,5 @@ class BtcBlockMapper(object):
             'merkle_root': block.merkle_root,
             'time': block.time,
             'nonce': block.nonce,
-            'bits': block.bits,
-            'chain_work': block.chain_work
+            'bits': block.bits
         }

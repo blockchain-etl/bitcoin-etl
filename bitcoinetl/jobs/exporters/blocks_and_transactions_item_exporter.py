@@ -33,7 +33,6 @@ BLOCK_FIELDS_TO_EXPORT = [
     'time',
     'nonce',
     'bits',
-    'chain_work',
     'tx',
     'transaction_count',
     'hash'

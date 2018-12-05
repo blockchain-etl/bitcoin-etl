@@ -33,7 +33,6 @@ class BtcBlock(object):
         self.time = None
         self.nonce = None
         self.bits = None
-        self.chain_work = None
 
         self.tx = []
         self.transaction_count = None
