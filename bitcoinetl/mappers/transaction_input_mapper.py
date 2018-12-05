@@ -29,33 +29,33 @@ class BtcTransactionInputMapper(object):
         result = []
 
         for item in json_dict.get('vin'):
-            vin = BtcTransactionInput()
+            input = BtcTransactionInput()
 
-            vin.txid = item.get('txid')
-            vin.vout = item.get('vout')
-            vin.coinbase = item.get('coinbase')
-            vin.txinwitness = item.get('txinwitness')
-            vin.sequence = item.get('sequence')
-            vin.value = item.get('value')
+            input.txid = item.get('txid')
+            input.vout = item.get('vout')
+            input.coinbase = item.get('coinbase')
+            input.txinwitness = item.get('txinwitness')
+            input.sequence = item.get('sequence')
+            input.value = item.get('value')
             if "scriptSig" in item:
-                vin.asm = (item.get('scriptSig')).get('asm')
-                vin.hex = (item.get('scriptSig')).get('hex')
-            result.append(vin)
+                input.asm = (item.get('scriptSig')).get('asm')
+                input.hex = (item.get('scriptSig')).get('hex')
+            result.append(input)
 
         return result
 
-    def input_to_dict(self, vins):
+    def input_to_dict(self, inputs):
         result = []
-        for item in vins:
-            vin = {
-                "txid": item.txid,
-                "vout": item.vout,
-                "asm": item.asm,
-                "hex": item.hex,
-                "coinbase": item.coinbase,
-                "tx_in_witness": item.txinwitness,
-                "sequence": item.sequence,
-                "value": item.value,
+        for input in inputs:
+            item = {
+                "txid": input.txid,
+                "vout": input.vout,
+                "asm": input.asm,
+                "hex": input.hex,
+                "coinbase": input.coinbase,
+                "tx_in_witness": input.txinwitness,
+                "sequence": input.sequence,
+                "value": input.value,
             }
-            result.append(vin)
+            result.append(item)
         return result

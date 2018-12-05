@@ -31,5 +31,5 @@ class BtcTransaction(object):
         self.lock_time = None
         self.block_hash = None
         self.block_time = None
-        self.vout = []
-        self.vin = []
+        self.inputs = []
+        self.outputs = []

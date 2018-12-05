@@ -46,8 +46,8 @@ class BtcTransactionMapper(object):
         if block is not None:
             transaction.block_time = block.time
 
-        transaction.vin = BtcTransactionInputMapper().json_dict_to_input(json_dict)
-        transaction.vout = BtcTransactionOutputMapper().json_dict_to_output(json_dict)
+        transaction.inputs = BtcTransactionInputMapper().json_dict_to_input(json_dict)
+        transaction.outputs = BtcTransactionOutputMapper().json_dict_to_output(json_dict)
 
         return transaction
 
@@ -63,7 +63,7 @@ class BtcTransactionMapper(object):
             'block_hash': transaction.block_hash,
             'block_time': transaction.block_time,
 
-            'vout': BtcTransactionOutputMapper().output_to_dict(transaction.vout),
-            'vin': BtcTransactionInputMapper().input_to_dict(transaction.vin)
+            'inputs': BtcTransactionInputMapper().input_to_dict(transaction.inputs),
+            'outputs': BtcTransactionOutputMapper().output_to_dict(transaction.outputs)
         }
         return result

@@ -43,6 +43,7 @@ For the latest version, check out the repo and call
 ## Schema
 
 ### blocks.json
+
 Column              | Type            |
 --------------------|-----------------|
 hash                | string          | 
@@ -57,6 +58,7 @@ nonce               | bigint          |
 bits                | hex_string      |
 
 ### transactions.json
+
 Column                  | Type                  |
 ------------------------|-----------------------|
 hex                     | string                | 
@@ -67,20 +69,8 @@ version                 | bigint                |
 lock_time               | bigint                |
 block_hash              | string                |
 block_time              | bigint                |
-vout                    | []transactionOutput   |
-vin                     | []transactionInput    |
-
-### transactionOutput
-
-Column                  | Type                  |
-------------------------|-----------------------|
-value                   | bigint                | 
-n                       | bigint                | 
-asm                     | string                |
-hex                     | string                |
-req_sigs                | bigint                |
-type                    | string                |
-addresses               | string                |
+inputs                  | []transactionInput    |
+outputs                 | []transactionOutput   |
 
 ### transactionInput
 
@@ -94,6 +84,18 @@ coinbase                | string                |
 sequence                | bigint                |
 tx_in_witness           | string                |
 value                   | bigint                |
+
+### transactionOutput
+
+Column                  | Type                  |
+------------------------|-----------------------|
+value                   | bigint                | 
+n                       | bigint                | 
+asm                     | string                |
+hex                     | string                |
+req_sigs                | bigint                |
+type                    | string                |
+addresses               | string                |
 
 
 You can find column descriptions in [TODO](https://github.com/medvedev1088/bitcoin-etl-airflow/tree/master/dags/resources/stages/raw/schemas)

@@ -28,30 +28,30 @@ class BtcTransactionOutputMapper(object):
     def json_dict_to_output(self, json_dict):
         result = []
         for item in json_dict.get('vout'):
-            vout = BtcTransactionOutput()
+            output = BtcTransactionOutput()
 
-            vout.addresses = item.get('addresses')
-            vout.txinwitness = item.get('txinwitness')
-            vout.sequence = item.get('sequence')
-            vout.value = item.get('value')
-            vout.n = item.get('n')
+            output.addresses = item.get('addresses')
+            output.txinwitness = item.get('txinwitness')
+            output.sequence = item.get('sequence')
+            output.value = item.get('value')
+            output.n = item.get('n')
             if "scriptSig" in item:
-                vout.asm = (item.get('scriptSig')).get('asm')
-                vout.hex = (item.get('scriptSig')).get('hex')
-            result.append(vout)
+                output.asm = (item.get('scriptSig')).get('asm')
+                output.hex = (item.get('scriptSig')).get('hex')
+            result.append(output)
         return result
 
     def output_to_dict(self, outputs):
         result = []
-        for item in outputs:
-            vout = {
-                "addresses": item.addresses,
-                "asm": item.asm,
-                "hex": item.hex,
-                "txinwitness": item.txinwitness,
-                "sequence": item.sequence,
-                "value": int(int(item.value) * math.pow(10, 8)),
-                "n": item.n
+        for output in outputs:
+            item = {
+                "addresses": output.addresses,
+                "asm": output.asm,
+                "hex": output.hex,
+                "txinwitness": output.txinwitness,
+                "sequence": output.sequence,
+                "value": int(int(output.value) * math.pow(10, 8)),
+                "n": output.n
             }
-            result.append(vout)
+            result.append(item)
         return result
