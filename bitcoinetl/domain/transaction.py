@@ -26,7 +26,7 @@ class BtcTransaction(object):
         self.txid = None
         self.hash = None
         self.size = None
-        self.vsize = None
+        self.virtual_size = None
         self.version = None
         self.lock_time = None
         self.block_hash = None

@@ -64,7 +64,7 @@ Column                  | Type                  |
 hex                     | string                | 
 hash                    | string                | 
 size                    | bigint                |
-vsize                   | bigint                |
+virtual_size            | bigint                |
 version                 | bigint                |
 lock_time               | bigint                |
 block_hash              | string                |

@@ -42,7 +42,7 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'hex',
     'hash',
     'size',
-    'vsize',
+    'virtual_size',
     'version',
     'lock_time',
     'block_hash',

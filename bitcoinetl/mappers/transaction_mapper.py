@@ -34,7 +34,7 @@ class BtcTransactionMapper(object):
         transaction.hex = json_dict.get('hex')
         transaction.hash = json_dict.get('hash')
         transaction.size = json_dict.get('size')
-        transaction.vsize = json_dict.get('vsize')
+        transaction.virtual_size = json_dict.get('vsize')
         transaction.version = json_dict.get('version')
         transaction.lock_time = json_dict.get('locktime')
 
@@ -57,7 +57,7 @@ class BtcTransactionMapper(object):
             'hex': transaction.hex,
             'hash': transaction.hash,
             'size': transaction.size,
-            'vsize': transaction.vsize,
+            'virtual_size': transaction.virtual_size,
             'version': transaction.version,
             'lock_time': transaction.lock_time,
             'block_hash': transaction.block_hash,
