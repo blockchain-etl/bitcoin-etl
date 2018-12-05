@@ -24,6 +24,7 @@
 from blockchainetl.jobs.exporters.composite_item_exporter import CompositeItemExporter
 
 BLOCK_FIELDS_TO_EXPORT = [
+    'hash',
     'size',
     'stripped_size',
     'weight',
@@ -33,9 +34,7 @@ BLOCK_FIELDS_TO_EXPORT = [
     'time',
     'nonce',
     'bits',
-    'tx',
-    'transaction_count',
-    'hash'
+    'transaction_count'
 ]
 
 TRANSACTION_FIELDS_TO_EXPORT = [
@@ -47,8 +46,7 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'block_hash',
     'block_time',
     'inputs',
-    'outputs',
-    'req_sigs'
+    'outputs'
 ]
 
 

@@ -35,9 +35,12 @@ class BtcTransactionOutputMapper(object):
             output.sequence = item.get('sequence')
             output.value = item.get('value')
             output.n = item.get('n')
-            if "scriptSig" in item:
-                output.asm = (item.get('scriptSig')).get('asm')
-                output.hex = (item.get('scriptSig')).get('hex')
+            if "scriptPubKey" in item:
+                script_pub_key = item.get('scriptPubKey')
+                output.asm = script_pub_key.get('asm')
+                output.hex = script_pub_key.get('hex')
+                output.req_sigs = script_pub_key.get('reqSigs')
+                output.addresses = script_pub_key.get('addresses')
             result.append(output)
         return result
 
@@ -48,7 +51,7 @@ class BtcTransactionOutputMapper(object):
                 "addresses": output.addresses,
                 "asm": output.asm,
                 "hex": output.hex,
-                "txinwitness": output.txinwitness,
+                "req_sigs": output.req_sigs,
                 "sequence": output.sequence,
                 "value": int(int(output.value) * math.pow(10, 8)),
                 "n": output.n

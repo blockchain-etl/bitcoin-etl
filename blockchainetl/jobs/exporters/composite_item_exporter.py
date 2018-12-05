@@ -40,7 +40,7 @@ class CompositeItemExporter:
     def open(self):
         for item_type, filename in self.filename_mapping.items():
             file = get_file_handle(filename, binary=True)
-            fields = self.field_mapping[item_type]
+            fields = self.field_mapping.get(item_type)
             self.file_mapping[item_type] = file
             if str(filename).endswith('.json'):
                 item_exporter = JsonLinesItemExporter(file, fields_to_export=fields)

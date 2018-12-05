@@ -67,5 +67,6 @@ class BtcBlockMapper(object):
             'merkle_root': block.merkle_root,
             'time': block.time,
             'nonce': block.nonce,
-            'bits': block.bits
+            'bits': block.bits,
+            'transaction_count': block.transaction_count
         }
