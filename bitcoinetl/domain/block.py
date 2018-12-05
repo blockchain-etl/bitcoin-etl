@@ -37,9 +37,7 @@ class BtcBlock(object):
         self.bits = None
         self.difficulty = None
         self.chain_work = None
-        self.previous_block_hash = None
-        self.next_block_hash = None
-        
+
         self.tx = []
         self.transaction_count = None
     

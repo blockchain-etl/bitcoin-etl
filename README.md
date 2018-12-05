@@ -59,8 +59,6 @@ nonce               | bigint          |
 bits                | string          |
 difficulty          | numeric         |
 chain_work          | string          |
-previous_block_hash | string          |
-next_block_hash     | string          |
 
 ### transactions.json
 Column                  | Type                  |

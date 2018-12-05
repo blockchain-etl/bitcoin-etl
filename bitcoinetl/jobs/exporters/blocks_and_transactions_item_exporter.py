@@ -37,8 +37,6 @@ BLOCK_FIELDS_TO_EXPORT = [
     'bits',
     'difficulty',
     'chain_work',
-    'previous_block_hash',
-    'next_block_hash',
     'tx',
     'transaction_count',
     'hash'

@@ -49,8 +49,6 @@ class BtcBlockMapper(object):
         block.bits = json_dict.get('bits')
         block.difficulty = json_dict.get('difficulty')
         block.chain_work = json_dict.get('chainwork')
-        block.previous_block_hash = json_dict.get('previousblockhash')
-        block.next_block_hash = json_dict.get('nextblockhash')
 
         if 'tx' in json_dict:
             block.transactions = [
@@ -78,7 +76,5 @@ class BtcBlockMapper(object):
             'nonce': block.nonce,
             'bits': block.bits,
             'difficulty': block.difficulty,
-            'chain_work': block.chain_work,
-            'previous_block_hash': block.previous_block_hash,
-            'next_block_hash': block.next_block_hash
+            'chain_work': block.chain_work
         }
