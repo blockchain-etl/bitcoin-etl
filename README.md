@@ -81,7 +81,6 @@ asm                     | string                |
 hex                     | string                |
 coinbase                | string                |
 sequence                | bigint                |
-tx_in_witness           | string                |
 value                   | bigint                |
 
 ### transactionOutput

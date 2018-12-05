@@ -53,7 +53,6 @@ class BtcTransactionInputMapper(object):
                 "asm": input.asm,
                 "hex": input.hex,
                 "coinbase": input.coinbase,
-                "tx_in_witness": input.txinwitness,
                 "sequence": input.sequence,
                 "value": input.value,
             }

@@ -29,5 +29,4 @@ class BtcTransactionInput(object):
         self.hex = None
         self.coinbase = None
         self.sequence = None
-        self.tx_in_witness = []
         self.value = None
