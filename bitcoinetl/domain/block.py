@@ -24,7 +24,6 @@ class BtcBlock(object):
     
     def __init__(self):
         self.hash = None
-        self.confirmations = None
         self.size = None
         self.stripped_size = None
         self.weight = None

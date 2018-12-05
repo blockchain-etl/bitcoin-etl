@@ -35,7 +35,6 @@ class BtcTransactionMapper(object):
         transaction.version = json_dict.get('version')
         transaction.locktime = json_dict.get('locktime')
         transaction.blockhash = json_dict.get('blockhash')
-        transaction.confirmations = json_dict.get('confirmations')
         transaction.time = json_dict.get('time')
         transaction.blocktime = json_dict.get('blocktime')
 
@@ -54,7 +53,6 @@ class BtcTransactionMapper(object):
             'version': transaction.version,
             'locktime': transaction.locktime,
             'blockhash': transaction.blockhash,
-            'confirmations': transaction.confirmations,
             'time': transaction.time,
             'blocktime': transaction.blocktime,
 

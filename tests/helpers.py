@@ -31,7 +31,7 @@ def sort_json(json_string):
     return json.dumps(json.loads(json_string), sort_keys=True)
 
 
-def compare_lines_ignore_order(expected, actual, online=False):
+def compare_lines_ignore_order(expected, actual):
     expected_lines = expected.splitlines()
     actual_lines = actual.splitlines()
     assert len(expected_lines) == len(actual_lines)
@@ -43,14 +43,7 @@ def compare_lines_ignore_order(expected, actual, online=False):
         pass
 
     for expected_line, actual_line in zip(sorted(expected_lines), sorted(actual_lines)):
-        if online:
-            """ This is because the confirmations number change
-             with each new block added. """
-            expected = json.loads(expected_line)
-            actual = json.loads(actual_line)
-            assert expected['hash'] == actual['hash']
-        else:
-            assert expected_line == actual_line
+        assert expected_line == actual_line
 
 
 def read_file(path):

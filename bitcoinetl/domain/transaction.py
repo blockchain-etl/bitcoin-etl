@@ -30,7 +30,6 @@ class BtcTransaction(object):
         self.version = None
         self.lock_time = None
         self.block_hash = None
-        self.confirmations = None
         self.time = None
         self.block_time = None
         self.vout = []

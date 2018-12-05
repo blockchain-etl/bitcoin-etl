@@ -46,7 +46,6 @@ For the latest version, check out the repo and call
 Column              | Type            |
 --------------------|-----------------|
 hash                | string          | 
-confirmations       | bigint          |
 size                | bigint          |
 stripped_size       | bigint          |
 weight              | bigint          |
@@ -73,7 +72,6 @@ vsize                   | bigint                |
 version                 | bigint                |
 lock_time               | bigint                |
 block_hash              | string                |
-confirmations           | bigint                |
 time                    | bigint                |
 block_time              | bigint                |
 vout                    | []transactionOutput   |

@@ -33,29 +33,9 @@ class BtcBlockMapper(object):
         else:
             self.transaction_mapper = transaction_mapper
 
-            'size',
-    'stripped_size',
-    'weight',
-    'height',
-    'version',
-    'version_hex',
-    'merkle_root',
-    'time',
-    'median_time',
-    'nonce',
-    'bits',
-    'difficulty',
-    'chain_work',
-    'previous_block_hash',
-    'next_block_hash',
-    'tx',
-    'transaction_count',
-    'hash',
-    'confirmations',
     def json_dict_to_block(self, json_dict):
         block = BtcBlock()
         block.hash = json_dict.get('hash')
-        block.confirmations = json_dict.get('confirmations')
         block.size = json_dict.get('size')
         block.stripped_size = json_dict.get('strippedsize')
         block.weight = json_dict.get('weight')
@@ -100,7 +80,5 @@ class BtcBlockMapper(object):
             'difficulty': block.difficulty,
             'chain_work': block.chain_work,
             'previous_block_hash': block.previous_block_hash,
-            'next_block_hash': block.next_block_hash,
-            'confirmations': block.confirmations,
+            'next_block_hash': block.next_block_hash
         }
-

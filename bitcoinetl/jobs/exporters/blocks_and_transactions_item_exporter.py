@@ -41,8 +41,7 @@ BLOCK_FIELDS_TO_EXPORT = [
     'next_block_hash',
     'tx',
     'transaction_count',
-    'hash',
-    'confirmations',
+    'hash'
 ]
 
 TRANSACTION_FIELDS_TO_EXPORT = [
@@ -53,7 +52,6 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'version',
     'lock_time',
     'block_hash',
-    'confirmations',
     'time',
     'block_time',
     'vout',
