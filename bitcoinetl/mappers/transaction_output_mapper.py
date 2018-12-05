@@ -19,8 +19,8 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-import math
 
+from bitcoinetl.bitcoin_utils import bitcoin_to_satoshi
 from bitcoinetl.domain.transaction_output import BtcTransactionOutput
 
 
@@ -53,7 +53,7 @@ class BtcTransactionOutputMapper(object):
                 "hex": output.hex,
                 "req_sigs": output.req_sigs,
                 "sequence": output.sequence,
-                "value": int(int(output.value) * math.pow(10, 8)),
+                "value": bitcoin_to_satoshi(output.value),
                 "n": output.n
             }
             result.append(item)

@@ -21,8 +21,7 @@
 # SOFTWARE.
 
 
-import math
-
+from bitcoinetl.bitcoin_utils import bitcoin_to_satoshi
 from bitcoinetl.json_rpc_requests import generate_get_block_by_hash_json_rpc, \
     generate_get_block_hash_by_number_json_rpc, generate_get_transaction_by_id_json_rpc
 from bitcoinetl.mappers.block_mapper import BtcBlockMapper
@@ -80,7 +79,8 @@ class ExportBlocksJob(BaseJob):
 
             for index, response in enumerate(transaction_detail_response):
                 n = tx['vin'][index]['vout']
-                tx['vin'][index]['value'] = int(int(response['vout'][n]['value']) * math.pow(10, 8))
+                value = response['vout'][n]['value']
+                tx['vin'][index]['value'] = bitcoin_to_satoshi(value)
 
             block['tx'][tx_index] = tx
 
