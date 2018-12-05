@@ -39,7 +39,6 @@ BLOCK_FIELDS_TO_EXPORT = [
 ]
 
 TRANSACTION_FIELDS_TO_EXPORT = [
-    'hex',
     'hash',
     'size',
     'virtual_size',

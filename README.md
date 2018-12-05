@@ -61,7 +61,6 @@ bits                | hex_string      |
 
 Column                  | Type                  |
 ------------------------|-----------------------|
-hex                     | string                | 
 hash                    | string                | 
 size                    | bigint                |
 virtual_size            | bigint                |
