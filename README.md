@@ -54,8 +54,7 @@ version             | bigint          |
 merkle_root         | hex_string      |
 time                | bigint          |
 nonce               | bigint          |
-bits                | string          |
-difficulty          | numeric         |
+bits                | hex_string      |
 chain_work          | string          |
 
 ### transactions.json

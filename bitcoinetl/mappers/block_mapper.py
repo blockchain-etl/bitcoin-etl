@@ -45,7 +45,6 @@ class BtcBlockMapper(object):
         block.time = json_dict.get('time')
         block.nonce = json_dict.get('nonce')
         block.bits = json_dict.get('bits')
-        block.difficulty = json_dict.get('difficulty')
         block.chain_work = json_dict.get('chainwork')
 
         if 'tx' in json_dict:
@@ -71,6 +70,5 @@ class BtcBlockMapper(object):
             'time': block.time,
             'nonce': block.nonce,
             'bits': block.bits,
-            'difficulty': block.difficulty,
             'chain_work': block.chain_work
         }
