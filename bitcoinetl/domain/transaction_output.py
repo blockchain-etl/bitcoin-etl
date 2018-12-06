@@ -27,6 +27,6 @@ class BtcTransactionOutput(object):
         self.n = None
         self.asm = None
         self.hex = None
-        self.req_sigs = None
+        self.required_signatures = None
         self.type = None
         self.addresses = []

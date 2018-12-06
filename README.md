@@ -91,7 +91,7 @@ value                   | bigint                |
 n                       | bigint                | 
 asm                     | string                |
 hex                     | hex_string            |
-req_sigs                | bigint                |
+required_signatures     | bigint                |
 type                    | string                |
 addresses               | string                |
 

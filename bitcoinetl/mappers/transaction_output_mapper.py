@@ -39,7 +39,7 @@ class BtcTransactionOutputMapper(object):
                 script_pub_key = item.get('scriptPubKey')
                 output.asm = script_pub_key.get('asm')
                 output.hex = script_pub_key.get('hex')
-                output.req_sigs = script_pub_key.get('reqSigs')
+                output.required_signatures = script_pub_key.get('reqSigs')
                 output.addresses = script_pub_key.get('addresses')
             result.append(output)
         return result
@@ -51,7 +51,7 @@ class BtcTransactionOutputMapper(object):
                 "addresses": output.addresses,
                 "asm": output.asm,
                 "hex": output.hex,
-                "req_sigs": output.req_sigs,
+                "required_signatures": output.required_signatures,
                 "sequence": output.sequence,
                 "value": bitcoin_to_satoshi(output.value),
                 "n": output.n
