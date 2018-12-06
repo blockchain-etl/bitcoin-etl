@@ -29,4 +29,6 @@ class BtcTransactionInput(object):
         self.script_hex = None
         self.coinbase_param = None
         self.sequence = None
+
+        self.addresses = []
         self.value = None

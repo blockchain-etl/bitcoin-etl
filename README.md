@@ -87,13 +87,12 @@ value                   | bigint                |
 
 Column                  | Type                  |
 ------------------------|-----------------------|
-value                   | bigint                | 
-n                       | bigint                | 
 script_asm              | string                |
 script_hex              | hex_string            |
 required_signatures     | bigint                |
 type                    | string                |
 addresses               | string                |
+value                   | bigint                | 
 
 
 You can find column descriptions in [TODO](https://github.com/medvedev1088/bitcoin-etl-airflow/tree/master/dags/resources/stages/raw/schemas)

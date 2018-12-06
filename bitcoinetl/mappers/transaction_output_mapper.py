@@ -33,13 +33,13 @@ class BtcTransactionOutputMapper(object):
             output.addresses = item.get('addresses')
             output.txinwitness = item.get('txinwitness')
             output.sequence = item.get('sequence')
-            output.value = item.get('value')
-            output.n = item.get('n')
+            output.value = bitcoin_to_satoshi(item.get('value'))
             if "scriptPubKey" in item:
                 script_pub_key = item.get('scriptPubKey')
                 output.asm = script_pub_key.get('asm')
                 output.hex = script_pub_key.get('hex')
                 output.required_signatures = script_pub_key.get('reqSigs')
+                output.type = script_pub_key.get('type')
                 output.addresses = script_pub_key.get('addresses')
             result.append(output)
         return result
@@ -48,13 +48,13 @@ class BtcTransactionOutputMapper(object):
         result = []
         for output in outputs:
             item = {
-                "addresses": output.addresses,
                 "script_asm": output.script_asm,
                 "script_hex": output.script_hex,
                 "required_signatures": output.required_signatures,
                 "sequence": output.sequence,
-                "value": bitcoin_to_satoshi(output.value),
-                "n": output.n
+                "type": output.type,
+                "addresses": output.addresses,
+                "value": output.value
             }
             result.append(item)
         return result
