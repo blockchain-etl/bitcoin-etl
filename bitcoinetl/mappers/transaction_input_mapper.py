@@ -31,8 +31,8 @@ class BtcTransactionInputMapper(object):
         for item in json_dict.get('vin'):
             input = BtcTransactionInput()
 
-            input.txid = item.get('txid')
-            input.vout = item.get('vout')
+            input.spent_txid = item.get('txid')
+            input.spent_output_index = item.get('vout')
             input.coinbase_param = item.get('coinbase')
             input.sequence = item.get('sequence')
             input.value = item.get('value')
@@ -47,8 +47,8 @@ class BtcTransactionInputMapper(object):
         result = []
         for input in inputs:
             item = {
-                "txid": input.txid,
-                "vout": input.vout,
+                "spent_txid": input.spent_txid,
+                "spent_output_index": input.spent_output_index,
                 "asm": input.asm,
                 "hex": input.hex,
                 "coinbase_param": input.coinbase_param,

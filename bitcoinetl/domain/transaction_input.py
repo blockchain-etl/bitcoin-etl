@@ -23,8 +23,8 @@
 
 class BtcTransactionInput(object):
     def __init__(self):
-        self.txid = None
-        self.vout = None
+        self.spent_txid = None
+        self.spent_output_index = None
         self.asm = None
         self.hex = None
         self.coinbase_param = None

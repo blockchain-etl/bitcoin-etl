@@ -75,8 +75,8 @@ outputs                 | []transactionOutput   |
 
 Column                  | Type                  |
 ------------------------|-----------------------|
-txid                    | hex_string            | 
-vout                    | bigint                | 
+spent_txid              | hex_string            | 
+spent_output_index      | bigint                | 
 asm                     | string                |
 hex                     | hex_string            |
 coinbase_param          | hex_string            |
