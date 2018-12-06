@@ -77,8 +77,8 @@ Column                  | Type                  |
 ------------------------|-----------------------|
 spent_txid              | hex_string            | 
 spent_output_index      | bigint                | 
-asm                     | string                |
-hex                     | hex_string            |
+script_asm              | string                |
+script_hex              | hex_string            |
 coinbase_param          | hex_string            |
 sequence                | bigint                |
 value                   | bigint                |
@@ -89,8 +89,8 @@ Column                  | Type                  |
 ------------------------|-----------------------|
 value                   | bigint                | 
 n                       | bigint                | 
-asm                     | string                |
-hex                     | hex_string            |
+script_asm              | string                |
+script_hex              | hex_string            |
 required_signatures     | bigint                |
 type                    | string                |
 addresses               | string                |

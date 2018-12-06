@@ -49,8 +49,8 @@ class BtcTransactionOutputMapper(object):
         for output in outputs:
             item = {
                 "addresses": output.addresses,
-                "asm": output.asm,
-                "hex": output.hex,
+                "script_asm": output.script_asm,
+                "script_hex": output.script_hex,
                 "required_signatures": output.required_signatures,
                 "sequence": output.sequence,
                 "value": bitcoin_to_satoshi(output.value),

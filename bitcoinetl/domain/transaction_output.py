@@ -25,8 +25,8 @@ class BtcTransactionOutput(object):
     def __init__(self):
         self.value = None
         self.n = None
-        self.asm = None
-        self.hex = None
+        self.script_asm = None
+        self.script_hex = None
         self.required_signatures = None
         self.type = None
         self.addresses = []

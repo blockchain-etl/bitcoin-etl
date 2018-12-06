@@ -49,8 +49,8 @@ class BtcTransactionInputMapper(object):
             item = {
                 "spent_txid": input.spent_txid,
                 "spent_output_index": input.spent_output_index,
-                "asm": input.asm,
-                "hex": input.hex,
+                "script_asm": input.script_asm,
+                "script_hex": input.script_hex,
                 "coinbase_param": input.coinbase_param,
                 "sequence": input.sequence,
                 "value": input.value,
