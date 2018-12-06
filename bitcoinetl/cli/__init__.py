@@ -21,6 +21,7 @@
 
 import click
 
+from bitcoinetl.cli.enrich_transactions import enrich_transactions
 from bitcoinetl.cli.export_blocks_and_transactions import export_blocks_and_transactions
 from bitcoinetl.cli.get_block_range_for_date import get_block_range_for_date
 from bitcoinetl.cli.get_block_range_for_timestamps import get_block_range_for_timestamps
@@ -34,6 +35,7 @@ def cli(ctx):
 
 # export
 cli.add_command(export_blocks_and_transactions, "export_blocks_and_transactions")
+cli.add_command(enrich_transactions, "enrich_transactions")
 
 # utils
 cli.add_command(get_block_range_for_date, "get_block_range_for_date")

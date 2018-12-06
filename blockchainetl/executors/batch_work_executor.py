@@ -19,17 +19,15 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-import time
-from http.client import HTTPException
+from json import JSONDecodeError
 
 from requests.exceptions import Timeout as RequestsTimeout, HTTPError, TooManyRedirects
-
 from blockchainetl.executors.bounded_executor import BoundedExecutor
 from blockchainetl.executors.fail_safe_executor import FailSafeExecutor
 from blockchainetl.progress_logger import ProgressLogger
 from blockchainetl.utils import dynamic_batch_iterator
 
-RETRY_EXCEPTIONS = (ConnectionError, HTTPError, RequestsTimeout, TooManyRedirects, OSError, HTTPException)
+RETRY_EXCEPTIONS = (ConnectionError, HTTPError, RequestsTimeout, TooManyRedirects, OSError, JSONDecodeError)
 
 
 # Executes the given work in batches, reducing the batch size exponentially in case of errors.
@@ -50,19 +48,16 @@ class BatchWorkExecutor:
 
     # Check race conditions
     def _fail_safe_execute(self, work_handler, batch):
-        retries = 3
-        delay = 3
-        for i in range(retries):
-            try:
-                time.sleep(delay)
-                work_handler(batch)
-            except self.retry_exceptions as exception:
-                delay = delay * 2
-                print('Exception occurred {}. Waiting {} seconds'.format(type(exception), delay))
-                if i < retries - 1:
-                    continue
-                else:
-                    raise
+        try:
+            work_handler(batch)
+        except self.retry_exceptions:
+            batch_size = self.batch_size
+            # Reduce the batch size. Subsequent batches will be 2 times smaller
+            if batch_size == len(batch) and batch_size > 1:
+                self.batch_size = int(batch_size / 2)
+            # For the failed batch try handling items one by one
+            for item in batch:
+                work_handler([item])
         self.progress_logger.track(len(batch))
 
     def shutdown(self):
