@@ -28,26 +28,10 @@ from web3.utils.request import make_post_request
 
 class BatchRPCProvider(HTTPProvider):
 
-    def __init__(self, rpc_user, rpc_password, rpc_host, rpc_port):
-        self.rpc_user = rpc_user
-        self.rpc_password = rpc_password
-        self.rpc_host = rpc_host
-        self.rpc_port = rpc_port
+    def __init__(self, provider_uri):
+        self.provider_uri = provider_uri
 
     def make_request(self, commands):
-        user = self.rpc_user
-        password = self.rpc_password
-        try:
-            user = user.encode('utf8')
-        except AttributeError:
-            pass
-        try:
-            password = password.encode('utf8')
-        except AttributeError:
-            pass
-        authpair = user + b':' + password
-        auth_header = b'Basic ' + base64.b64encode(authpair)
-
         rpc_calls = []
         for command in commands:
             m = command.pop(0)
@@ -55,11 +39,8 @@ class BatchRPCProvider(HTTPProvider):
         text = json.dumps(rpc_calls)
         request_data = text.encode('utf-8')
         raw_response = make_post_request(
-            "http://{}:{}/".format(self.rpc_host, self.rpc_port),
+            self.provider_uri,
             request_data,
-            headers={
-                'Authorization': auth_header
-            },
             timeout=60
         )
 

@@ -37,21 +37,19 @@ logging_basic_config()
 @click.option('-b', '--batch-size', default=50, type=int, help='The number of receipts to export at a time.')
 @click.option('-i', '--input', required=True, type=str,
               help='The file containing transaction hashes, one per line.')
-@click.option('-t', '--rpc-host', default='localhost', type=str, help='The URI of the remote bitcoin node')
-@click.option('-u', '--rpc-user', required=True, default=None, type=str, help='The RPC username of the bitcoin node')
-@click.option('-p', '--rpc-pass', required=True, default=None, type=str, help='The RPC password of the bitcoin node')
-@click.option('-o', '--rpc-port', default=8332, type=int, help='The RPC port of the bitcoin node')
+@click.option('-p', '--provider-uri', default='http://user:pass@localhost:8332', type=str,
+              help='The URI of the remote Bitcoin node')
 @click.option('-w', '--max-workers', default=20, type=int, help='The maximum number of workers.')
 @click.option('--output', default=None, type=str,
               help='The output file for enriched transactions. '
                    'If not provided receipts will not be exported. Use "-" for stdout')
-def enrich_transactions(batch_size, input, rpc_host, rpc_user, rpc_pass, rpc_port, max_workers, output):
+def enrich_transactions(batch_size, input, provider_uri, max_workers, output):
     """Enriches transactions."""
     with smart_open(input, 'r') as transaction_file:
         job = EnrichTransactionsJob(
             transactions_iterable=(json.loads(transaction) for transaction in transaction_file),
             batch_size=batch_size,
-            batch_rpc_provider=ThreadLocalProxy(lambda: get_provider(rpc_host, rpc_port, rpc_user, rpc_pass)),
+            batch_rpc_provider=ThreadLocalProxy(lambda: get_provider(provider_uri)),
             max_workers=max_workers,
             item_exporter=blocks_and_transactions_item_exporter(None, output))
 
