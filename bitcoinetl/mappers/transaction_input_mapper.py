@@ -37,8 +37,8 @@ class BtcTransactionInputMapper(object):
             input.sequence = item.get('sequence')
             input.value = item.get('value')
             if "scriptSig" in item:
-                input.asm = (item.get('scriptSig')).get('asm')
-                input.hex = (item.get('scriptSig')).get('hex')
+                input.script_asm = (item.get('scriptSig')).get('asm')
+                input.script_hex = (item.get('scriptSig')).get('hex')
             result.append(input)
 
         return result

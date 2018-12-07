@@ -36,8 +36,8 @@ class BtcTransactionOutputMapper(object):
             output.value = bitcoin_to_satoshi(item.get('value'))
             if "scriptPubKey" in item:
                 script_pub_key = item.get('scriptPubKey')
-                output.asm = script_pub_key.get('asm')
-                output.hex = script_pub_key.get('hex')
+                output.script_asm = script_pub_key.get('asm')
+                output.script_hex = script_pub_key.get('hex')
                 output.required_signatures = script_pub_key.get('reqSigs')
                 output.type = script_pub_key.get('type')
                 output.addresses = script_pub_key.get('addresses')

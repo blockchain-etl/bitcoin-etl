@@ -56,6 +56,7 @@ merkle_root         | hex_string      |
 time                | bigint          |
 nonce               | bigint          |
 bits                | hex_string      |
+transaction_count   | bigint          |
 
 ### transactions.json
 
@@ -81,6 +82,7 @@ script_asm              | string                |
 script_hex              | hex_string            |
 coinbase_param          | hex_string            |
 sequence                | bigint                |
+addresses               | []string              |
 value                   | bigint                |
 
 ### transactionOutput
@@ -90,8 +92,9 @@ Column                  | Type                  |
 script_asm              | string                |
 script_hex              | hex_string            |
 required_signatures     | bigint                |
+sequence                | bigint                |
 type                    | string                |
-addresses               | string                |
+addresses               | []string              |
 value                   | bigint                | 
 
 
