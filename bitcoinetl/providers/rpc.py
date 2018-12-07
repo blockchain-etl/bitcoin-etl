@@ -21,33 +21,10 @@
 # SOFTWARE.
 import base64
 import json
-import logging
 
 from web3 import HTTPProvider
 from web3.utils.request import make_post_request
 
-logging.getLogger("BitcoinRPC").setLevel(logging.INFO)
-
-
-# class BatchRPCProvider():
-#     def __init__(self, rpc_user, rpc_password, rpc_host, rpc_port):
-#         self.rpc_connection = AuthServiceProxy("http://%s:%s@%s:%s" % (rpc_user, rpc_password, rpc_host, rpc_port))
-#
-#     def make_request(self, commands):
-#         response = self.rpc_connection.batch_(commands)
-#         return response
-#
-#     def getblockhash(self, param):
-#         response = self.rpc_connection.getblockhash(param)
-#         return response
-#
-#     def getblock(self, *param):
-#         response = self.rpc_connection.getblock(*param)
-#         return response
-#
-#     def getblockcount(self, *param):
-#         response = self.rpc_connection.getblockcount(*param)
-#         return response
 
 class BatchRPCProvider(HTTPProvider):
 
@@ -94,3 +71,15 @@ class BatchRPCProvider(HTTPProvider):
                 raise ValueError('"result" is None in the JSON RPC response {}', resp_item.get('error'))
             result.append(resp_item.get('result'))
         return result
+
+    def getblockhash(self, param):
+        response = self.make_request([['getblockhash', param]])
+        return response[0] if len(response) > 0 else None
+
+    def getblock(self, param):
+        response = self.make_request([['getblock', param]])
+        return response[0] if len(response) > 0 else None
+
+    def getblockcount(self):
+        response = self.make_request([['getblockcount']])
+        return response[0] if len(response) > 0 else None
