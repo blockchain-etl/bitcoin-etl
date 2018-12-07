@@ -57,6 +57,7 @@ class BtcTransactionMapper(object):
     def transaction_to_dict(self, transaction):
         result = {
             'type': 'transaction',
+            'txid': transaction.txid,
             'hash': transaction.hash,
             'size': transaction.size,
             'virtual_size': transaction.virtual_size,

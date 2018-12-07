@@ -23,6 +23,7 @@
 
 class BtcTransactionOutput(object):
     def __init__(self):
+        self.index = None
         self.script_asm = None
         self.script_hex = None
         self.required_signatures = None

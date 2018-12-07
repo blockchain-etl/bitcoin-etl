@@ -30,6 +30,7 @@ class BtcTransactionOutputMapper(object):
         for item in json_dict.get('vout'):
             output = BtcTransactionOutput()
 
+            output.index = item.get('n')
             output.addresses = item.get('addresses')
             output.txinwitness = item.get('txinwitness')
             output.sequence = item.get('sequence')
@@ -48,6 +49,7 @@ class BtcTransactionOutputMapper(object):
         result = []
         for output in outputs:
             item = {
+                "index": output.index,
                 "script_asm": output.script_asm,
                 "script_hex": output.script_hex,
                 "required_signatures": output.required_signatures,
