@@ -32,12 +32,9 @@ def get_provider(provider_type, read_resource_lambda=None):
 
     elif provider_type == "online":
 
-        rpc_username = os.environ.get("RPC_USERNAME")
-        rpc_password = os.environ.get("RPC_PASSWORD")
-        rpc_host = os.environ.get("RPC_HOST") or "127.0.0.1"
-        rpc_port = os.environ.get("RPC_PORT") or 8332
-        if rpc_username is None or rpc_password is None:
-            raise ValueError('RPC_USERNAME and RPC_PASSWORD are required environment variables')
+        provider_uri = os.environ.get("BITCOINETL_PROVIDER_URI")
+        if provider_uri is None:
+            raise ValueError('BITCOINETL_PROVIDER_URI is required environment variable')
 
-        provider = BatchRPCProvider(rpc_username, rpc_password, rpc_host, rpc_port)
+        provider = BatchRPCProvider(provider_uri)
     return provider

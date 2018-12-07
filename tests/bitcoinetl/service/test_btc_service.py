@@ -31,6 +31,8 @@ from tests.bitcoinetl.job.helpers import get_provider
 
 
 @pytest.mark.parametrize("date,expected_start_block,expected_end_block", [
+    skip_if_slow_tests_disabled(['2009-01-03', 0, 0]),
+    skip_if_slow_tests_disabled(['2009-01-09', 1, 14]),
     skip_if_slow_tests_disabled(['2009-03-01', 5924, 6028]),
     skip_if_slow_tests_disabled(['2017-01-02', 446189, 446347]),
 ])

@@ -212,7 +212,7 @@ You can tune `--batch-size`, `--max-workers` for performance.
 ```bash
 > pip install -e .[dev]
 > export BITCOIN_ETL_RUN_SLOW_TESTS=True
-> export RPC_USERNAME="" RPC_PASSWORD="" RPC_HOST="" RPC_PORT=""
+> export BITCOINETL_PROVIDER_URI=http://user:pass@localhost:8332
 > pytest -vv
 ```
 

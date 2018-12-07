@@ -58,10 +58,6 @@ class BtcService(object):
         start_block = start_block_bounds[1]
         end_block = end_block_bounds[0]
 
-        # The genesis block has timestamp 0 but we include it with the 1st block.
-        if start_block == 1:
-            start_block = 0
-
         return start_block, end_block
 
 
@@ -70,8 +66,7 @@ class BlockTimestampGraph(object):
         self._rpc_connection = rpc_connection
 
     def get_first_point(self):
-        # Ignore the genesis block as its timestamp is 0
-        block_hash = self._rpc_connection.getblockhash(1)
+        block_hash = self._rpc_connection.getblockhash(0)
         block = self._rpc_connection.getblock(block_hash)
         return block_to_point(block)
 
