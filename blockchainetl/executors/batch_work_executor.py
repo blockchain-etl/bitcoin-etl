@@ -32,13 +32,14 @@ RETRY_EXCEPTIONS = (ConnectionError, HTTPError, RequestsTimeout, TooManyRedirect
 
 # Executes the given work in batches, reducing the batch size exponentially in case of errors.
 class BatchWorkExecutor:
-    def __init__(self, starting_batch_size, max_workers, retry_exceptions=RETRY_EXCEPTIONS):
+    def __init__(self, starting_batch_size, max_workers, retry_exceptions=RETRY_EXCEPTIONS, exponential_backoff=True):
         self.batch_size = starting_batch_size
         self.max_workers = max_workers
         # Using bounded executor prevents unlimited queue growth
         # and allows monitoring in-progress futures and failing fast in case of errors.
         self.executor = FailSafeExecutor(BoundedExecutor(1, self.max_workers))
         self.retry_exceptions = retry_exceptions
+        self.exponential_backoff = exponential_backoff
         self.progress_logger = ProgressLogger()
 
     def execute(self, work_iterable, work_handler, total_items=None):
@@ -54,7 +55,10 @@ class BatchWorkExecutor:
             batch_size = self.batch_size
             # Reduce the batch size. Subsequent batches will be 2 times smaller
             if batch_size == len(batch) and batch_size > 1:
-                self.batch_size = int(batch_size / 2)
+                if self.exponential_backoff:
+                    self.batch_size = int(batch_size / 2)
+                else:
+                    self.batch_size = batch_size - 1
             # For the failed batch try handling items one by one
             for item in batch:
                 work_handler([item])

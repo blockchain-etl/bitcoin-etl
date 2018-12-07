@@ -41,7 +41,7 @@ logging_basic_config()
 @click.option('-u', '--rpc-user', required=True, default=None, type=str, help='The RPC username of the bitcoin node')
 @click.option('-p', '--rpc-pass', required=True, default=None, type=str, help='The RPC password of the bitcoin node')
 @click.option('-o', '--rpc-port', default=8332, type=int, help='The RPC port of the bitcoin node')
-@click.option('-w', '--max-workers', default=10, type=int, help='The maximum number of workers.')
+@click.option('-w', '--max-workers', default=20, type=int, help='The maximum number of workers.')
 @click.option('--output', default=None, type=str,
               help='The output file for enriched transactions. '
                    'If not provided receipts will not be exported. Use "-" for stdout')

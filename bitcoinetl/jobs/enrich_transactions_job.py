@@ -26,11 +26,10 @@ from bitcoinetl.mappers.transaction_mapper import BtcTransactionMapper
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
 
-
-# Enrich transactions
 from blockchainetl.utils import dynamic_batch_iterator
 
 
+# Enrich transactions
 class EnrichTransactionsJob(BaseJob):
     def __init__(
             self,
@@ -42,7 +41,7 @@ class EnrichTransactionsJob(BaseJob):
         self.transactions_iterable = transactions_iterable
         self.rpc_provider = batch_rpc_provider
 
-        self.batch_work_executor = BatchWorkExecutor(batch_size, max_workers)
+        self.batch_work_executor = BatchWorkExecutor(batch_size, max_workers, exponential_backoff=False)
         self.item_exporter = item_exporter
 
         self.transaction_mapper = BtcTransactionMapper()
@@ -63,10 +62,7 @@ class EnrichTransactionsJob(BaseJob):
 
         txids = set(txids)
 
-        print('Querying {} txids for {} txes'.format(len(txids), len(transactions)))
         input_transactions = self._get_transactions(txids, len(transactions))
-        print('Done querying {} txids'.format(len(txids)))
-
         input_transactions_map = {input_transaction.txid: input_transaction for input_transaction in input_transactions}
 
         for input in flat_inputs:
@@ -94,7 +90,6 @@ class EnrichTransactionsJob(BaseJob):
     def _get_transactions(self, txids, batch_size):
         result = []
         for batch in dynamic_batch_iterator(txids, lambda: batch_size):
-            print('Querying for batch of {} total {}'.format(len(txids), str(batch)))
             transaction_detail_rpc = list(generate_get_transaction_by_id_json_rpc(batch))
             transaction_detail_response = self.rpc_provider.make_request(transaction_detail_rpc)
 

@@ -21,13 +21,10 @@
 # SOFTWARE.
 import base64
 import json
-from json import JSONDecodeError
+import logging
 
 from web3 import HTTPProvider
 from web3.utils.request import make_post_request
-
-from bitcoinetl.providers.authproxy import AuthServiceProxy
-import logging
 
 logging.getLogger("BitcoinRPC").setLevel(logging.INFO)
 
@@ -55,20 +52,23 @@ logging.getLogger("BitcoinRPC").setLevel(logging.INFO)
 class BatchRPCProvider(HTTPProvider):
 
     def __init__(self, rpc_user, rpc_password, rpc_host, rpc_port):
-        self.rpc_connection = AuthServiceProxy("http://%s:%s@%s:%s" % (rpc_user, rpc_password, rpc_host, rpc_port))
+        self.rpc_user = rpc_user
+        self.rpc_password = rpc_password
+        self.rpc_host = rpc_host
+        self.rpc_port = rpc_port
 
     def make_request(self, commands):
-        user = "a"
-        passwd = "a"
+        user = self.rpc_user
+        password = self.rpc_password
         try:
             user = user.encode('utf8')
         except AttributeError:
             pass
         try:
-            passwd = passwd.encode('utf8')
+            password = password.encode('utf8')
         except AttributeError:
             pass
-        authpair = user + b':' + passwd
+        authpair = user + b':' + password
         auth_header = b'Basic ' + base64.b64encode(authpair)
 
         rpc_calls = []
@@ -78,7 +78,7 @@ class BatchRPCProvider(HTTPProvider):
         text = json.dumps(rpc_calls)
         request_data = text.encode('utf-8')
         raw_response = make_post_request(
-            "http://localhost:8332/",
+            "http://{}:{}/".format(self.rpc_host, self.rpc_port),
             request_data,
             headers={
                 'Authorization': auth_header
@@ -86,13 +86,11 @@ class BatchRPCProvider(HTTPProvider):
             timeout=60
         )
 
-        try:
-            response = self.decode_rpc_response(raw_response)
-        except JSONDecodeError as error:
-            open('error.out', 'w+').write(text + " ================= " + error.doc)
-            raise
+        response = self.decode_rpc_response(raw_response)
 
         result = []
         for resp_item in response:
+            if resp_item.get('result') is None:
+                raise ValueError('"result" is None in the JSON RPC response {}', resp_item.get('error'))
             result.append(resp_item.get('result'))
         return result
