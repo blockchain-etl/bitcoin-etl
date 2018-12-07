@@ -32,6 +32,7 @@ BLOCK_FIELDS_TO_EXPORT = [
     'version',
     'merkle_root',
     'time',
+    'median_time',
     'nonce',
     'bits',
     'transaction_count'
@@ -45,6 +46,7 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'lock_time',
     'block_hash',
     'block_time',
+    'block_median_time',
     'inputs',
     'outputs'
 ]

@@ -46,6 +46,9 @@ class BtcTransactionMapper(object):
         if block is not None:
             transaction.block_time = block.time
 
+        if block is not None:
+            transaction.block_median_time = block.median_time
+
         transaction.inputs = BtcTransactionInputMapper().json_dict_to_input(json_dict)
         transaction.outputs = BtcTransactionOutputMapper().json_dict_to_output(json_dict)
 
@@ -61,6 +64,7 @@ class BtcTransactionMapper(object):
             'lock_time': transaction.lock_time,
             'block_hash': transaction.block_hash,
             'block_time': transaction.block_time,
+            'block_median_time': transaction.block_median_time,
 
             'inputs': BtcTransactionInputMapper().input_to_dict(transaction.inputs),
             'outputs': BtcTransactionOutputMapper().output_to_dict(transaction.outputs)

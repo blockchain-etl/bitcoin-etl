@@ -54,6 +54,7 @@ height              | bigint          |
 version             | bigint          |
 merkle_root         | hex_string      |
 time                | bigint          |
+median_time         | bigint          |
 nonce               | bigint          |
 bits                | hex_string      |
 transaction_count   | bigint          |
@@ -69,6 +70,7 @@ version                 | bigint                |
 lock_time               | bigint                |
 block_hash              | hex_string            |
 block_time              | bigint                |
+block_median_time       | bigint                |
 inputs                  | []transactionInput    |
 outputs                 | []transactionOutput   |
 

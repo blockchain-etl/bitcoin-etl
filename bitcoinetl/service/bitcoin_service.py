@@ -84,4 +84,4 @@ class BlockTimestampGraph(object):
 
  
 def block_to_point(block):
-    return Point(block['height'], block["time"])
+    return Point(block['height'], block["mediantime"])

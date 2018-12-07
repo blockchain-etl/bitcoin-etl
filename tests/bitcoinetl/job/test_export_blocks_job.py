@@ -60,6 +60,8 @@ def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_
         export_transactions=transactions_output_file is not None)
     job.run()
 
+    print('=====================')
+    print(read_file(blocks_output_file))
     compare_lines_ignore_order(
         read_resource(resource_group, 'expected_blocks.json'), read_file(blocks_output_file)
     )
