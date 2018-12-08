@@ -34,6 +34,8 @@ from tests.bitcoinetl.job.helpers import get_provider
     skip_if_slow_tests_disabled(['2009-01-03', 0, 0]),
     skip_if_slow_tests_disabled(['2009-01-09', 1, 19]),
     skip_if_slow_tests_disabled(['2009-03-01', 5929, 6033]),
+    skip_if_slow_tests_disabled(['2014-04-18', 296398, 296557]),
+    skip_if_slow_tests_disabled(['2014-04-19', 296558, 296716]),
     skip_if_slow_tests_disabled(['2017-01-02', 446194, 446352]),
 ])
 def test_get_block_range_for_date(date, expected_start_block, expected_end_block):
@@ -61,6 +63,7 @@ def test_get_block_range_for_timestamps(start_timestamp, end_timestamp, expected
     eth_service = get_new_btc_service()
     blocks = eth_service.get_block_range_for_timestamps(start_timestamp, end_timestamp)
     assert blocks == (expected_start_block, expected_end_block)
+
 
 def get_new_btc_service():
     rpc_conn = get_provider("online")

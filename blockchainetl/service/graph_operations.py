@@ -37,7 +37,11 @@ class GraphOperations(object):
         if initial_bounds is None:
             initial_bounds = self._get_first_point(), self._get_last_point()
 
-        result = self._get_bounds_for_y_coordinate_recursive(y, *initial_bounds)
+        bounds = self._get_bounds_for_y_coordinate_recursive(y, *initial_bounds)
+
+        # mediantime in Bitcoin blocks is not increasing **strictly** monotonically, so points with same y are possible
+        result = self._find_points_with_same_y(bounds[0]), self._find_points_with_same_y(bounds[1])
+
         return result
 
     def _get_bounds_for_y_coordinate_recursive(self, y, start, end):
@@ -52,8 +56,8 @@ class GraphOperations(object):
             return start.x, end.x
         else:
             assert start.y < y < end.y
-            if start.y >= end.y:
-                raise ValueError('y must increase strictly monotonically')
+            if start.y > end.y:
+                raise ValueError('y must increase monotonically')
 
             # Interpolation Search https://en.wikipedia.org/wiki/Interpolation_search, O(log(log(n)) average case.
             # Improvements for worst case:
@@ -86,7 +90,36 @@ class GraphOperations(object):
 
             return self._get_bounds_for_y_coordinate_recursive(y, *bounds)
 
+    def _find_points_with_same_y(self, x):
+        return self._find_point_with_same_y(x, False), self._find_point_with_same_y(x, True)
+
+    def _find_point_with_same_y(self, x, move_right=True):
+        if x == 0 and move_right is False:
+            return x
+
+        if move_right is True and x == self._get_last_point().x:
+            return x
+
+        point = self._get_point(x)
+
+        next_point = point
+
+        increment = 1 if move_right else - 1
+        while next_point.y == point.y:
+            next_point = self._get_point(next_point.x + increment)
+
+        return next_point.x - increment
+
+    def _find_point_in_cache(self, x):
+        for point in self._cached_points:
+            if point.x == x:
+                return point
+        return None
+
     def _get_point(self, x):
+        cached_point = self._find_point_in_cache(x)
+        if cached_point is not None:
+            return cached_point
         point = self._graph.get_point(x)
         self._cached_points.append(point)
         return point
@@ -114,8 +147,9 @@ def interpolate(point1, point2, y):
     x1, y1 = point1.x, point1.y
     x2, y2 = point2.x, point2.y
     if y1 == y2:
-        raise ValueError('The y coordinate for points is the same {}, {}'.format(point1, point2))
-    x = int((y - y1) * (x2 - x1) / (y2 - y1) + x1)
+        x = int((x1 + x2) / 2)
+    else:
+        x = int((y - y1) * (x2 - x1) / (y2 - y1) + x1)
     return x
 
 
