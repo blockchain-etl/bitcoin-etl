@@ -28,15 +28,18 @@ class BtcTransactionInputMapper(object):
     def json_dict_to_input(self, json_dict):
         result = []
 
+        index = 0
         for item in json_dict.get('vin'):
             input = BtcTransactionInput()
 
+            input.index = index
+            index = index + 1
             input.spent_txid = item.get('txid')
             input.spent_output_index = item.get('vout')
             input.coinbase_param = item.get('coinbase')
             input.sequence = item.get('sequence')
             input.value = item.get('value')
-            if "scriptSig" in item:
+            if 'scriptSig' in item:
                 input.script_asm = (item.get('scriptSig')).get('asm')
                 # input.script_hex = (item.get('scriptSig')).get('hex')
             result.append(input)
@@ -47,13 +50,14 @@ class BtcTransactionInputMapper(object):
         result = []
         for input in inputs:
             item = {
-                "spent_txid": input.spent_txid,
-                "spent_output_index": input.spent_output_index,
-                "script_asm": input.script_asm,
-                "script_hex": input.script_hex,
-                "coinbase_param": input.coinbase_param,
-                "sequence": input.sequence,
-                "value": input.value,
+                'index': input.index,
+                'spent_txid': input.spent_txid,
+                'spent_output_index': input.spent_output_index,
+                'script_asm': input.script_asm,
+                'script_hex': input.script_hex,
+                'coinbase_param': input.coinbase_param,
+                'sequence': input.sequence,
+                'value': input.value,
             }
             result.append(item)
         return result

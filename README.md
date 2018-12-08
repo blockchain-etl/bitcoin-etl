@@ -14,7 +14,7 @@ Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_block
 
 ```bash
 > bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
---rpc-pass 'test' --rpc-host 'localhost' --rpc-user 'test' \
+--provider-uri http://user:pass@localhost:8332 \
  --blocks-output blocks.json --transactions-output transactions.json
 ```
 
@@ -71,13 +71,14 @@ lock_time               | bigint                |
 block_hash              | hex_string            |
 block_time              | bigint                |
 block_median_time       | bigint                |
-inputs                  | []transactionInput    |
-outputs                 | []transactionOutput   |
+inputs                  | []transaction_input   |
+outputs                 | []transaction_output  |
 
-### transactionInput
+### transaction_input
 
 Column                  | Type                  |
 ------------------------|-----------------------|
+index                   | bigint                | 
 spent_txid              | hex_string            | 
 spent_output_index      | bigint                | 
 script_asm              | string                |
@@ -87,10 +88,11 @@ sequence                | bigint                |
 addresses               | []string              |
 value                   | bigint                |
 
-### transactionOutput
+### transaction_output
 
 Column                  | Type                  |
 ------------------------|-----------------------|
+index                   | bigint                |
 script_asm              | string                |
 script_hex              | hex_string            |
 required_signatures     | bigint                |
@@ -122,7 +124,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 
     ```bash
     > bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
-    --rpc-pass '' --rpc-host 'localhost' --rpc-user '' \
+    --provider-uri http://user:pass@localhost:8332 \
     --blocks-output blocks.json --transactions-output transactions.json
     ```
     In case `bitcoinetl` command is not available in PATH, use `python -m bitcoinetl` instead.
@@ -169,10 +171,7 @@ Options:
   -s, --start-block INTEGER   Start block
   -e, --end-block INTEGER     End block  [required]
   -b, --batch-size INTEGER    The number of blocks to export at a time.
-  -h, --rpc-host TEXT         The URI of the remote bitcoin node
-  -u, --rpc-user TEXT         The RPC username of the bitcoin node  [required]
-  -p, --rpc-pass TEXT         The RPC password of the bitcoin node  [required]
-  -o, --rpc-port INTEGER      The RPC port of the bitcoin node
+  -p, --provider-uri TEXT     The URI of the remote Bitcoin node
   -w, --max-workers INTEGER   The maximum number of workers.
   --blocks-output TEXT        The output file for blocks. If not provided
                               blocks will not be exported. Use "-" for stdout
@@ -188,7 +187,7 @@ For the `--output` parameters the supported type is json. The format type is inf
 
 ```bash
 > bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
-  --rpc-pass 'test' --rpc-host 'localhost' --rpc-user 'test' \
+  --provider-uri http://user:pass@localhost:8332 \
   --blocks-output blocks.json --transactions-output transactions.json
 ```
 
@@ -198,13 +197,14 @@ You can tune `--batch-size`, `--max-workers` for performance.
 
 #### get_block_range_for_timestamps
 ```bash
-> bitcoinetl get_block_range_for_timestamps --rpc-host= 'localhost' \
-  --rpc-user='' --rpc-pass='' --start-timestamp=1325376000 --end-timestamp=1325377000
+> bitcoinetl get_block_range_for_timestamps \
+  --provider-uri http://user:pass@localhost:8332 \
+  --start-timestamp=1325376000 --end-timestamp=1325377000
 ```
 
 #### get_block_range_for_date
 ```bash
-> bitcoinetl get_block_range_for_date --rpc-host='localhost' --rpc-user='' --rpc-pass='' --date=2017-03-01
+> bitcoinetl get_block_range_for_date --provider-uri http://user:pass@localhost:8332 --date=2017-03-01
 ```
 
 
