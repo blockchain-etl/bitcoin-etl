@@ -20,8 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from bitcoinetl.providers.rpc import BatchRPCProvider
+from bitcoinetl.providers.rpc import BitcoinRpc
 
 
-def get_provider(provider_uri):
-    return BatchRPCProvider(provider_uri)
+def get_bitcoin_rpc(provider_uri):
+    return BitcoinRpc(provider_uri)

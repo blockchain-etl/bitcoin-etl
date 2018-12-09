@@ -23,11 +23,10 @@
 import pytest
 from dateutil.parser import parse
 
-from bitcoinetl.providers.rpc import BatchRPCProvider
 from bitcoinetl.service.bitcoin_service import BtcService
 from blockchainetl.service.graph_operations import OutOfBoundsError
+from tests.bitcoinetl.job.helpers import get_bitcoin_rpc
 from tests.helpers import skip_if_slow_tests_disabled
-from tests.bitcoinetl.job.helpers import get_provider
 
 
 @pytest.mark.parametrize("date,expected_start_block,expected_end_block", [
@@ -66,5 +65,5 @@ def test_get_block_range_for_timestamps(start_timestamp, end_timestamp, expected
 
 
 def get_new_btc_service():
-    rpc_conn = get_provider("online")
-    return BtcService(rpc_conn)
+    rpc = get_bitcoin_rpc("online")
+    return BtcService(rpc)

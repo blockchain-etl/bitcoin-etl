@@ -19,16 +19,17 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 import os
-from bitcoinetl.providers.rpc import BatchRPCProvider
-from tests.bitcoinetl.job.mock_rpc_provider import MockRPCProvider
+from bitcoinetl.providers.rpc import BitcoinRpc
+from tests.bitcoinetl.job.mock_bitcoin_rpc import MockBitcoinRpc
 
 
-def get_provider(provider_type, read_resource_lambda=None):
+def get_bitcoin_rpc(provider_type, read_resource_lambda=None):
     if provider_type == "mock":
         if read_resource_lambda is None:
             raise ValueError('read_resource_lambda must not be None for provider type {}'.format(provider_type))
-        provider = MockRPCProvider(read_resource_lambda)
+        rpc = MockBitcoinRpc(read_resource_lambda)
 
     elif provider_type == "online":
 
@@ -36,5 +37,5 @@ def get_provider(provider_type, read_resource_lambda=None):
         if provider_uri is None:
             raise ValueError('BITCOINETL_PROVIDER_URI is required environment variable')
 
-        provider = BatchRPCProvider(provider_uri)
-    return provider
+        rpc = BitcoinRpc(provider_uri)
+    return rpc

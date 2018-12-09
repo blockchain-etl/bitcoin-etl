@@ -37,7 +37,7 @@ class ExportBlocksJob(BaseJob):
             start_block,
             end_block,
             batch_size,
-            batch_rpc_provider,
+            bitcoin_rpc,
             max_workers,
             item_exporter,
             export_blocks=True,
@@ -46,7 +46,7 @@ class ExportBlocksJob(BaseJob):
         self.start_block = start_block
         self.end_block = end_block
 
-        self.rpc_provider = batch_rpc_provider
+        self.bitcoin_rpc = bitcoin_rpc
 
         self.batch_work_executor = BatchWorkExecutor(batch_size, max_workers)
         self.item_exporter = item_exporter
@@ -73,12 +73,12 @@ class ExportBlocksJob(BaseJob):
 
         # get block
         block_hash_rpc = list(generate_get_block_hash_by_number_json_rpc(block_number_batch))
-        block_hashes_response = self.rpc_provider.make_request(block_hash_rpc)
+        block_hashes_response = self.bitcoin_rpc.batch(block_hash_rpc)
         block_hashes = rpc_response_batch_to_results(block_hashes_response)
 
         # get block details by hash
         block_detail_rpc = list(generate_get_block_by_hash_json_rpc(block_hashes, self.export_transactions))
-        block_detail_response = self.rpc_provider.make_request(block_detail_rpc)
+        block_detail_response = self.bitcoin_rpc.batch(block_detail_rpc)
         block_detail_results = rpc_response_batch_to_results(block_detail_response)
 
         blocks = [self.block_mapper.json_dict_to_block(block_detail_result)

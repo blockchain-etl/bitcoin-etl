@@ -25,7 +25,7 @@ import click
 
 from bitcoinetl.jobs.enrich_transactions_job import EnrichTransactionsJob
 from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
-from bitcoinetl.providers.auto import get_provider
+from bitcoinetl.providers.auto import get_bitcoin_rpc
 from blockchainetl.file_utils import smart_open
 from blockchainetl.logging_utils import logging_basic_config
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
@@ -49,7 +49,7 @@ def enrich_transactions(batch_size, input, provider_uri, max_workers, output):
         job = EnrichTransactionsJob(
             transactions_iterable=(json.loads(transaction) for transaction in transaction_file),
             batch_size=batch_size,
-            batch_rpc_provider=ThreadLocalProxy(lambda: get_provider(provider_uri)),
+            bitcoin_rpc=ThreadLocalProxy(lambda: get_bitcoin_rpc(provider_uri)),
             max_workers=max_workers,
             item_exporter=blocks_and_transactions_item_exporter(None, output))
 

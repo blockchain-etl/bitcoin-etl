@@ -35,11 +35,11 @@ class EnrichTransactionsJob(BaseJob):
             self,
             transactions_iterable,
             batch_size,
-            batch_rpc_provider,
+            bitcoin_rpc,
             max_workers,
             item_exporter):
         self.transactions_iterable = transactions_iterable
-        self.rpc_provider = batch_rpc_provider
+        self.bitcoin_rpc = bitcoin_rpc
 
         self.batch_work_executor = BatchWorkExecutor(batch_size, max_workers, exponential_backoff=False)
         self.item_exporter = item_exporter
@@ -91,7 +91,7 @@ class EnrichTransactionsJob(BaseJob):
         result = []
         for batch in dynamic_batch_iterator(txids, lambda: batch_size):
             transaction_detail_rpc = list(generate_get_transaction_by_id_json_rpc(batch))
-            transaction_detail_response = self.rpc_provider.make_request(transaction_detail_rpc)
+            transaction_detail_response = self.bitcoin_rpc.batch(transaction_detail_rpc)
 
             transactions = [self.transaction_mapper.json_dict_to_transaction(raw_transaction)
                             for raw_transaction in transaction_detail_response]

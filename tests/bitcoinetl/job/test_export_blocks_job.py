@@ -24,7 +24,7 @@ import pytest
 
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
-from tests.bitcoinetl.job.helpers import get_provider
+from tests.bitcoinetl.job.helpers import get_bitcoin_rpc
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
 
 import tests.resources
@@ -52,8 +52,8 @@ def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_
         start_block=start_block,
         end_block=end_block,
         batch_size=batch_size,
-        batch_rpc_provider=ThreadLocalProxy(
-            lambda: get_provider(provider_type, lambda file: read_resource(resource_group, file))),
+        bitcoin_rpc=ThreadLocalProxy(
+            lambda: get_bitcoin_rpc(provider_type, lambda file: read_resource(resource_group, file))),
         max_workers=5,
         item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file),
         export_blocks=blocks_output_file is not None,

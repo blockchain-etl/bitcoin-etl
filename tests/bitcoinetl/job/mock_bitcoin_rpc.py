@@ -23,11 +23,11 @@ import decimal
 import json
 
 
-class MockRPCProvider():
+class MockBitcoinRpc:
     def __init__(self, read_resource):
         self.read_resource = read_resource
 
-    def make_request(self, data):
+    def batch(self, data):
         rpc_response = []
         for req in data:
             method = req[0]

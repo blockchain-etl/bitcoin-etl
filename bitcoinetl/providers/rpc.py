@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,19 +19,20 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-import base64
+
 import json
 
 from web3 import HTTPProvider
 from web3.utils.request import make_post_request
 
 
-class BatchRPCProvider(HTTPProvider):
+class BitcoinRpc(HTTPProvider):
 
-    def __init__(self, provider_uri):
+    def __init__(self, provider_uri, timeout=60):
         self.provider_uri = provider_uri
+        self.timeout = timeout
 
-    def make_request(self, commands):
+    def batch(self, commands):
         rpc_calls = []
         for command in commands:
             m = command.pop(0)
@@ -41,7 +42,7 @@ class BatchRPCProvider(HTTPProvider):
         raw_response = make_post_request(
             self.provider_uri,
             request_data,
-            timeout=60
+            timeout=self.timeout
         )
 
         response = self.decode_rpc_response(raw_response)
@@ -54,13 +55,13 @@ class BatchRPCProvider(HTTPProvider):
         return result
 
     def getblockhash(self, param):
-        response = self.make_request([['getblockhash', param]])
+        response = self.batch([['getblockhash', param]])
         return response[0] if len(response) > 0 else None
 
     def getblock(self, param):
-        response = self.make_request([['getblock', param]])
+        response = self.batch([['getblock', param]])
         return response[0] if len(response) > 0 else None
 
     def getblockcount(self):
-        response = self.make_request([['getblockcount']])
+        response = self.batch([['getblockcount']])
         return response[0] if len(response) > 0 else None

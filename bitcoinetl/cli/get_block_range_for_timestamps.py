@@ -23,7 +23,7 @@
 
 import click
 
-from bitcoinetl.providers.auto import get_provider
+from bitcoinetl.providers.auto import get_bitcoin_rpc
 from bitcoinetl.service.bitcoin_service import BtcService
 from blockchainetl.file_utils import smart_open
 from blockchainetl.logging_utils import logging_basic_config
@@ -40,7 +40,7 @@ logging_basic_config()
 def get_block_range_for_timestamps(provider_uri, start_timestamp, end_timestamp, output):
     """Outputs start and end blocks for given timestamps."""
 
-    rpc_connection = get_provider(provider_uri)
+    rpc_connection = get_bitcoin_rpc(provider_uri)
     btc_service = BtcService(rpc_connection)
 
     start_block, end_block = btc_service.get_block_range_for_timestamps(start_timestamp, end_timestamp)
