@@ -31,6 +31,7 @@ class BtcTransaction(object):
         self.virtual_size = None
         self.version = None
         self.lock_time = None
+        self.block_height = None
         self.block_hash = None
         self.block_time = None
         self.block_median_time = None

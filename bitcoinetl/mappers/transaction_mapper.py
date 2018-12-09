@@ -38,6 +38,9 @@ class BtcTransactionMapper(object):
         transaction.version = json_dict.get('version')
         transaction.lock_time = json_dict.get('locktime')
 
+        if block is not None:
+            transaction.block_height = block.height
+
         transaction.block_hash = json_dict.get('blockhash')
         if block is not None:
             transaction.block_hash = block.hash
@@ -63,6 +66,7 @@ class BtcTransactionMapper(object):
             'virtual_size': transaction.virtual_size,
             'version': transaction.version,
             'lock_time': transaction.lock_time,
+            'block_height': transaction.block_height,
             'block_hash': transaction.block_hash,
             'block_time': transaction.block_time,
             'block_median_time': transaction.block_median_time,

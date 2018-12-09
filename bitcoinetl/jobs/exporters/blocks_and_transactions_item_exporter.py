@@ -45,6 +45,7 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'virtual_size',
     'version',
     'lock_time',
+    'block_height',
     'block_hash',
     'block_time',
     'block_median_time',
