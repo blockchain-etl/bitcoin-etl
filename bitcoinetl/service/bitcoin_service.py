@@ -45,7 +45,7 @@ class BtcService(object):
         try:
             start_block_bounds = self._graph_operations.get_bounds_for_y_coordinate(start_timestamp)
         except OutOfBoundsError:
-            start_block_bounds = ((0, 0), (0, 0))
+            start_block_bounds = (0, 0)
 
         try:
             end_block_bounds = self._graph_operations.get_bounds_for_y_coordinate(end_timestamp)
@@ -55,8 +55,8 @@ class BtcService(object):
         if start_block_bounds == end_block_bounds and start_block_bounds[0] != start_block_bounds[1]:
             raise ValueError('The given timestamp range does not cover any blocks')
 
-        start_block = start_block_bounds[1][0]
-        end_block = end_block_bounds[0][1]
+        start_block = start_block_bounds[1]
+        end_block = end_block_bounds[0]
 
         return start_block, end_block
 
@@ -84,6 +84,4 @@ class BlockTimestampGraph(object):
 
  
 def block_to_point(block):
-    # Using mediantime because it's increasing monotonically, unlike block.time
-    # https://bitcoin.stackexchange.com/questions/67618/difference-between-time-and-mediantime-in-getblock
-    return Point(block['height'], block["mediantime"])
+    return Point(block['height'], block["time"])

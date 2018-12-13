@@ -26,7 +26,7 @@ from blockchainetl.utils import pairwise
 
 class GraphOperations(object):
     def __init__(self, graph):
-        """x axis on the graph must be integers, y value must increase strictly monotonically with increase of x"""
+        """x axis on the graph must be integers"""
         self._graph = graph
         self._cached_points = []
 
@@ -39,8 +39,8 @@ class GraphOperations(object):
 
         bounds = self._get_bounds_for_y_coordinate_recursive(y, *initial_bounds)
 
-        # mediantime in Bitcoin blocks is not increasing **strictly** monotonically, so points with same y are possible
-        result = self._find_points_with_same_y(bounds[0]), self._find_points_with_same_y(bounds[1])
+        result = self._find_point_around_y(y, bounds[0], find_below=True, move_left=False), \
+                 self._find_point_around_y(y, bounds[1], find_below=False, move_left=True)
 
         return result
 
@@ -57,7 +57,8 @@ class GraphOperations(object):
         else:
             assert start.y < y < end.y
             if start.y > end.y:
-                raise ValueError('y must increase monotonically')
+                raise ValueError('Start y must be lesser or equal to end y coordinate. Was {}, {}'
+                                 .format(start.y, end.y))
 
             # Interpolation Search https://en.wikipedia.org/wiki/Interpolation_search, O(log(log(n)) average case.
             # Improvements for worst case:
@@ -90,25 +91,33 @@ class GraphOperations(object):
 
             return self._get_bounds_for_y_coordinate_recursive(y, *bounds)
 
-    def _find_points_with_same_y(self, x):
-        return self._find_point_with_same_y(x, False), self._find_point_with_same_y(x, True)
-
-    def _find_point_with_same_y(self, x, move_right=True):
-        if x == 0 and move_right is False:
-            return x
-
-        if move_right is True and x == self._get_last_point().x:
-            return x
-
+    def _find_point_around_y(self, y, x, find_below, move_left):
+        find_above = not find_below
+        move_right = not move_left
         point = self._get_point(x)
+        last_point = self._get_last_point()
 
         next_point = point
+        best_point = point
+        iteration = 0
+        max_iterations = 15
 
-        increment = 1 if move_right else - 1
-        while next_point.y == point.y:
+        increment = - 1 if move_left else 1
+        while iteration < max_iterations and 0 <= (next_point.x + increment) <= last_point.x:
+            prev_point = next_point
             next_point = self._get_point(next_point.x + increment)
+            if find_below and move_left and (next_point.y == y or next_point.y < y < prev_point.y):
+                best_point = next_point
+            if find_below and move_right and (prev_point.y == y or prev_point.y < y < next_point.y):
+                best_point = prev_point
+            if find_above and move_left and (prev_point.y == y or next_point.y < y < prev_point.y):
+                best_point = prev_point
+            if find_above and move_right and (next_point.y == y or prev_point.y < y < next_point.y):
+                best_point = next_point
 
-        return next_point.x - increment
+            iteration = iteration + 1
+
+        return best_point.x
 
     def _find_point_in_cache(self, x):
         for point in self._cached_points:
