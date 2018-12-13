@@ -145,7 +145,7 @@ class GraphOperations(object):
 
 
 def find_best_bounds(y, points):
-    sorted_points = sorted(points, key=lambda point: point.y)
+    sorted_points = sorted(points, key=lambda point: point.x)
     for point1, point2 in pairwise(sorted_points):
         if point1.y <= y <= point2.y:
             return point1, point2
