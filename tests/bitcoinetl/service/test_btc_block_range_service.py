@@ -23,7 +23,7 @@
 import pytest
 from dateutil.parser import parse
 
-from bitcoinetl.service.bitcoin_service import BtcService
+from bitcoinetl.service.btc_block_range_service import BtcBlockRangeService
 from blockchainetl.service.graph_operations import OutOfBoundsError
 from tests.bitcoinetl.job.helpers import get_bitcoin_rpc
 from tests.helpers import skip_if_slow_tests_disabled
@@ -42,9 +42,9 @@ from tests.helpers import skip_if_slow_tests_disabled
     skip_if_slow_tests_disabled(['2017-01-02', 446189, 446347]),
 ])
 def test_get_block_range_for_date(date, expected_start_block, expected_end_block):
-    btc_service = get_new_btc_service()
+    btc_block_range_service = get_new_btc_block_range_service()
     parsed_date = parse(date)
-    blocks = btc_service.get_block_range_for_date(parsed_date)
+    blocks = btc_block_range_service.get_block_range_for_date(parsed_date)
     assert blocks == (expected_start_block, expected_end_block)
 
 
@@ -52,7 +52,7 @@ def test_get_block_range_for_date(date, expected_start_block, expected_end_block
     skip_if_slow_tests_disabled(['2030-01-01'])
 ])
 def test_get_block_range_for_date_fail(date):
-    btc_service = get_new_btc_service()
+    btc_service = get_new_btc_block_range_service()
     parsed_date = parse(date)
     with pytest.raises(OutOfBoundsError):
         btc_service.get_block_range_for_date(parsed_date)
@@ -63,11 +63,11 @@ def test_get_block_range_for_date_fail(date):
     skip_if_slow_tests_disabled([1328227200, 1328248800, 165081,165132]),
 ])
 def test_get_block_range_for_timestamps(start_timestamp, end_timestamp, expected_start_block, expected_end_block):
-    eth_service = get_new_btc_service()
+    eth_service = get_new_btc_block_range_service()
     blocks = eth_service.get_block_range_for_timestamps(start_timestamp, end_timestamp)
     assert blocks == (expected_start_block, expected_end_block)
 
 
-def get_new_btc_service():
+def get_new_btc_block_range_service():
     rpc = get_bitcoin_rpc("online")
-    return BtcService(rpc)
+    return BtcBlockRangeService(rpc)

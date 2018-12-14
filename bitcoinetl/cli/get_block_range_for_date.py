@@ -26,7 +26,7 @@ from datetime import datetime
 import click
 
 from bitcoinetl.providers.auto import get_bitcoin_rpc
-from bitcoinetl.service.bitcoin_service import BtcService
+from bitcoinetl.service.btc_block_range_service import BtcBlockRangeService
 from blockchainetl.file_utils import smart_open
 from blockchainetl.logging_utils import logging_basic_config
 
@@ -39,12 +39,11 @@ logging_basic_config()
 @click.option('-d', '--date', required=True, type=lambda d: datetime.strptime(d, '%Y-%m-%d'),
               help='The date e.g. 2018-01-01.')
 @click.option('-o', '--output', default='-', type=str, help='The output file. If not specified stdout is used.')
-
 def get_block_range_for_date(provider_uri, date, output):
     """Outputs start and end blocks for given date."""
-   
+
     rpc_connection = get_bitcoin_rpc(provider_uri)
-    btc_service = BtcService(rpc_connection)
+    btc_service = BtcBlockRangeService(rpc_connection)
 
     start_block, end_block = btc_service.get_block_range_for_date(date)
 

@@ -56,6 +56,7 @@ def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_
             lambda: get_bitcoin_rpc(provider_type, lambda file: read_resource(resource_group, file))),
         max_workers=5,
         item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file),
+        chain='bitcoin',
         export_blocks=blocks_output_file is not None,
         export_transactions=transactions_output_file is not None)
     job.run()

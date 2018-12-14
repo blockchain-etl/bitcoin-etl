@@ -23,10 +23,11 @@
 
 from datetime import datetime, timezone
 
+from bitcoinetl.service.btc_block_timestamp_graph import BlockTimestampGraph
 from blockchainetl.service.graph_operations import GraphOperations, OutOfBoundsError, Point
 
 
-class BtcService(object):
+class BtcBlockRangeService(object):
     def __init__(self, rpc_connection):
         graph = BlockTimestampGraph(rpc_connection)
         self._graph_operations = GraphOperations(graph)
@@ -61,27 +62,3 @@ class BtcService(object):
         return start_block, end_block
 
 
-class BlockTimestampGraph(object):
-    def __init__(self, rpc_connection):
-        self._rpc_connection = rpc_connection
-
-    def get_first_point(self):
-        block_hash = self._rpc_connection.getblockhash(0)
-        block = self._rpc_connection.getblock(block_hash)
-        return block_to_point(block)
-
-    def get_last_point(self):
-        block_height = self._rpc_connection.getblockcount()
-        block_hash = self._rpc_connection.getblockhash(block_height)
-        block = self._rpc_connection.getblock(block_hash)
-
-        return block_to_point(block)
-
-    def get_point(self, block_height):
-        block_hash = self._rpc_connection.getblockhash(block_height)
-        block = self._rpc_connection.getblock(block_hash)
-        return block_to_point(block)
-
- 
-def block_to_point(block):
-    return Point(block['height'], block["time"])
