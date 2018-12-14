@@ -1,0 +1,21 @@
+{
+    "result": {
+        "hash": "1a91e3dace36e2be3bf030a65679fe821aa1d6ef92e7c9902eb318182c355691",
+        "confirmations": 2514895,
+        "size": 224,
+        "height": 0,
+        "version": 1,
+        "merkleroot": "5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69",
+        "tx": [
+            "5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69"
+        ],
+        "time": 1386325540,
+        "nonce": 99943,
+        "bits": "1e0ffff0",
+        "difficulty": 0.00024414,
+        "chainwork": "0000000000000000000000000000000000000000000000000000000000100010",
+        "nextblockhash": "82bc68038f6034c0596b6e313729793a887fded6e92a31fbdf70863f89d9bea2"
+    },
+    "error": null,
+    "id": "curltest"
+}

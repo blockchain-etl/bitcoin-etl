@@ -29,7 +29,7 @@ class BtcTransactionInputMapper(object):
         result = []
 
         index = 0
-        for item in json_dict.get('vin'):
+        for item in json_dict.get('vin', []):
             input = BtcTransactionInput()
 
             input.index = index

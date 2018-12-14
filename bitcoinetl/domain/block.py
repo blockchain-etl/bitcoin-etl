@@ -37,6 +37,6 @@ class BtcBlock(object):
         self.bits = None
 
         self.transactions = []
-        self.transaction_count = None
+        self.transaction_count = 0
     
 

@@ -32,28 +32,30 @@ class BtcBlockMapper(object):
         else:
             self.transaction_mapper = transaction_mapper
 
-    def json_dict_to_block(self, block_json, transactions_json=None):
+    def json_dict_to_block(self, json_dict):
         block = BtcBlock()
-        block.hash = block_json.get('hash')
-        block.size = block_json.get('size')
-        block.stripped_size = block_json.get('strippedsize')
-        block.weight = block_json.get('weight')
-        block.height = block_json.get('height')
-        block.version = block_json.get('version')
-        block.merkle_root = block_json.get('merkleroot')
-        block.time = block_json.get('time')
-        block.median_time = block_json.get('mediantime')
-        block.nonce = block_json.get('nonce')
-        block.bits = block_json.get('bits')
+        block.hash = json_dict.get('hash')
+        block.size = json_dict.get('size')
+        block.stripped_size = json_dict.get('strippedsize')
+        block.weight = json_dict.get('weight')
+        block.height = json_dict.get('height')
+        block.version = json_dict.get('version')
+        block.merkle_root = json_dict.get('merkleroot')
+        block.time = json_dict.get('time')
+        block.median_time = json_dict.get('mediantime')
+        block.nonce = json_dict.get('nonce')
+        block.bits = json_dict.get('bits')
 
-        transactions = transactions_json if transactions_json is not None else block_json.get('tx')
-        if transactions is not None:
-            block.transactions = [
-                self.transaction_mapper.json_dict_to_transaction(tx, block) for tx in transactions
-                if isinstance(tx, dict)
-            ]
+        raw_transactions = json_dict.get('tx')
+        if raw_transactions is not None and len(raw_transactions) > 0:
+            if isinstance(raw_transactions[0], dict):
+                block.transactions = [
+                    self.transaction_mapper.json_dict_to_transaction(tx, block) for tx in raw_transactions
+                ]
+            else:
+                block.transactions = raw_transactions
 
-            block.transaction_count = len(block_json['tx'])
+            block.transaction_count = len(raw_transactions)
 
         return block
 
