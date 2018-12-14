@@ -14,7 +14,7 @@ Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_block
 
 ```bash
 > bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
---provider-uri http://user:pass@localhost:8332 \
+--provider-uri http://user:pass@localhost:8332 --chain bitcoin \
  --blocks-output blocks.json --transactions-output transactions.json
 ```
 
@@ -125,7 +125,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 
     ```bash
     > bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
-    --provider-uri http://user:pass@localhost:8332 \
+    --provider-uri http://user:pass@localhost:8332 --chain bitcoin \
     --blocks-output blocks.json --transactions-output transactions.json
     ```
     In case `bitcoinetl` command is not available in PATH, use `python -m bitcoinetl` instead.
