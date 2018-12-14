@@ -196,13 +196,6 @@ Omit `--blocks-output` or `--transactions-output` options if you want to export 
 
 You can tune `--batch-size`, `--max-workers` for performance.
 
-#### get_block_range_for_timestamps
-```bash
-> bitcoinetl get_block_range_for_timestamps \
-  --provider-uri http://user:pass@localhost:8332 \
-  --start-timestamp=1325376000 --end-timestamp=1325377000
-```
-
 #### get_block_range_for_date
 ```bash
 > bitcoinetl get_block_range_for_date --provider-uri http://user:pass@localhost:8332 --date=2017-03-01
