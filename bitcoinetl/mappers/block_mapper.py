@@ -32,27 +32,28 @@ class BtcBlockMapper(object):
         else:
             self.transaction_mapper = transaction_mapper
 
-    def json_dict_to_block(self, json_dict):
+    def json_dict_to_block(self, block_json, transactions_json=None):
         block = BtcBlock()
-        block.hash = json_dict.get('hash')
-        block.size = json_dict.get('size')
-        block.stripped_size = json_dict.get('strippedsize')
-        block.weight = json_dict.get('weight')
-        block.height = json_dict.get('height')
-        block.version = json_dict.get('version')
-        block.merkle_root = json_dict.get('merkleroot')
-        block.time = json_dict.get('time')
-        block.median_time = json_dict.get('mediantime')
-        block.nonce = json_dict.get('nonce')
-        block.bits = json_dict.get('bits')
+        block.hash = block_json.get('hash')
+        block.size = block_json.get('size')
+        block.stripped_size = block_json.get('strippedsize')
+        block.weight = block_json.get('weight')
+        block.height = block_json.get('height')
+        block.version = block_json.get('version')
+        block.merkle_root = block_json.get('merkleroot')
+        block.time = block_json.get('time')
+        block.median_time = block_json.get('mediantime')
+        block.nonce = block_json.get('nonce')
+        block.bits = block_json.get('bits')
 
-        if 'tx' in json_dict:
+        transactions = transactions_json if transactions_json is not None else block_json.get('tx')
+        if transactions is not None:
             block.transactions = [
-                self.transaction_mapper.json_dict_to_transaction(tx, block) for tx in json_dict['tx']
+                self.transaction_mapper.json_dict_to_transaction(tx, block) for tx in transactions
                 if isinstance(tx, dict)
             ]
 
-            block.transaction_count = len(json_dict['tx'])
+            block.transaction_count = len(block_json['tx'])
 
         return block
 

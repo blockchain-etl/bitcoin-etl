@@ -20,9 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-def generate_get_block_by_hash_json_rpc(block_hashes, include_transactions):
+
+def generate_get_block_by_hash_json_rpc(block_hashes, include_transactions, chain='bitcoin'):
     for _, block_hash in enumerate(block_hashes):
-        verbosity = 2 if include_transactions else 1
+        if chain == 'dogecoin':
+            verbosity = True
+        else:
+            verbosity = 2 if include_transactions else 1
         yield ["getblock", block_hash, verbosity]
 
 

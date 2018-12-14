@@ -50,7 +50,7 @@ class BitcoinRpc(HTTPProvider):
         result = []
         for resp_item in response:
             if resp_item.get('result') is None:
-                raise ValueError('"result" is None in the JSON RPC response {}', resp_item.get('error'))
+                raise ValueError('"result" is None in the JSON RPC response {}. Request: {}', resp_item.get('error'), text)
             result.append(resp_item.get('result'))
         return result
 

@@ -22,7 +22,7 @@
 
 
 from bitcoinetl.json_rpc_requests import generate_get_block_by_hash_json_rpc, \
-    generate_get_block_hash_by_number_json_rpc
+    generate_get_block_hash_by_number_json_rpc, generate_get_transaction_by_id_json_rpc
 from bitcoinetl.mappers.block_mapper import BtcBlockMapper
 from bitcoinetl.mappers.transaction_mapper import BtcTransactionMapper
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
@@ -40,6 +40,7 @@ class ExportBlocksJob(BaseJob):
             bitcoin_rpc,
             max_workers,
             item_exporter,
+            chain,
             export_blocks=True,
             export_transactions=True):
         validate_range(start_block, end_block)
@@ -50,6 +51,8 @@ class ExportBlocksJob(BaseJob):
 
         self.batch_work_executor = BatchWorkExecutor(batch_size, max_workers)
         self.item_exporter = item_exporter
+
+        self.chain = chain
 
         self.export_blocks = export_blocks
         self.export_transactions = export_transactions
@@ -77,15 +80,38 @@ class ExportBlocksJob(BaseJob):
         block_hashes = rpc_response_batch_to_results(block_hashes_response)
 
         # get block details by hash
-        block_detail_rpc = list(generate_get_block_by_hash_json_rpc(block_hashes, self.export_transactions))
+        block_detail_rpc = list(generate_get_block_by_hash_json_rpc(block_hashes, self.export_transactions, self.chain))
         block_detail_response = self.bitcoin_rpc.batch(block_detail_rpc)
-        block_detail_results = rpc_response_batch_to_results(block_detail_response)
+        block_detail_results = list(rpc_response_batch_to_results(block_detail_response))
 
-        blocks = [self.block_mapper.json_dict_to_block(block_detail_result)
-                  for block_detail_result in block_detail_results]
+        transactions_json = None
+        if self.chain == 'dogecoin' and self.export_transactions:
+            all_txids = [block.get('tx', []) for block in block_detail_results]
+            flat_txids = [txid for txids in all_txids for txid in txids]
+            flat_txids = [txid for txid in flat_txids if
+                          txid != '5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69']
+            if flat_txids:
+                transaction_detail_rpc = list(generate_get_transaction_by_id_json_rpc(flat_txids))
+                transaction_detail_response = self.bitcoin_rpc.batch(transaction_detail_rpc)
+                transaction_detail_results = rpc_response_batch_to_results(transaction_detail_response)
+                transactions_json = list(transaction_detail_results)
+
+        blocks = [self.block_mapper.json_dict_to_block(
+            block_detail_result,
+            transactions_json=self._filter_transactions_for_block(transactions_json, block_detail_result))
+            for block_detail_result in block_detail_results]
 
         for block in blocks:
             self._export_block(block)
+
+    def _filter_transactions_for_block(self, transactions, block):
+        if transactions is None or len(transactions) == 0:
+            return None
+        block_hash = block.get('hash')
+        if block_hash is None:
+            raise ValueError('There is no hash in block data {}', block)
+
+        return [tx for tx in transactions if tx.get('blockhash') == block_hash]
 
     def _export_block(self, block):
         if self.export_blocks:
