@@ -25,7 +25,7 @@ from bitcoinetl.json_rpc_requests import generate_get_block_hash_by_number_json_
     generate_get_block_by_hash_json_rpc, generate_get_transaction_by_id_json_rpc
 from bitcoinetl.mappers.block_mapper import BtcBlockMapper
 from bitcoinetl.mappers.transaction_mapper import BtcTransactionMapper
-from blockchainetl.utils import rpc_response_batch_to_results
+from blockchainetl.utils import rpc_response_batch_to_results, dynamic_batch_iterator
 
 
 class BtcService(object):
@@ -68,7 +68,7 @@ class BtcService(object):
     def _enrich_blocks_with_transactions(self, blocks):
         all_txids = [block.transactions for block in blocks]
         flat_txids = [txid for txids in all_txids for txid in txids]
-        raw_transactions = self._get_raw_transactions_by_txids(flat_txids)
+        raw_transactions = self._get_raw_transactions_by_txids_batched(flat_txids)
 
         for block in blocks:
             raw_block_transactions = [tx for tx in raw_transactions if tx.get('blockhash') == block.hash]
@@ -77,6 +77,17 @@ class BtcService(object):
             block.transaction_count = len(block.transactions)
 
         return blocks
+
+    def _get_raw_transactions_by_txids_batched(self, txids):
+        if txids is None or len(txids) == 0:
+            return []
+
+        result = []
+        batch_size = 100
+        for batch in dynamic_batch_iterator(txids, lambda: batch_size):
+            result.extend(self._get_raw_transactions_by_txids(batch))
+
+        return result
 
     def _get_raw_transactions_by_txids(self, txids):
         if txids is None or len(txids) == 0:
