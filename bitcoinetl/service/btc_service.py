@@ -36,14 +36,14 @@ class BtcService(object):
         self.chain = chain
 
     def get_blocks(self, block_number_batch, with_transactions=True):
-        if block_number_batch is None or len(block_number_batch) == 0:
+        if not block_number_batch:
             return []
 
         block_hashes = self.get_block_hashes(block_number_batch)
         return self.get_blocks_by_hashes(block_hashes, with_transactions)
 
     def get_blocks_by_hashes(self, block_hash_batch, with_transactions=True):
-        if block_hash_batch is None or len(block_hash_batch) == 0:
+        if not block_hash_batch:
             return []
 
         # get block details by hash
