@@ -44,7 +44,7 @@ For the latest version, check out the repo and call
 
 ### blocks.json
 
-Column              | Type            |
+Field               | Type            |
 --------------------|-----------------|
 hash                | hex_string      | 
 size                | bigint          |
@@ -61,7 +61,7 @@ transaction_count   | bigint          |
 
 ### transactions.json
 
-Column                  | Type                  |
+Field                   | Type                  |
 ------------------------|-----------------------|
 hash                    | hex_string            | 
 size                    | bigint                |
@@ -76,7 +76,7 @@ outputs                 | []transaction_output  |
 
 ### transaction_input
 
-Column                  | Type                  |
+Field                   | Type                  |
 ------------------------|-----------------------|
 index                   | bigint                | 
 spent_txid              | hex_string            | 
@@ -90,7 +90,7 @@ value                   | bigint                |
 
 ### transaction_output
 
-Column                  | Type                  |
+Field                   | Type                  |
 ------------------------|-----------------------|
 index                   | bigint                |
 script_asm              | string                |
