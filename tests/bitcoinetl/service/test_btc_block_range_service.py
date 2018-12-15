@@ -37,6 +37,7 @@ from tests.helpers import skip_if_slow_tests_disabled
     skip_if_slow_tests_disabled(['2009-05-07', 13583, 13704]),
     skip_if_slow_tests_disabled(['2009-05-08', 13705, 13811]),
     skip_if_slow_tests_disabled(['2009-06-05', 16534, 16563]),
+    skip_if_slow_tests_disabled(['2013-10-09', 262452, 262645]),
     skip_if_slow_tests_disabled(['2014-04-18', 296393, 296552]),
     skip_if_slow_tests_disabled(['2014-04-19', 296553, 296711]),
     skip_if_slow_tests_disabled(['2017-01-02', 446189, 446347]),

@@ -23,6 +23,8 @@
 
 from blockchainetl.utils import pairwise
 
+FIND_POINT_AROUND_MAX_ITERATIONS = 20
+
 
 class GraphOperations(object):
     def __init__(self, graph):
@@ -39,6 +41,7 @@ class GraphOperations(object):
 
         bounds = self._get_bounds_for_y_coordinate_recursive(y, *initial_bounds)
 
+        # block times in Bitcoin are not monotonic so need to find other bounds around the found ones
         result = self._find_point_around_y(y, bounds[0], find_below=True, move_left=False), \
                  self._find_point_around_y(y, bounds[1], find_below=False, move_left=True)
 
@@ -100,10 +103,9 @@ class GraphOperations(object):
         next_point = point
         best_point = point
         iteration = 0
-        max_iterations = 15
 
         increment = - 1 if move_left else 1
-        while iteration < max_iterations and 0 <= (next_point.x + increment) <= last_point.x:
+        while iteration < FIND_POINT_AROUND_MAX_ITERATIONS and 0 <= (next_point.x + increment) <= last_point.x:
             prev_point = next_point
             next_point = self._get_point(next_point.x + increment)
             if find_below and move_left and (next_point.y == y or next_point.y < y < prev_point.y):
