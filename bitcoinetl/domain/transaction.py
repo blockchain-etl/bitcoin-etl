@@ -34,7 +34,6 @@ class BtcTransaction(object):
         self.block_height = None
         self.block_hash = None
         self.block_time = None
-        self.block_median_time = None
         # TODO: Add fee
         self.inputs = []
         self.outputs = []

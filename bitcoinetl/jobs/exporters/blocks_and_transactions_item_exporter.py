@@ -48,7 +48,6 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'block_height',
     'block_hash',
     'block_time',
-    'block_median_time',
     'inputs',
     'outputs'
 ]

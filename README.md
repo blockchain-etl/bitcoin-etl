@@ -71,7 +71,6 @@ lock_time               | bigint                |
 block_height            | bigint                |
 block_hash              | hex_string            |
 block_time              | bigint                |
-block_median_time       | bigint                |
 inputs                  | []transaction_input   |
 outputs                 | []transaction_output  |
 
