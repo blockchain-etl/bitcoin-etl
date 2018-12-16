@@ -19,9 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
+import decimal
 import json
 
+from eth_utils import to_text
 from web3 import HTTPProvider
 from web3.utils.request import make_post_request
 
@@ -65,3 +66,6 @@ class BitcoinRpc(HTTPProvider):
     def getblockcount(self):
         response = self.batch([['getblockcount']])
         return response[0] if len(response) > 0 else None
+
+    def decode_rpc_response(self, response):
+        return json.loads(to_text(response), parse_float=decimal.Decimal)

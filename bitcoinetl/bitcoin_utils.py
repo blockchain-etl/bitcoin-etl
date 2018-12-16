@@ -7,6 +7,6 @@ def bitcoin_to_satoshi(bitcoin_value):
         return bitcoin_value
 
     if isinstance(bitcoin_value, Decimal):
-        return int(bitcoin_value * (Decimal(10) ** 8))
+        return int(bitcoin_value * (Decimal(10) ** 8).to_integral_value())
     else:
         return int(bitcoin_value * math.pow(10, 8))
