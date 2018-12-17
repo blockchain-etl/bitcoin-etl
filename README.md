@@ -24,8 +24,6 @@ For the latest version, check out the repo and call
 > python bitcoinetl.py
 ```
 
-[LIMITATIONS](#limitations)
-
 ## Table of Contents
 
 - [Schema](#schema)
