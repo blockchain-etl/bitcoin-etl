@@ -29,46 +29,48 @@ from tests.bitcoinetl.job.helpers import get_bitcoin_rpc
 from tests.helpers import skip_if_slow_tests_disabled
 
 
-@pytest.mark.parametrize("date,expected_start_block,expected_end_block", [
-    skip_if_slow_tests_disabled(['2009-01-03', 0, 0]),
-    skip_if_slow_tests_disabled(['2009-01-09', 1, 14]),
-    skip_if_slow_tests_disabled(['2009-03-01', 5924, 6028]),
-    skip_if_slow_tests_disabled(['2009-05-06', 13448, 13582]),
-    skip_if_slow_tests_disabled(['2009-05-07', 13583, 13704]),
-    skip_if_slow_tests_disabled(['2009-05-08', 13705, 13811]),
-    skip_if_slow_tests_disabled(['2009-06-05', 16534, 16563]),
-    skip_if_slow_tests_disabled(['2013-10-09', 262452, 262645]),
-    skip_if_slow_tests_disabled(['2014-04-18', 296393, 296552]),
-    skip_if_slow_tests_disabled(['2014-04-19', 296553, 296711]),
-    skip_if_slow_tests_disabled(['2017-01-02', 446189, 446347]),
+@pytest.mark.parametrize("chain,date,expected_start_block,expected_end_block", [
+    skip_if_slow_tests_disabled(['bitcoin', '2009-01-03', 0, 0], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', '2009-01-09', 1, 14], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', '2009-03-01', 5924, 6028], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', '2009-05-06', 13448, 13582], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', '2009-05-07', 13583, 13704], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', '2009-05-08', 13705, 13811], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', '2009-06-05', 16534, 16563], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', '2013-10-09', 262452, 262645], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', '2014-04-18', 296393, 296552], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', '2014-04-19', 296553, 296711], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', '2017-01-02', 446189, 446347], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['dogecoin', '2014-01-20', 63869, 65347], chain='dogecoin'),
+    skip_if_slow_tests_disabled(['dogecoin', '2014-01-21', 65322, 66853], chain='dogecoin'),
 ])
-def test_get_block_range_for_date(date, expected_start_block, expected_end_block):
-    btc_block_range_service = get_new_btc_block_range_service()
+def test_get_block_range_for_date(chain, date, expected_start_block, expected_end_block):
+    btc_block_range_service = get_new_btc_block_range_service(chain)
     parsed_date = parse(date)
     blocks = btc_block_range_service.get_block_range_for_date(parsed_date)
     assert blocks == (expected_start_block, expected_end_block)
 
 
-@pytest.mark.parametrize("date", [
-    skip_if_slow_tests_disabled(['2030-01-01'])
+@pytest.mark.parametrize("chain,date", [
+    skip_if_slow_tests_disabled(['bitcoin','2030-01-01'], chain='bitcoin')
 ])
-def test_get_block_range_for_date_fail(date):
-    btc_service = get_new_btc_block_range_service()
+def test_get_block_range_for_date_fail(chain, date):
+    btc_service = get_new_btc_block_range_service(chain)
     parsed_date = parse(date)
     with pytest.raises(OutOfBoundsError):
         btc_service.get_block_range_for_date(parsed_date)
 
 
-@pytest.mark.parametrize("start_timestamp,end_timestamp,expected_start_block,expected_end_block", [
-    skip_if_slow_tests_disabled([1235952055, 1235995140, 6029, 6082]),
-    skip_if_slow_tests_disabled([1328227200, 1328248800, 165081,165132]),
+@pytest.mark.parametrize("chain,start_timestamp,end_timestamp,expected_start_block,expected_end_block", [
+    skip_if_slow_tests_disabled(['bitcoin', 1235952055, 1235995140, 6029, 6082], chain='bitcoin'),
+    skip_if_slow_tests_disabled(['bitcoin', 1328227200, 1328248800, 165081,165132], chain='bitcoin'),
 ])
-def test_get_block_range_for_timestamps(start_timestamp, end_timestamp, expected_start_block, expected_end_block):
-    eth_service = get_new_btc_block_range_service()
+def test_get_block_range_for_timestamps(chain, start_timestamp, end_timestamp, expected_start_block, expected_end_block):
+    eth_service = get_new_btc_block_range_service(chain)
     blocks = eth_service.get_block_range_for_timestamps(start_timestamp, end_timestamp)
     assert blocks == (expected_start_block, expected_end_block)
 
 
-def get_new_btc_block_range_service():
-    rpc = get_bitcoin_rpc("online")
+def get_new_btc_block_range_service(chain):
+    rpc = get_bitcoin_rpc("online", chain=chain)
     return BtcBlockRangeService(rpc)

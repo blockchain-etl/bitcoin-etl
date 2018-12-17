@@ -53,10 +53,11 @@ def read_file(path):
         return file.read()
 
 
-run_slow_tests_variable = os.environ.get('BITCOIN_ETL_RUN_SLOW_TESTS', 'False')
-run_slow_tests = run_slow_tests_variable.lower() in ['1', 'true', 'yes']
+def run_slow_tests(chain):
+    provider_uri_variable = os.environ.get('BITCOINETL_{}_PROVIDER_URI'.format(chain.upper()), '')
+    return provider_uri_variable is not None and len(provider_uri_variable) > 0
 
-def skip_if_slow_tests_disabled(data):
-    return pytest.param(*data,
-            marks=pytest.mark.skipif(not run_slow_tests, 
-                                    reason='Skipping slow running tests'))
+
+def skip_if_slow_tests_disabled(data, chain='bitcoin'):
+    return pytest.param(*data, marks=pytest.mark.skipif(not run_slow_tests(chain),
+                                                        reason='Skipping slow running tests'))

@@ -28,8 +28,8 @@ from blockchainetl.service.graph_operations import GraphOperations, OutOfBoundsE
 
 
 class BtcBlockRangeService(object):
-    def __init__(self, rpc_connection):
-        graph = BlockTimestampGraph(rpc_connection)
+    def __init__(self, bitcoin_rpc):
+        graph = BlockTimestampGraph(bitcoin_rpc)
         self._graph_operations = GraphOperations(graph)
 
     def get_block_range_for_date(self, date):

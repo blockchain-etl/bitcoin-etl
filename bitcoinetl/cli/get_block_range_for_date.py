@@ -42,8 +42,8 @@ logging_basic_config()
 def get_block_range_for_date(provider_uri, date, output):
     """Outputs start and end blocks for given date."""
 
-    rpc_connection = get_bitcoin_rpc(provider_uri)
-    btc_service = BtcBlockRangeService(rpc_connection)
+    bitcoin_rpc = get_bitcoin_rpc(provider_uri)
+    btc_service = BtcBlockRangeService(bitcoin_rpc)
 
     start_block, end_block = btc_service.get_block_range_for_date(date)
 

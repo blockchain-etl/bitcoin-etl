@@ -23,7 +23,7 @@
 
 from blockchainetl.utils import pairwise
 
-FIND_POINT_AROUND_MAX_ITERATIONS = 20
+MAX_ITERATIONS_FIND_POINT_AROUND = 119
 
 
 class GraphOperations(object):
@@ -97,17 +97,24 @@ class GraphOperations(object):
     def _find_point_around_y(self, y, x, find_below, move_left):
         find_above = not find_below
         move_right = not move_left
-        point = self._get_point(x)
+
         last_point = self._get_last_point()
+        point = self._get_point(x)
 
         next_point = point
         best_point = point
         iteration = 0
 
         increment = - 1 if move_left else 1
-        while iteration < FIND_POINT_AROUND_MAX_ITERATIONS and 0 <= (next_point.x + increment) <= last_point.x:
+        while iteration < MAX_ITERATIONS_FIND_POINT_AROUND and 0 <= (next_point.x + increment) <= last_point.x:
             prev_point = next_point
-            next_point = self._get_point(next_point.x + increment)
+
+            next_point_x = next_point.x + increment
+
+            prefetch_left = min(20 if move_left else 0, next_point_x)
+            prefetch_right = min(20 if move_right else 0, max(last_point.x - next_point_x - 1, 0))
+            next_point = self._get_point(next_point_x, prefetch_left=prefetch_left, prefetch_right=prefetch_right)
+
             if find_below and move_left and (next_point.y == y or next_point.y < y < prev_point.y):
                 best_point = next_point
             if find_below and move_right and (prev_point.y == y or prev_point.y < y < next_point.y):
@@ -127,13 +134,28 @@ class GraphOperations(object):
                 return point
         return None
 
-    def _get_point(self, x):
+    def _get_point(self, x, prefetch_left=0, prefetch_right=0):
+        prefetch_left = max(prefetch_left, 0)
+        prefetch_right = max(prefetch_right, 0)
         cached_point = self._find_point_in_cache(x)
         if cached_point is not None:
             return cached_point
-        point = self._graph.get_point(x)
-        self._cached_points.append(point)
-        return point
+        else:
+            if prefetch_left == 0 and prefetch_right == 0:
+                point = self._graph.get_point(x)
+                self._cached_points.append(point)
+                return point
+            else:
+                xs = [x]
+                for i in range(x - prefetch_left, x):
+                    xs.append(i)
+                for i in range(x + 1, x + prefetch_right + 1):
+                    xs.append(i)
+                points = self._graph.get_points(xs)
+                for point in points:
+                    self._cached_points.append(point)
+                point = [p for p in points if p.x == x][0]
+                return point
 
     def _get_first_point(self):
         point = self._graph.get_first_point()

@@ -21,30 +21,40 @@
 # SOFTWARE.
 
 
+from bitcoinetl.domain.block import BtcBlock
+from bitcoinetl.service.btc_service import BtcService
 from blockchainetl.service.graph_operations import Point
 
 
 class BlockTimestampGraph(object):
-    def __init__(self, rpc_connection):
-        self._rpc_connection = rpc_connection
+    def __init__(self, bitcoin_rpc):
+        self._bitcoin_rpc = bitcoin_rpc
+        self._btc_service = BtcService(bitcoin_rpc)
 
     def get_first_point(self):
-        block_hash = self._rpc_connection.getblockhash(0)
-        block = self._rpc_connection.getblock(block_hash)
+        block_hash = self._bitcoin_rpc.getblockhash(0)
+        block = self._bitcoin_rpc.getblock(block_hash)
         return block_to_point(block)
 
     def get_last_point(self):
-        block_height = self._rpc_connection.getblockcount()
-        block_hash = self._rpc_connection.getblockhash(block_height)
-        block = self._rpc_connection.getblock(block_hash)
+        block_height = self._bitcoin_rpc.getblockcount()
+        block_hash = self._bitcoin_rpc.getblockhash(block_height)
+        block = self._bitcoin_rpc.getblock(block_hash)
 
         return block_to_point(block)
 
     def get_point(self, block_height):
-        block_hash = self._rpc_connection.getblockhash(block_height)
-        block = self._rpc_connection.getblock(block_hash)
+        block_hash = self._bitcoin_rpc.getblockhash(block_height)
+        block = self._bitcoin_rpc.getblock(block_hash)
         return block_to_point(block)
+
+    def get_points(self, block_heights):
+        blocks = self._btc_service.get_blocks(block_heights, with_transactions=False)
+        return [block_to_point(block) for block in blocks]
 
 
 def block_to_point(block):
-    return Point(block['height'], block["time"])
+    if isinstance(block, BtcBlock):
+        return Point(block.height, block.time)
+    else:
+        return Point(block['height'], block["time"])

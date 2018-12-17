@@ -25,7 +25,7 @@ from bitcoinetl.providers.rpc import BitcoinRpc
 from tests.bitcoinetl.job.mock_bitcoin_rpc import MockBitcoinRpc
 
 
-def get_bitcoin_rpc(provider_type, read_resource_lambda=None):
+def get_bitcoin_rpc(provider_type, read_resource_lambda=None, chain='bitcoin'):
     if provider_type == "mock":
         if read_resource_lambda is None:
             raise ValueError('read_resource_lambda must not be None for provider type {}'.format(provider_type))
@@ -33,9 +33,10 @@ def get_bitcoin_rpc(provider_type, read_resource_lambda=None):
 
     elif provider_type == "online":
 
-        provider_uri = os.environ.get("BITCOINETL_PROVIDER_URI")
-        if provider_uri is None:
-            raise ValueError('BITCOINETL_PROVIDER_URI is required environment variable')
+        env_variable_name = "BITCOINETL_{}_PROVIDER_URI".format(chain.upper())
+        provider_uri = os.environ.get(env_variable_name)
+        if provider_uri is None or len(provider_uri) == 0:
+            raise ValueError('{} is required environment variable'.format(env_variable_name))
 
         rpc = BitcoinRpc(provider_uri)
     return rpc

@@ -206,8 +206,8 @@ You can tune `--batch-size`, `--max-workers` for performance.
 
 ```bash
 > pip install -e .[dev]
-> export BITCOIN_ETL_RUN_SLOW_TESTS=True
-> export BITCOINETL_PROVIDER_URI=http://user:pass@localhost:8332
+> export BITCOINETL_BITCOIN_PROVIDER_URI=http://user:pass@localhost:8332
+> export BITCOINETL_DOGECOIN_PROVIDER_URI=http://user:pass@localhost:8331
 > pytest -vv
 ```
 

@@ -23,11 +23,14 @@
 
 def generate_get_block_by_hash_json_rpc(block_hashes, include_transactions, chain='bitcoin'):
     for _, block_hash in enumerate(block_hashes):
-        if chain == 'dogecoin':
-            verbosity = True
+        if not include_transactions:
+            yield ["getblock", block_hash]
         else:
-            verbosity = 2 if include_transactions else 1
-        yield ["getblock", block_hash, verbosity]
+            if chain == 'dogecoin':
+                verbosity = include_transactions
+            else:
+                verbosity = 2 if include_transactions else 1
+            yield ["getblock", block_hash, verbosity]
 
 
 def generate_get_block_hash_by_number_json_rpc(block_numbers):
