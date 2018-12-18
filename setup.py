@@ -31,6 +31,7 @@ setup(
     keywords='bitcoin',
     python_requires='>=3.5.3,<3.8.0',
     install_requires=[
+        'requests==2.18.4',
         'python-dateutil==2.7.0',
         'click==7.0',
     ],
