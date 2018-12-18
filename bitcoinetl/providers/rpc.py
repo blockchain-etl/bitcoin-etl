@@ -19,15 +19,14 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 import decimal
 import json
 
-from eth_utils import to_text
-from web3 import HTTPProvider
-from web3.utils.request import make_post_request
+from bitcoinetl.providers.request import make_post_request
 
 
-class BitcoinRpc(HTTPProvider):
+class BitcoinRpc:
 
     def __init__(self, provider_uri, timeout=60):
         self.provider_uri = provider_uri
@@ -46,7 +45,7 @@ class BitcoinRpc(HTTPProvider):
             timeout=self.timeout
         )
 
-        response = self.decode_rpc_response(raw_response)
+        response = self._decode_rpc_response(raw_response)
 
         result = []
         for resp_item in response:
@@ -67,5 +66,6 @@ class BitcoinRpc(HTTPProvider):
         response = self.batch([['getblockcount']])
         return response[0] if len(response) > 0 else None
 
-    def decode_rpc_response(self, response):
-        return json.loads(to_text(response), parse_float=decimal.Decimal)
+    def _decode_rpc_response(self, response):
+        response_text = response.decode('utf-8')
+        return json.loads(response_text, parse_float=decimal.Decimal)

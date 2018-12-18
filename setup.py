@@ -12,13 +12,13 @@ long_description = read('README.md') if os.path.isfile("README.md") else ""
 setup(
     name='bitcoin-etl',
     version='1.0.0',
-    author='Omidiora Samuel',
-    author_email='samparsky@gmail.com',
+    author='Evgeny Medvedev',
+    author_email='evge.medvedev@gmail.com',
     description='Tools for exporting Bitcoin blockchain data to JSON',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/blockchain-etl/bitcoin-etl',
-    packages=find_packages(exclude=['schemas', 'tests']),
+    packages=find_packages(exclude=['tests']),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
@@ -31,7 +31,6 @@ setup(
     keywords='bitcoin',
     python_requires='>=3.5.3,<3.8.0',
     install_requires=[
-        'web3==4.7.2',
         'python-dateutil==2.7.0',
         'click==7.0',
     ],
@@ -47,7 +46,7 @@ setup(
     },
     project_urls={
         'Bug Reports': 'https://github.com/blockchain-etl/bitcoin-etl/issues',
-        'Chat': 'https://gitter.im/bitcoin-etl/Lobby',
+        'Chat': 'https://gitter.im/ethereum-etl/Lobby',
         'Source': 'https://github.com/blockchain-etl/bitcoin-etl',
     },
 )
