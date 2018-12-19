@@ -26,7 +26,7 @@ def generate_get_block_by_hash_json_rpc(block_hashes, include_transactions, chai
         if not include_transactions:
             yield ["getblock", block_hash]
         else:
-            if chain == 'dogecoin':
+            if chain in ('dogecoin', 'bitcoin_cash'):
                 verbosity = include_transactions
             else:
                 verbosity = 2 if include_transactions else 1

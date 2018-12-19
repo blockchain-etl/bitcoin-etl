@@ -54,7 +54,7 @@ class BtcService(object):
         blocks = [self.block_mapper.json_dict_to_block(block_detail_result)
                   for block_detail_result in block_detail_results]
 
-        if self.chain == 'dogecoin' and with_transactions:
+        if self.chain in ('dogecoin', 'bitcoin_cash') and with_transactions:
             blocks = self._enrich_blocks_with_transactions(blocks)
 
         return blocks
@@ -93,7 +93,7 @@ class BtcService(object):
         if txids is None or len(txids) == 0:
             return []
 
-        filtered_txids = [txid for txid in txids if txid != DOGECOIN_ERROREOUS_TRANSACTION['txid']]
+        filtered_txids = [txid for txid in txids if txid not in [DOGECOIN_ERROREOUS_TRANSACTION['txid'], BITCOIN_CASH_ERROREOUS_TRANSACTION['txid']]]
         transaction_detail_rpc = list(generate_get_transaction_by_id_json_rpc(filtered_txids))
         transaction_detail_response = self.bitcoin_rpc.batch(transaction_detail_rpc)
         transaction_detail_results = rpc_response_batch_to_results(transaction_detail_response)
@@ -102,6 +102,9 @@ class BtcService(object):
         if DOGECOIN_ERROREOUS_TRANSACTION['txid'] in txids:
             raw_transactions.append(DOGECOIN_ERROREOUS_TRANSACTION)
 
+        if BITCOIN_CASH_ERROREOUS_TRANSACTION['txid'] in txids:
+            raw_transactions.append(BITCOIN_CASH_ERROREOUS_TRANSACTION)
+
         return raw_transactions
 
 
@@ -109,6 +112,15 @@ class BtcService(object):
 DOGECOIN_ERROREOUS_TRANSACTION = {
     'txid': '5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69',
     'blockhash': '1a91e3dace36e2be3bf030a65679fe821aa1d6ef92e7c9902eb318182c355691',
+    'locktime': 0,
+    'vin': [],
+    'vout': [],
+    'version': 1
+}
+
+BITCOIN_CASH_ERROREOUS_TRANSACTION = {
+    'txid': '4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
+    'blockhash': '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
     'locktime': 0,
     'vin': [],
     'vout': [],
