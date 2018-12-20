@@ -45,8 +45,7 @@ class BtcService(object):
 
     def get_latest_block(self, with_transactions=False):
         block_number = self.bitcoin_rpc.getblockcount()
-        blocks = self.get_block(block_number, with_transactions)
-        return blocks[0] if len(blocks) > 0 else None
+        return self.get_block(block_number, with_transactions)
 
     def get_blocks(self, block_number_batch, with_transactions=False):
         if not block_number_batch:
@@ -70,6 +69,8 @@ class BtcService(object):
         if self.chain in ('dogecoin', 'bitcoin_cash') and with_transactions:
             blocks = self._enrich_blocks_with_transactions(blocks)
 
+        self._remove_coinbase_inputs(blocks)
+
         return blocks
 
     def get_block_hashes(self, block_number_batch):
@@ -87,7 +88,6 @@ class BtcService(object):
             raw_block_transactions = [tx for tx in raw_transactions if tx.get('blockhash') == block.hash]
             block.transactions = [self.transaction_mapper.json_dict_to_transaction(tx, block)
                                   for tx in raw_block_transactions]
-            block.transaction_count = len(block.transactions)
 
         return blocks
 
@@ -120,23 +120,78 @@ class BtcService(object):
 
         return raw_transactions
 
+    def _remove_coinbase_inputs(self, blocks):
+        for block in blocks:
+            self._remove_coinbase_input(block)
+
+    def _remove_coinbase_input(self, block):
+        if block.has_full_transactions():
+            for transaction in block.transactions:
+                coinbase_inputs = [input for input in transaction.inputs if input.is_coinbase()]
+                if len(coinbase_inputs) > 1:
+                    raise ValueError('There must be no more than 1 coinbase input in any transaction. Was {}, hash {}'
+                                     .format(len(coinbase_inputs), transaction.hash))
+                coinbase_input = coinbase_inputs[0] if len(coinbase_inputs) > 0 else None
+                if coinbase_input is not None:
+                    block.coinbase_param = coinbase_input.coinbase_param
+                    transaction.inputs = [input for input in transaction.inputs if not input.is_coinbase()]
+
 
 # Transactions in genesis blocks return error for getrawtransaction API
+# The genesis block coinbase is not considered an ordinary transaction and cannot be retrieved
 GENESIS_TRANSACTIONS = {
     'dogecoin': {
         'txid': '5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69',
         'blockhash': '1a91e3dace36e2be3bf030a65679fe821aa1d6ef92e7c9902eb318182c355691',
         'locktime': 0,
-        'vin': [],
-        'vout': [],
+        'vin': [
+            {
+                "coinbase": "04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73",
+                "sequence": 4294967295
+            }
+        ],
+        'vout': [
+            {
+                "value": 50.00000000,
+                "n": 0,
+                "scriptPubKey": {
+                    "asm": "040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac OP_CHECKSIG",
+                    "hex": "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac",
+                    "reqSigs": 1,
+                    "type": "pubkey",
+                    "addresses": [
+                        "BZv7UykZdDFxh48RNjKPeH2PvGxcCKDuW"
+                    ]
+                }
+            }
+        ],
         'version': 1
     },
     'bitcoin_cash': {
         'txid': '4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
         'blockhash': '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
         'locktime': 0,
-        'vin': [],
-        'vout': [],
+        'vin': [
+            {
+                "coinbase": "04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73",
+                "sequence": 4294967295
+            }
+        ],
+        'vout': [
+            {
+                "value": 50.00000000,
+                "n": 0,
+                "scriptPubKey": {
+                    "asm": "04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f OP_CHECKSIG",
+                    "hex": "4104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac",
+                    "reqSigs": 1,
+                    "type": "pubkey",
+                    "addresses": [
+                        "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+                    ]
+                }
+            }
+        ],
         'version': 1
     }
 }

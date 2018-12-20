@@ -47,4 +47,4 @@ class BlockTimestampGraph(object):
 
 
 def block_to_point(block):
-    return Point(block.number, block.time)
+    return Point(block.number, block.timestamp)

@@ -33,3 +33,6 @@ class BtcTransactionInput(object):
 
         self.addresses = []
         self.value = None
+
+    def is_coinbase(self):
+        return self.coinbase_param is not None or self.spent_transaction_hash is None

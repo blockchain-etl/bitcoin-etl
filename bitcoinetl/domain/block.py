@@ -19,10 +19,11 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+from bitcoinetl.domain.transaction import BtcTransaction
 
 
 class BtcBlock(object):
-    
+
     def __init__(self):
         self.hash = None
         self.size = None
@@ -34,8 +35,9 @@ class BtcBlock(object):
         self.timestamp = None
         self.nonce = None
         self.bits = None
+        self.coinbase_param = None
 
         self.transactions = []
-        self.transaction_count = 0
-    
 
+    def has_full_transactions(self):
+        return len(self.transactions) > 0 and isinstance(self.transactions[0], BtcTransaction)

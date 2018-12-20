@@ -52,6 +52,7 @@ class BtcBlockMapper(object):
                     self.transaction_mapper.json_dict_to_transaction(tx, block) for tx in raw_transactions
                 ]
             else:
+                # Transaction hashes
                 block.transactions = raw_transactions
 
             block.transaction_count = len(raw_transactions)
@@ -71,5 +72,6 @@ class BtcBlockMapper(object):
             'timestamp': block.timestamp,
             'nonce': block.nonce,
             'bits': block.bits,
-            'transaction_count': block.transaction_count
+            'coinbase_param': block.coinbase_param,
+            'transaction_count': len(block.transactions)
         }

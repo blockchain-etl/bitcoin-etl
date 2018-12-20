@@ -55,7 +55,6 @@ class BtcTransactionInputMapper(object):
                 'spent_output_index': input.spent_output_index,
                 'script_asm': input.script_asm,
                 'script_hex': input.script_hex,
-                'coinbase_param': input.coinbase_param,
                 'sequence': input.sequence,
                 'value': input.value,
             }

@@ -29,6 +29,11 @@ from bitcoinetl.mappers.transaction_output_mapper import BtcTransactionOutputMap
 # http://chainquery.com/bitcoin-api/getblock
 # http://chainquery.com/bitcoin-api/getrawtransaction
 class BtcTransactionMapper(object):
+
+    def __init__(self):
+        self.transaction_input_mapper = BtcTransactionInputMapper()
+        self.transaction_output_mapper = BtcTransactionOutputMapper()
+
     def json_dict_to_transaction(self, json_dict, block=None):
         transaction = BtcTransaction()
         transaction.hash = json_dict.get('txid')
@@ -48,8 +53,8 @@ class BtcTransactionMapper(object):
         if block is not None:
             transaction.block_timestamp = block.timestamp
 
-        transaction.inputs = BtcTransactionInputMapper().json_dict_to_input(json_dict)
-        transaction.outputs = BtcTransactionOutputMapper().json_dict_to_output(json_dict)
+        transaction.inputs = self.transaction_input_mapper.json_dict_to_input(json_dict)
+        transaction.outputs = self.transaction_output_mapper.json_dict_to_output(json_dict)
 
         return transaction
 
@@ -65,7 +70,10 @@ class BtcTransactionMapper(object):
             'block_hash': transaction.block_hash,
             'block_timestamp': transaction.block_timestamp,
 
-            'inputs': BtcTransactionInputMapper().input_to_dict(transaction.inputs),
-            'outputs': BtcTransactionOutputMapper().output_to_dict(transaction.outputs)
+            'input_count': len(transaction.inputs),
+            'output_count': len(transaction.outputs),
+
+            'inputs': self.transaction_input_mapper.input_to_dict(transaction.inputs),
+            'outputs': self.transaction_output_mapper.output_to_dict(transaction.outputs)
         }
         return result

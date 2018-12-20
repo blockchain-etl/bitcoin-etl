@@ -38,10 +38,13 @@ def read_resource(resource_group, file_name):
 
 
 @pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type", [
-    (0, 0, 1, 'genesis_block', 'mock'),
+    (0, 0, 1, 'block_0', 'mock'),
+    skip_if_slow_tests_disabled([0, 0, 1, 'block_0', 'online']),
+    (1, 1, 1, 'block_1', 'mock'),
+    skip_if_slow_tests_disabled([1, 1, 1, 'block_1', 'online']),
     (50000, 50000, 1, 'block_without_transactions', 'mock'),
-    (50001, 50002, 2, 'block_with_transactions', 'mock'),
     skip_if_slow_tests_disabled([50000, 50000, 1, 'block_without_transactions', 'online']),
+    (50001, 50002, 2, 'block_with_transactions', 'mock'),
     skip_if_slow_tests_disabled([50001, 50002, 2, 'block_with_transactions', 'online']),
 ])
 def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_group, provider_type):

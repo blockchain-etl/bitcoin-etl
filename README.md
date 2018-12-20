@@ -54,6 +54,7 @@ merkle_root         | hex_string      |
 timestamp           | bigint          |
 nonce               | bigint          |
 bits                | hex_string      |
+coinbase_param      | hex_string      |
 transaction_count   | bigint          |
 
 ### transactions.json
@@ -68,6 +69,8 @@ lock_time               | bigint                |
 block_number            | bigint                |
 block_hash              | hex_string            |
 block_timestamp         | bigint                |
+input_count             | bigint                |
+output_count            | bigint                |
 inputs                  | []transaction_input   |
 outputs                 | []transaction_output  |
 
@@ -80,7 +83,6 @@ spent_transaction_hash  | hex_string            |
 spent_output_index      | bigint                | 
 script_asm              | string                |
 script_hex              | hex_string            |
-coinbase_param          | hex_string            |
 sequence                | bigint                |
 addresses               | []string              |
 value                   | bigint                |
