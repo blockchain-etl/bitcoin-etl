@@ -34,7 +34,7 @@ class BtcTransactionInputMapper(object):
 
             input.index = index
             index = index + 1
-            input.spent_txid = item.get('txid')
+            input.spent_transaction_hash = item.get('txid')
             input.spent_output_index = item.get('vout')
             input.coinbase_param = item.get('coinbase')
             input.sequence = item.get('sequence')
@@ -51,7 +51,7 @@ class BtcTransactionInputMapper(object):
         for input in inputs:
             item = {
                 'index': input.index,
-                'spent_txid': input.spent_txid,
+                'spent_transaction_hash': input.spent_transaction_hash,
                 'spent_output_index': input.spent_output_index,
                 'script_asm': input.script_asm,
                 'script_hex': input.script_hex,

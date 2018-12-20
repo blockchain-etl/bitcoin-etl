@@ -25,7 +25,6 @@
 class BtcTransaction(object):
     def __init__(self):
         # https://bitcoin.stackexchange.com/questions/77699/whats-the-difference-between-txid-and-hash-getrawtransaction-bitcoind
-        self.txid = None
         self.hash = None
         self.size = None
         self.virtual_size = None
@@ -34,6 +33,5 @@ class BtcTransaction(object):
         self.block_number = None
         self.block_hash = None
         self.block_time = None
-        # TODO: Add fee
         self.inputs = []
         self.outputs = []

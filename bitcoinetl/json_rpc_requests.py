@@ -38,7 +38,6 @@ def generate_get_block_hash_by_number_json_rpc(block_numbers):
         yield ["getblockhash", block_number]
 
 
-def generate_get_transaction_by_id_json_rpc(txids):
-    for txid in txids:
-        if txid != "":
-            yield ["getrawtransaction", txid, 1]
+def generate_get_transaction_by_id_json_rpc(hashes):
+    for hash in hashes:
+        yield ["getrawtransaction", hash, 1]

@@ -39,8 +39,8 @@ class MockBitcoinRpc:
                 number = req[1]
                 file_name = 'rpc_response_{}_{}.json'.format(method, number)
             elif method == 'getrawtransaction':
-                txid = req[1]
-                file_name = 'rpc_response_{}_{}.json'.format(method, txid)
+                hash = req[1]
+                file_name = 'rpc_response_{}_{}.json'.format(method, hash)
             else:
                 raise ValueError('Request method {} is unexpected'.format(method))
             file_content = self.read_resource(file_name)

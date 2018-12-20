@@ -79,9 +79,9 @@ class BtcService(object):
         return block_hashes
 
     def _enrich_blocks_with_transactions(self, blocks):
-        all_txids = [block.transactions for block in blocks]
-        flat_txids = [txid for txids in all_txids for txid in txids]
-        raw_transactions = self._get_raw_transactions_by_txids_batched(flat_txids)
+        all_transaction_hashes = [block.transactions for block in blocks]
+        flat_transaction_hashes = [hash for transaction_hashes in all_transaction_hashes for hash in transaction_hashes]
+        raw_transactions = self._get_raw_transactions_by_hashes_batched(flat_transaction_hashes)
 
         for block in blocks:
             raw_block_transactions = [tx for tx in raw_transactions if tx.get('blockhash') == block.hash]
@@ -91,51 +91,52 @@ class BtcService(object):
 
         return blocks
 
-    def _get_raw_transactions_by_txids_batched(self, txids):
-        if txids is None or len(txids) == 0:
+    def _get_raw_transactions_by_hashes_batched(self, hashes):
+        if hashes is None or len(hashes) == 0:
             return []
 
         result = []
         batch_size = 100
-        for batch in dynamic_batch_iterator(txids, lambda: batch_size):
-            result.extend(self._get_raw_transactions_by_txids(batch))
+        for batch in dynamic_batch_iterator(hashes, lambda: batch_size):
+            result.extend(self._get_raw_transactions_by_hashes(batch))
 
         return result
 
-    def _get_raw_transactions_by_txids(self, txids):
-        if txids is None or len(txids) == 0:
+    def _get_raw_transactions_by_hashes(self, hashes):
+        if hashes is None or len(hashes) == 0:
             return []
 
-        filtered_txids = [txid for txid in txids if txid not in [DOGECOIN_ERROREOUS_TRANSACTION['txid'], BITCOIN_CASH_ERROREOUS_TRANSACTION['txid']]]
-        transaction_detail_rpc = list(generate_get_transaction_by_id_json_rpc(filtered_txids))
+        genesis_transaction_hashes = [transaction['txid'] for transaction in GENESIS_TRANSACTIONS.values()]
+        filtered_hashes = [transaction_hash for transaction_hash in hashes
+                           if transaction_hash not in genesis_transaction_hashes]
+        transaction_detail_rpc = list(generate_get_transaction_by_id_json_rpc(filtered_hashes))
         transaction_detail_response = self.bitcoin_rpc.batch(transaction_detail_rpc)
         transaction_detail_results = rpc_response_batch_to_results(transaction_detail_response)
         raw_transactions = list(transaction_detail_results)
 
-        if DOGECOIN_ERROREOUS_TRANSACTION['txid'] in txids:
-            raw_transactions.append(DOGECOIN_ERROREOUS_TRANSACTION)
-
-        if BITCOIN_CASH_ERROREOUS_TRANSACTION['txid'] in txids:
-            raw_transactions.append(BITCOIN_CASH_ERROREOUS_TRANSACTION)
+        for genesis_transaction in GENESIS_TRANSACTIONS.values():
+            if genesis_transaction['txid'] in hashes:
+                raw_transactions.append(genesis_transaction)
 
         return raw_transactions
 
 
-# The transaction in 0th block in Dogecoin returns error for getrawtransaction rpc
-DOGECOIN_ERROREOUS_TRANSACTION = {
-    'txid': '5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69',
-    'blockhash': '1a91e3dace36e2be3bf030a65679fe821aa1d6ef92e7c9902eb318182c355691',
-    'locktime': 0,
-    'vin': [],
-    'vout': [],
-    'version': 1
-}
-
-BITCOIN_CASH_ERROREOUS_TRANSACTION = {
-    'txid': '4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
-    'blockhash': '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
-    'locktime': 0,
-    'vin': [],
-    'vout': [],
-    'version': 1
+# Transactions in genesis blocks return error for getrawtransaction API
+GENESIS_TRANSACTIONS = {
+    'dogecoin': {
+        'txid': '5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69',
+        'blockhash': '1a91e3dace36e2be3bf030a65679fe821aa1d6ef92e7c9902eb318182c355691',
+        'locktime': 0,
+        'vin': [],
+        'vout': [],
+        'version': 1
+    },
+    'bitcoin_cash': {
+        'txid': '4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
+        'blockhash': '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
+        'locktime': 0,
+        'vin': [],
+        'vout': [],
+        'version': 1
+    }
 }

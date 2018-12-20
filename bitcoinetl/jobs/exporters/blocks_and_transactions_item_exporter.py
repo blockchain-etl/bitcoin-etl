@@ -38,7 +38,6 @@ BLOCK_FIELDS_TO_EXPORT = [
 ]
 
 TRANSACTION_FIELDS_TO_EXPORT = [
-    'txid',
     'hash',
     'size',
     'virtual_size',

@@ -76,7 +76,7 @@ outputs                 | []transaction_output  |
 Field                   | Type                  |
 ------------------------|-----------------------|
 index                   | bigint                | 
-spent_txid              | hex_string            | 
+spent_transaction_hash  | hex_string            | 
 spent_output_index      | bigint                | 
 script_asm              | string                |
 script_hex              | hex_string            |

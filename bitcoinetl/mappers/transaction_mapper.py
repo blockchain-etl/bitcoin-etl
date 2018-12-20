@@ -31,8 +31,7 @@ from bitcoinetl.mappers.transaction_output_mapper import BtcTransactionOutputMap
 class BtcTransactionMapper(object):
     def json_dict_to_transaction(self, json_dict, block=None):
         transaction = BtcTransaction()
-        transaction.txid = json_dict.get('txid')
-        transaction.hash = json_dict.get('hash')
+        transaction.hash = json_dict.get('txid')
         transaction.size = json_dict.get('size')
         transaction.virtual_size = json_dict.get('vsize')
         transaction.version = json_dict.get('version')
@@ -57,7 +56,6 @@ class BtcTransactionMapper(object):
     def transaction_to_dict(self, transaction):
         result = {
             'type': 'transaction',
-            'txid': transaction.txid,
             'hash': transaction.hash,
             'size': transaction.size,
             'virtual_size': transaction.virtual_size,
