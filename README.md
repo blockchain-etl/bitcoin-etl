@@ -51,8 +51,7 @@ weight              | bigint          |
 number              | bigint          |
 version             | bigint          |
 merkle_root         | hex_string      |
-time                | bigint          |
-median_time         | bigint          |
+timestamp           | bigint          |
 nonce               | bigint          |
 bits                | hex_string      |
 transaction_count   | bigint          |
@@ -68,7 +67,7 @@ version                 | bigint                |
 lock_time               | bigint                |
 block_number            | bigint                |
 block_hash              | hex_string            |
-block_time              | bigint                |
+block_timestamp         | bigint                |
 inputs                  | []transaction_input   |
 outputs                 | []transaction_output  |
 
@@ -154,7 +153,6 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 ### Command Reference
 
 - [export_blocks_and_transactions](#export_blocks_and_transactions)
-- [get_block_range_for_timestamps](#get_block_range_for_timestamps)
 - [get_block_range_for_date](#get_block_range_for_date)
 
 All the commands accept `-h` parameter for help, e.g.:

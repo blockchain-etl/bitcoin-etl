@@ -24,7 +24,7 @@
 from datetime import datetime, timezone
 
 from bitcoinetl.service.btc_block_timestamp_graph import BlockTimestampGraph
-from blockchainetl.service.graph_operations import GraphOperations, OutOfBoundsError, Point
+from blockchainetl.service.graph_operations import GraphOperations, OutOfBoundsError
 
 
 class BtcBlockRangeService(object):

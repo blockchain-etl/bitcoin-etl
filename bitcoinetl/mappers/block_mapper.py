@@ -41,8 +41,7 @@ class BtcBlockMapper(object):
         block.number = json_dict.get('height')
         block.version = json_dict.get('version')
         block.merkle_root = json_dict.get('merkleroot')
-        block.time = json_dict.get('time')
-        block.median_time = json_dict.get('mediantime')
+        block.timestamp = json_dict.get('time')
         block.nonce = json_dict.get('nonce')
         block.bits = json_dict.get('bits')
 
@@ -69,8 +68,7 @@ class BtcBlockMapper(object):
             'number': block.number,
             'version': block.version,
             'merkle_root': block.merkle_root,
-            'time': block.time,
-            'median_time': block.median_time,
+            'timestamp': block.timestamp,
             'nonce': block.nonce,
             'bits': block.bits,
             'transaction_count': block.transaction_count

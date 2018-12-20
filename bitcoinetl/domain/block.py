@@ -31,8 +31,7 @@ class BtcBlock(object):
         self.number = None
         self.version = None
         self.merkle_root = None
-        self.time = None
-        self.median_time = None
+        self.timestamp = None
         self.nonce = None
         self.bits = None
 
