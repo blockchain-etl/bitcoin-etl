@@ -36,8 +36,8 @@ class MockBitcoinRpc:
                 verbosity = req[2]
                 file_name = 'rpc_response_{}_{}_{}.json'.format(method, blockhash, verbosity)
             elif method == 'getblockhash':
-                height = req[1]
-                file_name = 'rpc_response_{}_{}.json'.format(method, height)
+                number = req[1]
+                file_name = 'rpc_response_{}_{}.json'.format(method, number)
             elif method == 'getrawtransaction':
                 txid = req[1]
                 file_name = 'rpc_response_{}_{}.json'.format(method, txid)
@@ -58,8 +58,8 @@ class MockBitcoinRpc:
         # file_content = self.read_resource(file_name)
         # return json.loads(file_content)
 
-    def getblockhash(self, block_height):
-        file_name = 'rpc_response_{}_{}.json'.format("getblockhash", block_height)
+    def getblockhash(self, block_number):
+        file_name = 'rpc_response_{}_{}.json'.format("getblockhash", block_number)
         file_content = self.read_resource(file_name)
         return json_loads(file_content)
 

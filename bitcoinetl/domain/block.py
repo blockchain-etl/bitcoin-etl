@@ -28,7 +28,7 @@ class BtcBlock(object):
         self.size = None
         self.stripped_size = None
         self.weight = None
-        self.height = None
+        self.number = None
         self.version = None
         self.merkle_root = None
         self.time = None

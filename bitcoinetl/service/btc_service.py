@@ -35,7 +35,20 @@ class BtcService(object):
         self.transaction_mapper = BtcTransactionMapper()
         self.chain = chain
 
-    def get_blocks(self, block_number_batch, with_transactions=True):
+    def get_block(self, block_number, with_transactions=False):
+        block_hashes = self.get_block_hashes([block_number])
+        blocks = self.get_blocks_by_hashes(block_hashes, with_transactions)
+        return blocks[0] if len(blocks) > 0 else None
+
+    def get_genesis_block(self, with_transactions=False):
+        return self.get_block(0, with_transactions)
+
+    def get_latest_block(self, with_transactions=False):
+        block_number = self.bitcoin_rpc.getblockcount()
+        blocks = self.get_block(block_number, with_transactions)
+        return blocks[0] if len(blocks) > 0 else None
+
+    def get_blocks(self, block_number_batch, with_transactions=False):
         if not block_number_batch:
             return []
 

@@ -48,7 +48,7 @@ hash                | hex_string      |
 size                | bigint          |
 stripped_size       | bigint          |
 weight              | bigint          |
-height              | bigint          |
+number              | bigint          |
 version             | bigint          |
 merkle_root         | hex_string      |
 time                | bigint          |
@@ -66,7 +66,7 @@ size                    | bigint                |
 virtual_size            | bigint                |
 version                 | bigint                |
 lock_time               | bigint                |
-block_height            | bigint                |
+block_number            | bigint                |
 block_hash              | hex_string            |
 block_time              | bigint                |
 inputs                  | []transaction_input   |

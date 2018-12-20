@@ -39,7 +39,7 @@ class BtcTransactionMapper(object):
         transaction.lock_time = json_dict.get('locktime')
 
         if block is not None:
-            transaction.block_height = block.height
+            transaction.block_number = block.number
 
         transaction.block_hash = json_dict.get('blockhash')
         if block is not None:
@@ -63,7 +63,7 @@ class BtcTransactionMapper(object):
             'virtual_size': transaction.virtual_size,
             'version': transaction.version,
             'lock_time': transaction.lock_time,
-            'block_height': transaction.block_height,
+            'block_number': transaction.block_number,
             'block_hash': transaction.block_hash,
             'block_time': transaction.block_time,
 

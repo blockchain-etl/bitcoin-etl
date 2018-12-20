@@ -38,7 +38,7 @@ class BtcBlockMapper(object):
         block.size = json_dict.get('size')
         block.stripped_size = json_dict.get('strippedsize')
         block.weight = json_dict.get('weight')
-        block.height = json_dict.get('height')
+        block.number = json_dict.get('height')
         block.version = json_dict.get('version')
         block.merkle_root = json_dict.get('merkleroot')
         block.time = json_dict.get('time')
@@ -66,7 +66,7 @@ class BtcBlockMapper(object):
             'size': block.size,
             'stripped_size': block.stripped_size,
             'weight': block.weight,
-            'height': block.height,
+            'number': block.number,
             'version': block.version,
             'merkle_root': block.merkle_root,
             'time': block.time,

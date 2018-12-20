@@ -73,7 +73,7 @@ class ExportBlocksJob(BaseJob):
         )
 
     def _export_batch(self, block_number_batch):
-        blocks = self.btc_service.get_blocks(block_number_batch)
+        blocks = self.btc_service.get_blocks(block_number_batch, self.export_transactions)
 
         for block in blocks:
             self._export_block(block)
