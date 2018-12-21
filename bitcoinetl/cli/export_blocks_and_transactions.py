@@ -23,6 +23,7 @@
 
 import click
 
+from bitcoinetl.enum.chain import Chain
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from bitcoinetl.providers.auto import get_bitcoin_rpc
 from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
@@ -45,7 +46,7 @@ logging_basic_config()
 @click.option('--transactions-output', default=None, type=str,
               help='The output file for transactions. '
                    'If not provided transactions will not be exported. Use "-" for stdout')
-@click.option('-c', '--chain', default='bitcoin', type=click.Choice(['bitcoin', 'bitcoin_cash', 'dogecoin', 'litecoin']),
+@click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL),
               help='The type of chain')
 def export_blocks_and_transactions(start_block, end_block, batch_size, provider_uri,
                                    max_workers, blocks_output, transactions_output, chain):

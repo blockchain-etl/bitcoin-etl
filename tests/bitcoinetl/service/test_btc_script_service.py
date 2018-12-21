@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,26 +19,15 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from bitcoinetl.enum.chain import Chain
+
+import pytest
+
+from bitcoinetl.service.btc_script_service import script_hex_to_non_standard_address
 
 
-def generate_get_block_by_hash_json_rpc(block_hashes, include_transactions, chain=Chain.BITCOIN):
-    for _, block_hash in enumerate(block_hashes):
-        if not include_transactions:
-            yield ["getblock", block_hash]
-        else:
-            if chain in Chain.HAVE_OLD_API:
-                verbosity = include_transactions
-            else:
-                verbosity = 2 if include_transactions else 1
-            yield ["getblock", block_hash, verbosity]
-
-
-def generate_get_block_hash_by_number_json_rpc(block_numbers):
-    for _, block_number in enumerate(block_numbers):
-        yield ["getblockhash", block_number]
-
-
-def generate_get_transaction_by_id_json_rpc(hashes):
-    for hash in hashes:
-        yield ["getrawtransaction", hash, 1]
+@pytest.mark.parametrize('script_hex,expected_address', [
+    ('204e0000c93ad870ee0ca407cdc17ddc61c71b12906ad1fa476a9b56', 'nonstandard0cbd12ed8f1b1d8979f7f50d5083e9f21b7f5f78'),
+    ('', 'nonstandarde3b0c44298fc1c149afbf4c8996fb92427ae41e4'),
+])
+def test_script_hex_to_non_standard_address(script_hex, expected_address):
+    assert script_hex_to_non_standard_address(script_hex) == expected_address
