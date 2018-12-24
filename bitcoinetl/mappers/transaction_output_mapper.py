@@ -33,6 +33,7 @@ class BtcTransactionOutputMapper(object):
 
             # Getting the value from the raw transaction is necessary as JSON RPC value has precision loss caused
             # by using float https://twitter.com/EvgeMedvedev/status/1076383275621306368
+            # https://github.com/bitcoin/bitcoin/pull/3759
             value = self._get_value_by_output_index(pybitcointools_dict, output.index)
             if value is not None:
                 output.value = value
