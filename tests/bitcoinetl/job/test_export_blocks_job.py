@@ -37,17 +37,20 @@ def read_resource(resource_group, file_name):
     return tests.resources.read_resource([RESOURCE_GROUP, resource_group], file_name)
 
 
-@pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type", [
-    (0, 0, 1, 'block_0', 'mock'),
-    skip_if_slow_tests_disabled([0, 0, 1, 'block_0', 'online']),
-    (1, 1, 1, 'block_1', 'mock'),
-    skip_if_slow_tests_disabled([1, 1, 1, 'block_1', 'online']),
-    (50000, 50000, 1, 'block_without_transactions', 'mock'),
-    skip_if_slow_tests_disabled([50000, 50000, 1, 'block_without_transactions', 'online']),
-    (50001, 50002, 2, 'block_with_transactions', 'mock'),
-    skip_if_slow_tests_disabled([50001, 50002, 2, 'block_with_transactions', 'online']),
+@pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type,chain", [
+    (0, 0, 1, 'block_0', 'mock', 'bitcoin'),
+    skip_if_slow_tests_disabled([0, 0, 1, 'block_0', 'online', 'bitcoin']),
+    (1, 1, 1, 'block_1', 'mock', 'bitcoin'),
+    skip_if_slow_tests_disabled([1, 1, 1, 'block_1', 'online', 'bitcoin']),
+    (50000, 50000, 1, 'block_without_transactions', 'mock', 'bitcoin'),
+    skip_if_slow_tests_disabled([50000, 50000, 1, 'block_without_transactions', 'online', 'bitcoin']),
+    (50001, 50002, 2, 'block_with_transactions', 'mock', 'bitcoin'),
+    skip_if_slow_tests_disabled([50001, 50002, 2, 'block_with_transactions', 'online', 'bitcoin']),
+    (2, 2, 1, 'dogecoin/block_without_transactions', 'mock', 'dogecoin'),
+    skip_if_slow_tests_disabled([107212, 107212, 1, 'dogecoin/block_with_float_precision_loss', 'online', 'dogecoin'],
+                                chain='dogecoin'),
 ])
-def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_group, provider_type):
+def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_group, provider_type, chain):
     blocks_output_file = str(tmpdir.join('actual_block.json'))
     transactions_output_file = str(tmpdir.join("actual_transactions.json"))
 
@@ -56,10 +59,13 @@ def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_
         end_block=end_block,
         batch_size=batch_size,
         bitcoin_rpc=ThreadLocalProxy(
-            lambda: get_bitcoin_rpc(provider_type, lambda file: read_resource(resource_group, file))),
+            lambda: get_bitcoin_rpc(
+                provider_type,
+                read_resource_lambda=lambda file: read_resource(resource_group, file),
+                chain=chain)),
         max_workers=5,
         item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file),
-        chain='bitcoin',
+        chain=chain,
         export_blocks=blocks_output_file is not None,
         export_transactions=transactions_output_file is not None)
     job.run()

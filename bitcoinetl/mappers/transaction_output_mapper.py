@@ -25,27 +25,40 @@ from bitcoinetl.domain.transaction_output import BtcTransactionOutput
 
 
 class BtcTransactionOutputMapper(object):
+
+    def json_dict_to_outputs(self, json_rpc_dict, pybitcointools_dict=None):
+        outputs = []
+        for item in json_rpc_dict.get('vout', []):
+            output = self.json_dict_to_output(item)
+
+            # Getting the value from the raw transaction is necessary as JSON RPC value has precision loss caused
+            # by using float https://twitter.com/EvgeMedvedev/status/1076383275621306368
+            value = self._get_value_by_output_index(pybitcointools_dict, output.index)
+            if value is not None:
+                output.value = value
+
+            outputs.append(output)
+        return outputs
+
     def json_dict_to_output(self, json_dict):
-        result = []
-        for item in json_dict.get('vout', []):
-            output = BtcTransactionOutput()
+        output = BtcTransactionOutput()
 
-            output.index = item.get('n')
-            output.addresses = item.get('addresses')
-            output.txinwitness = item.get('txinwitness')
-            output.sequence = item.get('sequence')
-            output.value = bitcoin_to_satoshi(item.get('value'))
-            if 'scriptPubKey' in item:
-                script_pub_key = item.get('scriptPubKey')
-                output.script_asm = script_pub_key.get('asm')
-                output.script_hex = script_pub_key.get('hex')
-                output.required_signatures = script_pub_key.get('reqSigs')
-                output.type = script_pub_key.get('type')
-                output.addresses = script_pub_key.get('addresses')
-            result.append(output)
-        return result
+        output.index = json_dict.get('n')
+        output.addresses = json_dict.get('addresses')
+        output.txinwitness = json_dict.get('txinwitness')
+        output.sequence = json_dict.get('sequence')
+        output.value = bitcoin_to_satoshi(json_dict.get('value'))
+        if 'scriptPubKey' in json_dict:
+            script_pub_key = json_dict.get('scriptPubKey')
+            output.script_asm = script_pub_key.get('asm')
+            output.script_hex = script_pub_key.get('hex')
+            output.required_signatures = script_pub_key.get('reqSigs')
+            output.type = script_pub_key.get('type')
+            output.addresses = script_pub_key.get('addresses')
 
-    def output_to_dict(self, outputs):
+        return output
+
+    def outputs_to_dicts(self, outputs):
         result = []
         for output in outputs:
             item = {
@@ -60,3 +73,13 @@ class BtcTransactionOutputMapper(object):
             }
             result.append(item)
         return result
+
+    def _get_value_by_output_index(self, pybitcointools_dict, output_index):
+        if pybitcointools_dict is None:
+            return None
+        pybitcointools_outs = pybitcointools_dict.get('outs')
+
+        if pybitcointools_outs is None or len(pybitcointools_outs) <= output_index:
+            return None
+
+        return pybitcointools_outs[output_index].get('value')

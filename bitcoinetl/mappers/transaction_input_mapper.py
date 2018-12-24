@@ -25,28 +25,31 @@ from bitcoinetl.domain.transaction_input import BtcTransactionInput
 
 
 class BtcTransactionInputMapper(object):
-    def json_dict_to_input(self, json_dict):
-        result = []
-
+    def json_dict_to_inputs(self, json_rpc_dict):
+        inputs = []
         index = 0
-        for item in json_dict.get('vin', []):
-            input = BtcTransactionInput()
-
+        for item in json_rpc_dict.get('vin', []):
+            input = self.json_dict_to_input(item)
             input.index = index
             index = index + 1
-            input.spent_transaction_hash = item.get('txid')
-            input.spent_output_index = item.get('vout')
-            input.coinbase_param = item.get('coinbase')
-            input.sequence = item.get('sequence')
-            input.value = item.get('value')
-            if 'scriptSig' in item:
-                input.script_asm = (item.get('scriptSig')).get('asm')
-                input.script_hex = (item.get('scriptSig')).get('hex')
-            result.append(input)
+            inputs.append(input)
 
-        return result
+        return inputs
 
-    def input_to_dict(self, inputs):
+    def json_dict_to_input(self, json_dict):
+        input = BtcTransactionInput()
+
+        input.spent_transaction_hash = json_dict.get('txid')
+        input.spent_output_index = json_dict.get('vout')
+        input.coinbase_param = json_dict.get('coinbase')
+        input.sequence = json_dict.get('sequence')
+        if 'scriptSig' in json_dict:
+            input.script_asm = (json_dict.get('scriptSig')).get('asm')
+            input.script_hex = (json_dict.get('scriptSig')).get('hex')
+
+        return input
+
+    def inputs_to_dicts(self, inputs):
         result = []
         for input in inputs:
             item = {
