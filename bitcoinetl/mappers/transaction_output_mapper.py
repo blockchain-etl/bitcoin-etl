@@ -26,18 +26,10 @@ from bitcoinetl.domain.transaction_output import BtcTransactionOutput
 
 class BtcTransactionOutputMapper(object):
 
-    def json_dict_to_outputs(self, json_rpc_dict, pybitcointools_dict=None):
+    def json_dict_to_outputs(self, json_rpc_dict):
         outputs = []
         for item in json_rpc_dict.get('vout', []):
             output = self.json_dict_to_output(item)
-
-            # Getting the value from the raw transaction is necessary as JSON RPC value has precision loss caused
-            # by using float https://twitter.com/EvgeMedvedev/status/1076383275621306368
-            # https://github.com/bitcoin/bitcoin/pull/3759
-            value = self._get_value_by_output_index(pybitcointools_dict, output.index)
-            if value is not None:
-                output.value = value
-
             outputs.append(output)
         return outputs
 
@@ -74,13 +66,3 @@ class BtcTransactionOutputMapper(object):
             }
             result.append(item)
         return result
-
-    def _get_value_by_output_index(self, pybitcointools_dict, output_index):
-        if pybitcointools_dict is None:
-            return None
-        pybitcointools_outs = pybitcointools_dict.get('outs')
-
-        if pybitcointools_outs is None or len(pybitcointools_outs) <= output_index:
-            return None
-
-        return pybitcointools_outs[output_index].get('value')

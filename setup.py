@@ -34,8 +34,7 @@ setup(
         'lru-dict==1.1.6',
         'requests==2.20.0',
         'python-dateutil==2.7.0',
-        'click==7.0',
-        'bitcoin==1.1.42',
+        'click==7.0'
     ],
     extras_require={
         'dev': [

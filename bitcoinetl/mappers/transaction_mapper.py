@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import bitcoin
 from bitcoinetl.domain.transaction import BtcTransaction
 from bitcoinetl.mappers.transaction_input_mapper import BtcTransactionInputMapper
 from bitcoinetl.mappers.transaction_output_mapper import BtcTransactionOutputMapper
@@ -54,10 +53,7 @@ class BtcTransactionMapper(object):
             transaction.block_timestamp = block.timestamp
 
         transaction.inputs = self.transaction_input_mapper.json_dict_to_inputs(json_dict)
-
-        raw_transaction = json_dict.get('hex')
-        pybitcointools_transaction = bitcoin.deserialize(raw_transaction)
-        transaction.outputs = self.transaction_output_mapper.json_dict_to_outputs(json_dict, pybitcointools_transaction)
+        transaction.outputs = self.transaction_output_mapper.json_dict_to_outputs(json_dict)
 
         return transaction
 
