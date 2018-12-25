@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from bitcoinetl.bitcoin_utils import bitcoin_to_satoshi
+from bitcoinetl.btc_utils import bitcoin_to_satoshi
 from bitcoinetl.domain.transaction_output import BtcTransactionOutput
 
 

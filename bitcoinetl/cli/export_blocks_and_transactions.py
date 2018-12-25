@@ -25,8 +25,8 @@ import click
 
 from bitcoinetl.enum.chain import Chain
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
-from bitcoinetl.providers.auto import get_bitcoin_rpc
 from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
+from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
 from blockchainetl.logging_utils import logging_basic_config
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
 
@@ -58,7 +58,7 @@ def export_blocks_and_transactions(start_block, end_block, batch_size, provider_
         start_block=start_block,
         end_block=end_block,
         batch_size=batch_size,
-        bitcoin_rpc=ThreadLocalProxy(lambda: get_bitcoin_rpc(provider_uri)),
+        bitcoin_rpc=ThreadLocalProxy(lambda: BitcoinRpc(provider_uri)),
         max_workers=max_workers,
         item_exporter=blocks_and_transactions_item_exporter(blocks_output, transactions_output),
         chain=chain,

@@ -21,7 +21,8 @@
 # SOFTWARE.
 
 import os
-from bitcoinetl.providers.rpc import BitcoinRpc
+
+from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
 from tests.bitcoinetl.job.mock_bitcoin_rpc import MockBitcoinRpc
 
 

@@ -23,7 +23,7 @@
 import decimal
 import json
 
-from bitcoinetl.providers.request import make_post_request
+from bitcoinetl.rpc.request import make_post_request
 
 
 class BitcoinRpc:
