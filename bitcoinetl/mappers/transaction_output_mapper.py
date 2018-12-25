@@ -39,7 +39,6 @@ class BtcTransactionOutputMapper(object):
         output.index = json_dict.get('n')
         output.addresses = json_dict.get('addresses')
         output.txinwitness = json_dict.get('txinwitness')
-        output.sequence = json_dict.get('sequence')
         output.value = bitcoin_to_satoshi(json_dict.get('value'))
         if 'scriptPubKey' in json_dict:
             script_pub_key = json_dict.get('scriptPubKey')
@@ -59,7 +58,6 @@ class BtcTransactionOutputMapper(object):
                 'script_asm': output.script_asm,
                 'script_hex': output.script_hex,
                 'required_signatures': output.required_signatures,
-                'sequence': output.sequence,
                 'type': output.type,
                 'addresses': output.addresses,
                 'value': output.value

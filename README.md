@@ -95,7 +95,6 @@ index                   | bigint                |
 script_asm              | string                |
 script_hex              | hex_string            |
 required_signatures     | bigint                |
-sequence                | bigint                |
 type                    | string                |
 addresses               | []string              |
 value                   | bigint                | 
