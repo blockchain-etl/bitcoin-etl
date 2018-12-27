@@ -1,5 +1,7 @@
 # Transactions in genesis blocks return error for getrawtransaction API
 # The genesis block coinbase is not considered an ordinary transaction and cannot be retrieved
+from decimal import Decimal
+
 GENESIS_TRANSACTIONS = {
     'dogecoin': {
         'txid': '5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69',
@@ -13,7 +15,7 @@ GENESIS_TRANSACTIONS = {
         ],
         'vout': [
             {
-                "value": 50.00000000,
+                "value": Decimal('50.00000000'),
                 "n": 0,
                 "scriptPubKey": {
                     "asm": "040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac OP_CHECKSIG",
@@ -40,7 +42,7 @@ GENESIS_TRANSACTIONS = {
         ],
         'vout': [
             {
-                "value": 50.00000000,
+                "value": Decimal('50.00000000'),
                 "n": 0,
                 "scriptPubKey": {
                     "asm": "04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f OP_CHECKSIG",
@@ -49,6 +51,33 @@ GENESIS_TRANSACTIONS = {
                     "type": "pubkey",
                     "addresses": [
                         "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+                    ]
+                }
+            }
+        ],
+        'version': 1
+    },
+    'dash': {
+        'txid': 'e0028eb9648db56b1ac77cf090b99048a8007e2bb64b68f092c03c7f56a662c7',
+        'blockhash': '00000ffd590b1485b3caadc19b22e6379c733355108f107a430458cdf3407ab6',
+        'locktime': 0,
+        'vin': [
+            {
+                "coinbase": "04ffff001d01044c5957697265642030392f4a616e2f3230313420546865204772616e64204578706572696d656e7420476f6573204c6976653a204f76657273746f636b2e636f6d204973204e6f7720416363657074696e6720426974636f696e73",
+                "sequence": 4294967295
+            }
+        ],
+        'vout': [
+            {
+                "value": Decimal('50.00000000'),
+                "n": 0,
+                "scriptPubKey": {
+                    "asm": "040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9 OP_CHECKSIG",
+                    "hex": "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac",
+                    "reqSigs": 1,
+                    "type": "pubkey",
+                    "addresses": [
+                        "BZv7UykZdDFxh48RNjKPeH2PvGxcCKDuW"
                     ]
                 }
             }

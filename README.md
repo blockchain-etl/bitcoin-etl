@@ -18,6 +18,13 @@ Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_block
  --blocks-output blocks.json --transactions-output transactions.json
 ```
 
+Supported chains:
+- bitcoin
+- bitcoin_cash
+- dogecoin
+- litecoin
+- dash
+
 For the latest version, check out the repo and call 
 ```bash
 > pip install -e . 
@@ -204,7 +211,9 @@ You can tune `--batch-size`, `--max-workers` for performance.
 ```bash
 > pip install -e .[dev]
 > export BITCOINETL_BITCOIN_PROVIDER_URI=http://user:pass@localhost:8332
-> export BITCOINETL_DOGECOIN_PROVIDER_URI=http://user:pass@localhost:8332
+> export BITCOINETL_LITECOIN_PROVIDER_URI=http://user:pass@localhost:8331
+> export BITCOINETL_DOGECOIN_PROVIDER_URI=http://user:pass@localhost:8330
+> export BITCOINETL_DASH_PROVIDER_URI=http://user:pass@localhost:8328
 > pytest -vv
 ```
 

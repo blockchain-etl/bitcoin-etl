@@ -108,17 +108,17 @@ class BtcService(object):
         if hashes is None or len(hashes) == 0:
             return []
 
-        genesis_transaction_hashes = [transaction['txid'] for transaction in GENESIS_TRANSACTIONS.values()]
+        genesis_transaction = GENESIS_TRANSACTIONS.get(self.chain)
+        genesis_transaction_hash = genesis_transaction.get('txid') if genesis_transaction is not None else None
         filtered_hashes = [transaction_hash for transaction_hash in hashes
-                           if transaction_hash not in genesis_transaction_hashes]
+                           if transaction_hash != genesis_transaction_hash]
         transaction_detail_rpc = list(generate_get_transaction_by_id_json_rpc(filtered_hashes))
         transaction_detail_response = self.bitcoin_rpc.batch(transaction_detail_rpc)
         transaction_detail_results = rpc_response_batch_to_results(transaction_detail_response)
         raw_transactions = list(transaction_detail_results)
 
-        for genesis_transaction in GENESIS_TRANSACTIONS.values():
-            if genesis_transaction['txid'] in hashes:
-                raw_transactions.append(genesis_transaction)
+        if genesis_transaction_hash is not None and genesis_transaction_hash in hashes:
+            raw_transactions.append(genesis_transaction)
 
         return raw_transactions
 
