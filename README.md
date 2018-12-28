@@ -134,14 +134,6 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     ```
     In case `bitcoinetl` command is not available in PATH, use `python -m bitcoinetl` instead.
 
-    The result will be in the `output` subdirectory, partitioned in Hive style:
-
-    ```bash
-    output/blocks/start_block=00000000/end_block=00099999/blocks_00000000_00099999.json
-    output/blocks/start_block=00100000/end_block=00199999/blocks_00100000_00199999.json
-    ...
-    output/transactions/start_block=00000000/end_block=00099999/transactions_00000000_00099999.json
-
 ### Running in Docker
 
 1. Install Docker https://docs.docker.com/install/
