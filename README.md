@@ -200,8 +200,19 @@ Omit `--blocks-output` or `--transactions-output` options if you want to export 
 You can tune `--batch-size`, `--max-workers` for performance.
 
 #### get_block_range_for_date
+
 ```bash
 > bitcoinetl get_block_range_for_date --provider-uri http://user:pass@localhost:8332 --date=2017-03-01
+```
+
+This command is guaranteed to return the block range that covers all blocks with `block.time` on the specified
+date. However the returned block range may also contain blocks outside the specified date, because block times are not 
+monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can filter 
+`blocks.json`/`transactions.json` with the below command:
+
+```bash
+> bitcoinetl filter_items -i blocks.json -o blocks_filtered.json \
+-p "datetime.datetime.fromtimestamp(item['timestamp']).astimezone(datetime.timezone.utc).strftime('%Y-%m-%d') == '2017-03-01'"
 ```
 
 
@@ -210,6 +221,7 @@ You can tune `--batch-size`, `--max-workers` for performance.
 
 ```bash
 > pip install -e .[dev]
+> echo "The below variables are optional"
 > export BITCOINETL_BITCOIN_PROVIDER_URI=http://user:pass@localhost:8332
 > export BITCOINETL_LITECOIN_PROVIDER_URI=http://user:pass@localhost:8331
 > export BITCOINETL_DOGECOIN_PROVIDER_URI=http://user:pass@localhost:8330
