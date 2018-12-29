@@ -39,7 +39,6 @@ For the latest version, check out the repo and call
 - [Exporting the Blockchain](#exporting-the-blockchain)
   - [Running in Docker](#running-in-docker)
   - [Command Reference](#command-reference)
-- [Bitcoin Cash Support](#bitcoin-cash-support)
 - [Querying in Amazon Athena](#querying-in-amazon-athena)
 - [Querying in Google BigQuery](#querying-in-google-bigquery)
   - [Public Dataset](#public-dataset)
@@ -107,7 +106,7 @@ addresses               | []string              |
 value                   | bigint                | 
 
 
-You can find column descriptions in [TODO](https://github.com/medvedev1088/bitcoin-etl-airflow/tree/master/dags/resources/stages/raw/schemas)
+You can find column descriptions in [schemas](https://github.com/blockchain-etl/bitcoin-etl-airflow/tree/master/dags/resources/stages/enrich/schemas)
 
 ## Exporting the Blockchain
 
@@ -227,9 +226,6 @@ monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can f
 > pip install tox
 > tox
 ```
-
-### Bitcoin Cash Support
-Coming Soon...
 
 ## Querying in Amazon Athena
 Coming Soon...
