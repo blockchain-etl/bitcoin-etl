@@ -45,6 +45,7 @@ from tests.helpers import skip_if_slow_tests_disabled
     skip_if_slow_tests_disabled(['dogecoin', '2014-01-21', 65322, 66853], chain='dogecoin'),
     skip_if_slow_tests_disabled(['litecoin', '2011-10-07', 0, 0], chain='litecoin'),
     skip_if_slow_tests_disabled(['dash', '2014-01-19', 0, 4138], chain='dash'),
+    skip_if_slow_tests_disabled(['zcash', '2016-10-28', 0, 629], chain='zcash'),
 ])
 def test_get_block_range_for_date(chain, date, expected_start_block, expected_end_block):
     btc_block_range_service = get_new_btc_block_range_service(chain)

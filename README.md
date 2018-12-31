@@ -24,6 +24,7 @@ Supported chains:
 - dogecoin
 - litecoin
 - dash
+- zcash
 
 For the latest version, check out the repo and call 
 ```bash
@@ -217,6 +218,7 @@ monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can f
 > export BITCOINETL_LITECOIN_PROVIDER_URI=http://user:pass@localhost:8331
 > export BITCOINETL_DOGECOIN_PROVIDER_URI=http://user:pass@localhost:8330
 > export BITCOINETL_DASH_PROVIDER_URI=http://user:pass@localhost:8328
+> export BITCOINETL_ZCASH_PROVIDER_URI=http://user:pass@localhost:8327
 > pytest -vv
 ```
 
