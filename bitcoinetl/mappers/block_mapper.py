@@ -42,7 +42,8 @@ class BtcBlockMapper(object):
         block.version = json_dict.get('version')
         block.merkle_root = json_dict.get('merkleroot')
         block.timestamp = json_dict.get('time')
-        block.nonce = json_dict.get('nonce')
+        # bitcoin and all clones except zcash return integer nonce, zcash return hex string
+        block.nonce = to_hex(json_dict.get('nonce'))
         block.bits = json_dict.get('bits')
 
         raw_transactions = json_dict.get('tx')
@@ -75,3 +76,15 @@ class BtcBlockMapper(object):
             'coinbase_param': block.coinbase_param,
             'transaction_count': len(block.transactions)
         }
+
+
+def to_hex(val):
+    if val is None:
+        return None
+
+    if isinstance(val, str):
+        return val
+    elif isinstance(val, int):
+        return format(val, 'x')
+    else:
+        return val

@@ -59,7 +59,7 @@ number              | bigint          |
 version             | bigint          |
 merkle_root         | hex_string      |
 timestamp           | bigint          |
-nonce               | bigint          |
+nonce               | hex_string      |
 bits                | hex_string      |
 coinbase_param      | hex_string      |
 transaction_count   | bigint          |
