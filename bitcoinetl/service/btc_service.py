@@ -133,6 +133,7 @@ class BtcService(object):
                 if coinbase_input is not None:
                     block.coinbase_param = coinbase_input.coinbase_param
                     transaction.inputs = [input for input in transaction.inputs if not input.is_coinbase()]
+                    transaction.is_coinbase = True
 
     def _add_non_standard_addresses(self, block):
         if block.has_full_transactions():

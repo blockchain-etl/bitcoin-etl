@@ -76,6 +76,7 @@ lock_time               | bigint                |
 block_number            | bigint                |
 block_hash              | hex_string            |
 block_timestamp         | bigint                |
+is_coinbase             | boolean               |
 input_count             | bigint                |
 output_count            | bigint                |
 inputs                  | []transaction_input   |

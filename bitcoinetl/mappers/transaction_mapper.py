@@ -68,6 +68,7 @@ class BtcTransactionMapper(object):
             'block_number': transaction.block_number,
             'block_hash': transaction.block_hash,
             'block_timestamp': transaction.block_timestamp,
+            'is_coinbase': transaction.is_coinbase,
 
             'input_count': len(transaction.inputs),
             'output_count': len(transaction.outputs),

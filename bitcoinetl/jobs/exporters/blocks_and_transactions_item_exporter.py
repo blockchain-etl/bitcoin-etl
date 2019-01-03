@@ -47,6 +47,7 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'block_number',
     'block_hash',
     'block_timestamp',
+    'is_coinbase',
 
     'input_count',
     'output_count',
