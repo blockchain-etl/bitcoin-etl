@@ -1,9 +1,8 @@
 import hashlib
-import lru
 
 import requests
 
-_session_cache = lru.LRU(8)
+_session_cache = {}
 
 
 def _get_session(endpoint_uri):
