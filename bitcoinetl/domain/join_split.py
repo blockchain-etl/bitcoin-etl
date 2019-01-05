@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,8 @@
 # SOFTWARE.
 
 
-class BtcTransactionInput(object):
+class BtcJoinSplit(object):
     def __init__(self):
         self.index = None
-        self.spent_transaction_hash = None
-        self.spent_output_index = None
-        self.script_asm = None
-        self.script_hex = None
-        self.coinbase_param = None
-        self.sequence = None
-
-        self.type = None
-        self.addresses = []
-        self.value = None
-
-    def is_coinbase(self):
-        return self.coinbase_param is not None or self.spent_transaction_hash is None
+        self.public_input_value = None
+        self.public_output_value = None
