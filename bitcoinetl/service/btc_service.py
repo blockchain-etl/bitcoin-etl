@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from bitcoinetl.domain.transaction_input import BtcTransactionInput
+from bitcoinetl.domain.transaction_output import BtcTransactionOutput
 from bitcoinetl.enum.chain import Chain
 from bitcoinetl.json_rpc_requests import generate_get_block_hash_by_number_json_rpc, \
     generate_get_block_by_hash_json_rpc, generate_get_transaction_by_id_json_rpc
@@ -74,6 +76,8 @@ class BtcService(object):
         for block in blocks:
             self._remove_coinbase_input(block)
             self._add_non_standard_addresses(block)
+            if self.chain == Chain.ZCASH:
+                self._convert_join_splits_to_inputs_and_outputs(block)
 
         return blocks
 
@@ -142,3 +146,21 @@ class BtcService(object):
                     if output.addresses is None or len(output.addresses) == 0:
                         output.type = 'nonstandard'
                         output.addresses = [script_hex_to_non_standard_address(output.script_hex)]
+
+    def _convert_join_splits_to_inputs_and_outputs(self, block):
+        if block.has_full_transactions():
+            for transaction in block.transactions:
+                if transaction.join_splits is not None and len(transaction.join_splits) > 0:
+                    for join_split in transaction.join_splits:
+                        input_value = join_split.public_input_value or 0
+                        output_value = join_split.public_output_value or 0
+                        if input_value < output_value:
+                            input = BtcTransactionInput()
+                            input.type = 'shielded'
+                            input.value = output_value - input_value
+                            transaction.add_input(input)
+                        elif input_value > output_value:
+                            output = BtcTransactionOutput()
+                            output.type = 'shielded'
+                            output.value = input_value - output_value
+                            transaction.add_output(output)

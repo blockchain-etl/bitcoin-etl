@@ -21,6 +21,7 @@
 # SOFTWARE.
 
 from bitcoinetl.domain.transaction import BtcTransaction
+from bitcoinetl.mappers.join_split_mapper import BtcJoinSplitMapper
 from bitcoinetl.mappers.transaction_input_mapper import BtcTransactionInputMapper
 from bitcoinetl.mappers.transaction_output_mapper import BtcTransactionOutputMapper
 
@@ -32,6 +33,7 @@ class BtcTransactionMapper(object):
     def __init__(self):
         self.transaction_input_mapper = BtcTransactionInputMapper()
         self.transaction_output_mapper = BtcTransactionOutputMapper()
+        self.join_split_mapper = BtcJoinSplitMapper()
 
     def json_dict_to_transaction(self, json_dict, block=None):
         transaction = BtcTransaction()
@@ -52,8 +54,11 @@ class BtcTransactionMapper(object):
         if block is not None:
             transaction.block_timestamp = block.timestamp
 
-        transaction.inputs = self.transaction_input_mapper.json_dict_to_inputs(json_dict)
-        transaction.outputs = self.transaction_output_mapper.json_dict_to_outputs(json_dict)
+        transaction.inputs = self.transaction_input_mapper.vin_to_inputs(json_dict.get('vin'))
+        transaction.outputs = self.transaction_output_mapper.vout_to_outputs(json_dict.get('vout'))
+
+        # Only Zcash
+        transaction.join_splits = self.join_split_mapper.vjoinsplit_to_join_splits(json_dict.get('vjoinsplit'))
 
         return transaction
 

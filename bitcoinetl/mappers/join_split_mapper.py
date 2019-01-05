@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from bitcoinetl.btc_utils import bitcoin_to_satoshi
+from bitcoinetl.domain.join_split import BtcJoinSplit
 
-class BtcTransactionInput(object):
-    def __init__(self):
-        self.index = None
-        self.spent_transaction_hash = None
-        self.spent_output_index = None
-        self.script_asm = None
-        self.script_hex = None
-        self.coinbase_param = None
-        self.sequence = None
 
-        self.type = None
-        self.addresses = []
-        self.value = None
+class BtcJoinSplitMapper(object):
+    def vjoinsplit_to_join_splits(self, vjoinsplit):
+        join_splits = []
+        index = 0
+        for item in (vjoinsplit or []):
+            join_split = self.json_dict_to_join_split(item)
+            join_split.index = index
+            index = index + 1
+            join_splits.append(join_split)
 
-    def is_coinbase(self):
-        return self.coinbase_param is not None or self.spent_transaction_hash is None
+        return join_splits
+
+    def json_dict_to_join_split(self, json_dict):
+        join_split = BtcJoinSplit()
+
+        join_split.public_input_value = bitcoin_to_satoshi(json_dict.get('vpub_old'))
+        join_split.public_output_value = bitcoin_to_satoshi(json_dict.get('vpub_new'))
+
+        return join_split

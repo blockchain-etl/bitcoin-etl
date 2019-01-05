@@ -37,3 +37,22 @@ class BtcTransaction(object):
 
         self.inputs = []
         self.outputs = []
+
+        # Only for Zcash
+        self.join_splits = []
+
+    def add_input(self, input):
+        if len(self.inputs) > 0:
+            input.index = self.inputs[len(self.inputs) - 1].index + 1
+            self.inputs.append(input)
+        else:
+            input.index = 0
+            self.inputs.append(input)
+
+    def add_output(self, output):
+        if len(self.outputs) > 0:
+            output.index = self.outputs[len(self.outputs) - 1].index + 1
+            self.outputs.append(output)
+        else:
+            output.index = 0
+            self.outputs.append(output)

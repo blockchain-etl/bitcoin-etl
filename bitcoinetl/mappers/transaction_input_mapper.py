@@ -25,10 +25,10 @@ from bitcoinetl.domain.transaction_input import BtcTransactionInput
 
 
 class BtcTransactionInputMapper(object):
-    def json_dict_to_inputs(self, json_rpc_dict):
+    def vin_to_inputs(self, vin):
         inputs = []
         index = 0
-        for item in json_rpc_dict.get('vin', []):
+        for item in (vin or []):
             input = self.json_dict_to_input(item)
             input.index = index
             index = index + 1
@@ -58,6 +58,7 @@ class BtcTransactionInputMapper(object):
                 'spent_output_index': input.spent_output_index,
                 'script_asm': input.script_asm,
                 'script_hex': input.script_hex,
+                'type': input.type,
                 'sequence': input.sequence,
                 'value': input.value,
             }

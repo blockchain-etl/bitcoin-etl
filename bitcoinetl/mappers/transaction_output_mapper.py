@@ -26,9 +26,9 @@ from bitcoinetl.domain.transaction_output import BtcTransactionOutput
 
 class BtcTransactionOutputMapper(object):
 
-    def json_dict_to_outputs(self, json_rpc_dict):
+    def vout_to_outputs(self, vout):
         outputs = []
-        for item in json_rpc_dict.get('vout', []):
+        for item in (vout or []):
             output = self.json_dict_to_output(item)
             outputs.append(output)
         return outputs
