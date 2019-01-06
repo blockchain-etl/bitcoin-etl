@@ -154,13 +154,13 @@ class BtcService(object):
                     for join_split in transaction.join_splits:
                         input_value = join_split.public_input_value or 0
                         output_value = join_split.public_output_value or 0
-                        if input_value < output_value:
+                        if input_value > 0:
                             input = BtcTransactionInput()
                             input.type = 'shielded'
-                            input.value = output_value - input_value
+                            input.value = input_value
                             transaction.add_input(input)
-                        elif input_value > output_value:
+                        if output_value > 0:
                             output = BtcTransactionOutput()
                             output.type = 'shielded'
-                            output.value = input_value - output_value
+                            output.value = output_value
                             transaction.add_output(output)

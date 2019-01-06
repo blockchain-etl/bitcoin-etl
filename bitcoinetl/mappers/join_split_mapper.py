@@ -39,7 +39,7 @@ class BtcJoinSplitMapper(object):
     def json_dict_to_join_split(self, json_dict):
         join_split = BtcJoinSplit()
 
-        join_split.public_input_value = bitcoin_to_satoshi(json_dict.get('vpub_old'))
-        join_split.public_output_value = bitcoin_to_satoshi(json_dict.get('vpub_new'))
+        join_split.public_input_value = bitcoin_to_satoshi(json_dict.get('vpub_new'))
+        join_split.public_output_value = bitcoin_to_satoshi(json_dict.get('vpub_old'))
 
         return join_split
