@@ -77,7 +77,7 @@ GENESIS_TRANSACTIONS = {
                     "reqSigs": 1,
                     "type": "pubkey",
                     "addresses": [
-                        "BZv7UykZdDFxh48RNjKPeH2PvGxcCKDuW"
+                        "XmFkwjdeXLRr7deiHG3YFAxpEFred8L5C9"
                     ]
                 }
             }
