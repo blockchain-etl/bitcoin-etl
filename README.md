@@ -32,6 +32,8 @@ For the latest version, check out the repo and call
 > python bitcoinetl.py
 ```
 
+[LIMITATIONS](#limitations)
+
 ## Table of Contents
 
 - [Schema](#schema)
@@ -40,9 +42,7 @@ For the latest version, check out the repo and call
 - [Exporting the Blockchain](#exporting-the-blockchain)
   - [Running in Docker](#running-in-docker)
   - [Command Reference](#command-reference)
-- [Querying in Amazon Athena](#querying-in-amazon-athena)
-- [Querying in Google BigQuery](#querying-in-google-bigquery)
-  - [Public Dataset](#public-dataset)
+- [Public Datasets in BigQuery](#public-datasets-in-bigquery)
 
 
 ## Schema
@@ -109,6 +109,12 @@ value                   | bigint                |
 
 
 You can find column descriptions in [schemas](https://github.com/blockchain-etl/bitcoin-etl-airflow/tree/master/dags/resources/stages/enrich/schemas)
+
+## LIMITATIONS
+
+- output values returned by Dogecoin API have precision loss due to this issue 
+https://github.com/dogecoin/dogecoin/issues/1558
+
 
 ## Exporting the Blockchain
 
@@ -218,6 +224,7 @@ monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can f
 > export BITCOINETL_BITCOIN_PROVIDER_URI=http://user:pass@localhost:8332
 > export BITCOINETL_LITECOIN_PROVIDER_URI=http://user:pass@localhost:8331
 > export BITCOINETL_DOGECOIN_PROVIDER_URI=http://user:pass@localhost:8330
+> export BITCOINETL_BITCOIN_CASH_PROVIDER_URI=http://user:pass@localhost:8329
 > export BITCOINETL_DASH_PROVIDER_URI=http://user:pass@localhost:8328
 > export BITCOINETL_ZCASH_PROVIDER_URI=http://user:pass@localhost:8327
 > pytest -vv
@@ -230,11 +237,5 @@ monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can f
 > tox
 ```
 
-## Querying in Amazon Athena
-Coming Soon...
-
-## Querying in Google BigQuery
-Coming Soon...
-
-### Public Dataset
+### Public Datasets
 Coming Soon...
