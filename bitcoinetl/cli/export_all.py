@@ -31,9 +31,8 @@ from bitcoinetl.jobs.export_all_common import export_all_common
 # from ethereumetl.providers.auto import get_provider_from_uri
 # from bitcoinetl.service.btc_service import BtcService
 from bitcoinetl.service.btc_block_range_service import BtcBlockRangeService
-
-# from ethereumetl.utils import check_classic_provider_uri
-
+from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
+from blockchainetl.thread_local_proxy import ThreadLocalProxy
 
 def is_date_range(start, end):
     """Checks for YYYY-MM-DD date format."""
@@ -73,7 +72,9 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 
         # provider = get_provider_from_uri(provider_uri)
         # web3 = Web3(provider)
-        btc_service = BtcBlockRangeService(provider_uri)
+        btc_service = BtcBlockRangeService(
+            bitcoin_rpc=ThreadLocalProxy(lambda: BitcoinRpc(provider_uri))
+        )
 
         while start_date <= end_date:
             batch_start_block, batch_end_block = btc_service.get_block_range_for_date(start_date)
