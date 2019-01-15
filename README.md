@@ -32,8 +32,6 @@ For the latest version, check out the repo and call
 > python bitcoinetl.py
 ```
 
-[LIMITATIONS](#limitations)
-
 ## Table of Contents
 
 - [Schema](#schema)
@@ -110,10 +108,9 @@ value                   | bigint                |
 
 You can find column descriptions in [schemas](https://github.com/blockchain-etl/bitcoin-etl-airflow/tree/master/dags/resources/stages/enrich/schemas)
 
-## LIMITATIONS
-
-- output values returned by Dogecoin API have precision loss due to this issue 
-https://github.com/dogecoin/dogecoin/issues/1558
+Note that due to this issue https://github.com/dogecoin/dogecoin/issues/1558 output values returned by 
+Dogecoin API had precision loss in the clients prior to version 1.14. The explorers that used older versions
+to export the data may show incorrect address balances and transaction amounts. 
 
 
 ## Exporting the Blockchain
