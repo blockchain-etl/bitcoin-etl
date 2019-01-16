@@ -50,7 +50,7 @@ class BtcTransactionMapper(object):
         if block is not None:
             transaction.block_hash = block.hash
 
-        transaction.block_time = json_dict.get('blocktime')
+        transaction.block_timestamp = json_dict.get('blocktime')
         if block is not None:
             transaction.block_timestamp = block.timestamp
 

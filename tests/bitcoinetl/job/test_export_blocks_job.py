@@ -54,7 +54,10 @@ def read_resource(resource_group, file_name):
                                 chain='zcash'),
     (508, 508, 1, 'zcash/block_with_shielded_addresses', 'mock', 'zcash'),
     skip_if_slow_tests_disabled([508, 508, 1, 'zcash/block_with_shielded_addresses', 'online', 'zcash'],
-                                    chain='zcash'),
+                                chain='zcash'),
+    (91722, 91722, 1, 'bitcoin_cash/block_with_duplicate_txid', 'mock', 'bitcoin_cash'),
+    skip_if_slow_tests_disabled([91722, 91722, 1, 'bitcoin_cash/block_with_duplicate_txid', 'online', 'bitcoin_cash'],
+                                chain='bitcoin_cash'),
 ])
 def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_group, provider_type, chain):
     blocks_output_file = str(tmpdir.join('actual_block.json'))

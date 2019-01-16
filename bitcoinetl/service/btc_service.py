@@ -93,7 +93,7 @@ class BtcService(object):
         raw_transactions = self._get_raw_transactions_by_hashes_batched(flat_transaction_hashes)
 
         for block in blocks:
-            raw_block_transactions = [tx for tx in raw_transactions if tx.get('blockhash') == block.hash]
+            raw_block_transactions = [tx for tx in raw_transactions if tx.get('txid') in block.transactions]
             block.transactions = [self.transaction_mapper.json_dict_to_transaction(tx, block)
                                   for tx in raw_block_transactions]
 
