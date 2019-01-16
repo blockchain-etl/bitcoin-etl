@@ -77,7 +77,7 @@ class BtcService(object):
             self._remove_coinbase_input(block)
             self._add_non_standard_addresses(block)
             if self.chain == Chain.ZCASH:
-                self._convert_join_splits_to_inputs_and_outputs(block)
+                self._add_shielded_inputs_and_outputs(block)
 
         return blocks
 
@@ -147,7 +147,7 @@ class BtcService(object):
                         output.type = 'nonstandard'
                         output.addresses = [script_hex_to_non_standard_address(output.script_hex)]
 
-    def _convert_join_splits_to_inputs_and_outputs(self, block):
+    def _add_shielded_inputs_and_outputs(self, block):
         if block.has_full_transactions():
             for transaction in block.transactions:
                 if transaction.join_splits is not None and len(transaction.join_splits) > 0:
@@ -156,11 +156,25 @@ class BtcService(object):
                         output_value = join_split.public_output_value or 0
                         if input_value > 0:
                             input = BtcTransactionInput()
-                            input.type = 'shielded'
+                            input.type = ADDRESS_TYPE_SHIELDED
                             input.value = input_value
                             transaction.add_input(input)
                         if output_value > 0:
                             output = BtcTransactionOutput()
-                            output.type = 'shielded'
+                            output.type = ADDRESS_TYPE_SHIELDED
                             output.value = output_value
                             transaction.add_output(output)
+                if transaction.value_balance is not None and transaction.value_balance != 0:
+                    if transaction.value_balance > 0:
+                        input = BtcTransactionInput()
+                        input.type = ADDRESS_TYPE_SHIELDED
+                        input.value = transaction.value_balance
+                        transaction.add_input(input)
+                    if transaction.value_balance < 0:
+                        output = BtcTransactionOutput()
+                        output.type = ADDRESS_TYPE_SHIELDED
+                        output.value = transaction.value_balance
+                        transaction.add_output(output)
+
+
+ADDRESS_TYPE_SHIELDED = 'shielded'

@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
+from bitcoinetl.btc_utils import bitcoin_to_satoshi
 from bitcoinetl.domain.transaction import BtcTransaction
 from bitcoinetl.mappers.join_split_mapper import BtcJoinSplitMapper
 from bitcoinetl.mappers.transaction_input_mapper import BtcTransactionInputMapper
@@ -59,6 +59,7 @@ class BtcTransactionMapper(object):
 
         # Only Zcash
         transaction.join_splits = self.join_split_mapper.vjoinsplit_to_join_splits(json_dict.get('vjoinsplit'))
+        transaction.value_balance = bitcoin_to_satoshi(json_dict.get('valueBalance'))
 
         return transaction
 
