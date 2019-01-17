@@ -108,9 +108,14 @@ value                   | bigint                |
 
 You can find column descriptions in [schemas](https://github.com/blockchain-etl/bitcoin-etl-airflow/tree/master/dags/resources/stages/enrich/schemas)
 
-Note that due to this issue https://github.com/dogecoin/dogecoin/issues/1558 output values returned by 
-Dogecoin API had precision loss in the clients prior to version 1.14. The explorers that used older versions
-to export the data may show incorrect address balances and transaction amounts. 
+**Notes**:
+
+1. Output values returned by Dogecoin API had precision loss in the clients prior to version 1.14.
+It's caused by this issue https://github.com/dogecoin/dogecoin/issues/1558  
+The explorers that used older versions to export the data may show incorrect address balances and transaction amounts. 
+
+1. For Zcash, `vjoinsplit` and `valueBalance` fields are converted to inputs and outputs with type 'shielded'
+https://zcash-rpc.github.io/getrawtransaction.html, https://zcash.readthedocs.io/en/latest/rtd_pages/zips/zip-0243.html
 
 
 ## Exporting the Blockchain
