@@ -58,7 +58,6 @@ class GraphOperations(object):
         elif (end.x - start.x) <= 1:
             return start.x, end.x
         else:
-            assert start.y < y < end.y
             if start.y > end.y:
                 raise ValueError('Start y must be lesser or equal to end y coordinate. Was {}, {}'
                                  .format(start.y, end.y))
