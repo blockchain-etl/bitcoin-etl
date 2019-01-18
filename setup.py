@@ -29,7 +29,7 @@ setup(
         'Programming Language :: Python :: 3.7'
     ],
     keywords='bitcoin',
-    python_requires='>=3.5.3,<3.8.0',
+    python_requires='>=3.5.0,<3.8.0',
     install_requires=[
         'requests==2.20.0',
         'python-dateutil==2.7.0',
