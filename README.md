@@ -208,6 +208,22 @@ monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can f
 -p "datetime.datetime.fromtimestamp(item['timestamp']).astimezone(datetime.timezone.utc).strftime('%Y-%m-%d') == '2017-03-01'"
 ```
 
+#### export_all
+
+```bash
+> bitcoinetl export_all --provider-uri http://user:pass@localhost:8332 --date=2017-03-01
+```
+
+This command is guaranteed to return the block range that covers all blocks with `block.time` on the specified
+date. However the returned block range may also contain blocks outside the specified date, because block times are not 
+monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can filter 
+`blocks.json`/`transactions.json` with the below command:
+
+```bash
+> bitcoinetl filter_items -i blocks.json -o blocks_filtered.json \
+-p "datetime.datetime.fromtimestamp(item['timestamp']).astimezone(datetime.timezone.utc).strftime('%Y-%m-%d') == '2017-03-01'"
+```
+
 
 
 ### Running Tests
