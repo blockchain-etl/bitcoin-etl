@@ -25,14 +25,12 @@ import click
 import re
 
 from datetime import datetime, timedelta
-# from web3 import Web3
 from bitcoinetl.enum.chain import Chain
 from bitcoinetl.jobs.export_all_common import export_all_common
-# from ethereumetl.providers.auto import get_provider_from_uri
-# from bitcoinetl.service.btc_service import BtcService
 from bitcoinetl.service.btc_block_range_service import BtcBlockRangeService
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
+
 
 def is_date_range(start, end):
     """Checks for YYYY-MM-DD date format."""
@@ -48,8 +46,8 @@ def is_unix_time_range(start, end):
 
 def is_block_range(start, end):
     """Checks for a valid block number."""
-    return (start.isdigit() and 0 <= int(start) <= 99999999 
-        and end.isdigit() and 0 <= int(end) <= 99999999)
+    return (start.isdigit() and 0 <= int(start) <= 99999999
+            and end.isdigit() and 0 <= int(end) <= 99999999)
 
 
 def get_partitions(start, end, partition_batch_size, provider_uri):
@@ -70,8 +68,6 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 
         day = timedelta(days=1)
 
-        # provider = get_provider_from_uri(provider_uri)
-        # web3 = Web3(provider)
         btc_service = BtcBlockRangeService(
             bitcoin_rpc=ThreadLocalProxy(lambda: BitcoinRpc(provider_uri))
         )
@@ -115,8 +111,7 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 @click.option('-B', '--export-batch-size', default=100, type=int, help='The number of requests in JSON RPC batches.')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL),
               help='The type of chain')
-
 def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size, chain):
-    """Exports all data for a range of blocks."""    
+    """Exports all data for a range of blocks."""
     export_all_common(chain, get_partitions(start, end, partition_batch_size, provider_uri),
                       output_dir, provider_uri, max_workers, export_batch_size)

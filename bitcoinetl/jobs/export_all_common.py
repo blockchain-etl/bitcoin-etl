@@ -21,42 +21,24 @@
 # SOFTWARE.
 
 
-import csv
 import logging
 import os
-import shutil
-
 from time import time
 
-from blockchainetl.csv_utils import set_max_field_size_limit
-from blockchainetl.file_utils import smart_open
-from blockchainetl.logging_utils import logging_basic_config
-from blockchainetl.thread_local_proxy import ThreadLocalProxy
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
-
+from blockchainetl.logging_utils import logging_basic_config
+from blockchainetl.thread_local_proxy import ThreadLocalProxy
 
 logging_basic_config()
 logger = logging.getLogger('export_all')
 
 
-def extract_csv_column_unique(input, output, column):
-    set_max_field_size_limit()
-
-    with smart_open(input, 'r') as input_file, smart_open(output, 'w') as output_file:
-        reader = csv.DictReader(input_file)
-        seen = set()  # set for fast O(1) amortized lookup
-        for row in reader:
-            if row[column] in seen:
-                continue
-            seen.add(row[column])
-            output_file.write(row[column] + '\n')
-
-
 def export_all_common(chain, partitions, output_dir, provider_uri, max_workers, batch_size):
 
     for batch_start_block, batch_end_block, partition_dir in partitions:
+        logging.info('test1')
         # # # start # # #
 
         start_time = time()
@@ -116,7 +98,6 @@ def export_all_common(chain, partitions, output_dir, provider_uri, max_workers, 
         job.run()
 
         # # # finish # # #
-        # shutil.rmtree(os.path.dirname(cache_output_dir))
         end_time = time()
         time_diff = round(end_time - start_time, 5)
         logger.info('Exporting blocks {block_range} took {time_diff} seconds'.format(

@@ -220,7 +220,7 @@ monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can f
 #### export_all
 
 ```bash
-> bitcoinetl export_all --provider-uri http://user:pass@localhost:8332 ---start 1330560000 --end 1330646400
+> bitcoinetl export_all --provider-uri http://user:pass@localhost:8332 --start 2018-01-01 --end 2018-01-02
 ```
 
 You can tune `--export-batch-size`, `--max-workers` for performance.
