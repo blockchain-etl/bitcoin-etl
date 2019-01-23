@@ -163,6 +163,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 
 - [export_blocks_and_transactions](#export_blocks_and_transactions)
 - [get_block_range_for_date](#get_block_range_for_date)
+- [export_all](#export_all)
 
 All the commands accept `-h` parameter for help, e.g.:
 
@@ -216,6 +217,13 @@ monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can f
 -p "datetime.datetime.fromtimestamp(item['timestamp']).astimezone(datetime.timezone.utc).strftime('%Y-%m-%d') == '2017-03-01'"
 ```
 
+#### export_all
+
+```bash
+> bitcoinetl export_all --provider-uri http://user:pass@localhost:8332 ---start 1330560000 --end 1330646400
+```
+
+You can tune `--export-batch-size`, `--max-workers` for performance.
 
 
 ### Running Tests
