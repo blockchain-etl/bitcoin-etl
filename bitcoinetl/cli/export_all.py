@@ -38,12 +38,6 @@ def is_date_range(start, end):
                 re.match('^2[0-9]{3}-[0-9]{2}-[0-9]{2}$', end))
 
 
-def is_unix_time_range(start, end):
-    """Checks for Unix timestamp format."""
-    return bool(re.match("^[0-9]{10}$|^[0-9]{13}$", start) and
-                re.match("^[0-9]{10}$|^[0-9]{13}$", end))
-
-
 def is_block_range(start, end):
     """Checks for a valid block number."""
     return (start.isdigit() and 0 <= int(start) <= 99999999
@@ -52,19 +46,9 @@ def is_block_range(start, end):
 
 def get_partitions(start, end, partition_batch_size, provider_uri):
     """Yield partitions based on input data type."""
-    if is_date_range(start, end) or is_unix_time_range(start, end):
-        if is_date_range(start, end):
-            start_date = datetime.strptime(start, '%Y-%m-%d').date()
-            end_date = datetime.strptime(end, '%Y-%m-%d').date()
-
-        elif is_unix_time_range(start, end):
-            if len(start) == 10 and len(end) == 10:
-                start_date = datetime.utcfromtimestamp(int(start)).date()
-                end_date = datetime.utcfromtimestamp(int(end)).date()
-
-            elif len(start) == 13 and len(end) == 13:
-                start_date = datetime.utcfromtimestamp(int(start) / 1e3).date()
-                end_date = datetime.utcfromtimestamp(int(end) / 1e3).date()
+    if is_date_range(start, end):
+        start_date = datetime.strptime(start, '%Y-%m-%d').date()
+        end_date = datetime.strptime(end, '%Y-%m-%d').date()
 
         day = timedelta(days=1)
 
@@ -75,7 +59,7 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
         while start_date <= end_date:
             batch_start_block, batch_end_block = btc_service.get_block_range_for_date(start_date)
             partition_dir = '/date={start_date!s}/'.format(start_date=start_date)
-            yield batch_start_block, batch_end_block, partition_dir
+            yield batch_start_block, batch_end_block, partition_dir, start_date
             start_date += day
 
     elif is_block_range(start, end):
@@ -96,19 +80,19 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
             yield batch_start_block, batch_end_block, partition_dir
 
     else:
-        raise ValueError('start and end must be either block numbers or ISO dates or Unix times')
+        raise ValueError('start and end must be either block numbers or ISO dates')
 
 
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
-@click.option('-s', '--start', required=True, type=str, help='Start block/ISO date/Unix time')
-@click.option('-e', '--end', required=True, type=str, help='End block/ISO date/Unix time')
-@click.option('-b', '--partition-batch-size', default=10000, type=int,
+@click.option('-s', '--start', required=True, type=str, help='Start block/ISO date')
+@click.option('-e', '--end', required=True, type=str, help='End block/ISO date')
+@click.option('-b', '--partition-batch-size', default=100, type=int,
               help='The number of blocks to export in partition.')
 @click.option('-p', '--provider-uri', default='http://user:pass@localhost:8332', type=str,
               help='The URI of the remote Bitcoin node')
 @click.option('-o', '--output-dir', default='output', type=str, help='Output directory, partitioned in Hive style.')
 @click.option('-w', '--max-workers', default=5, type=int, help='The maximum number of workers.')
-@click.option('-B', '--export-batch-size', default=100, type=int, help='The number of requests in JSON RPC batches.')
+@click.option('-B', '--export-batch-size', default=1, type=int, help='The number of requests in JSON RPC batches.')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL),
               help='The type of chain')
 def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size, chain):

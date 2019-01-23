@@ -20,17 +20,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import click
+from blockchainetl.misc_utils import filter_items
+from tests.helpers import compare_lines_ignore_order, read_file
 
-from blockchainetl import misc_utils
 
+def test_filter_items(tmpdir):
+    input_file = str(tmpdir.join('input.json'))
+    open(input_file, 'w').write('''{"field1": "x1", "field2": "y1"}    
+{"field1": "x2", "field2": "y2"}    
+''')
 
-@click.command(context_settings=dict(help_option_names=['-h', '--help']))
-@click.option('-i', '--input', default='-', type=str, help='The input file. If not specified stdin is used.')
-@click.option('-o', '--output', default='-', type=str, help='The output file. If not specified stdout is used.')
-@click.option('-p', '--predicate', required=True, type=str,
-              help='Predicate in Python code e.g. "item[\'is_erc20\']".')
-def filter_items(input, output, predicate):
-    def evaluated_predicate(item):
-        return eval(predicate, globals(), {'item': item})
-    misc_utils.filter_items(input, output, evaluated_predicate)
+    output_file = str(tmpdir.join('output.json'))
+    filter_items(input_file, output_file, lambda item: item['field1'] == 'x1')
+
+    expected_file = str(tmpdir.join('expected.json'))
+    open(expected_file, 'w').write('''{"field1": "x1", "field2": "y1"}     
+''')
+
+    compare_lines_ignore_order(
+        read_file(expected_file), read_file(output_file)
+    )

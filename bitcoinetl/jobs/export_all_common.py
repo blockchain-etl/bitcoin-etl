@@ -19,16 +19,17 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-
+import datetime
 import logging
 import os
+import shutil
 from time import time
 
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
 from blockchainetl.logging_utils import logging_basic_config
+from blockchainetl.misc_utils import filter_items
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
 
 logging_basic_config()
@@ -36,9 +37,7 @@ logger = logging.getLogger('export_all')
 
 
 def export_all_common(chain, partitions, output_dir, provider_uri, max_workers, batch_size):
-
-    for batch_start_block, batch_end_block, partition_dir in partitions:
-        logging.info('test1')
+    for batch_start_block, batch_end_block, partition_dir, *args in partitions:
         # # # start # # #
 
         start_time = time()
@@ -68,11 +67,11 @@ def export_all_common(chain, partitions, output_dir, provider_uri, max_workers, 
         )
         os.makedirs(os.path.dirname(transactions_output_dir), exist_ok=True)
 
-        blocks_file = '{blocks_output_dir}/blocks_{file_name_suffix}.csv'.format(
+        blocks_file = '{blocks_output_dir}/blocks_{file_name_suffix}.json'.format(
             blocks_output_dir=blocks_output_dir,
             file_name_suffix=file_name_suffix,
         )
-        transactions_file = '{transactions_output_dir}/transactions_{file_name_suffix}.csv'.format(
+        transactions_file = '{transactions_output_dir}/transactions_{file_name_suffix}.json'.format(
             transactions_output_dir=transactions_output_dir,
             file_name_suffix=file_name_suffix,
         )
@@ -96,6 +95,30 @@ def export_all_common(chain, partitions, output_dir, provider_uri, max_workers, 
             export_blocks=blocks_file is not None,
             export_transactions=transactions_file is not None)
         job.run()
+
+        if args is not None and len(args) > 0:
+            date = args[0]
+            logger.info('Filtering blocks {blocks_file} by date {date}'.format(
+                blocks_file=blocks_file,
+                date=date,
+            ))
+
+            def filter_by_date(item, field):
+                return datetime.datetime.fromtimestamp(item[field]).astimezone(datetime.timezone.utc) \
+                           .strftime('%Y-%m-%d') == date.strftime('%Y-%m-%d')
+
+            filtered_blocks_file = blocks_file + '.filtered'
+            filter_items(blocks_file, filtered_blocks_file, lambda item: filter_by_date(item, 'timestamp'))
+            shutil.move(filtered_blocks_file, blocks_file)
+
+            logger.info('Filtering transactions {transactions_file} by date {date}'.format(
+                transactions_file=transactions_file,
+                date=date,
+            ))
+
+            filtered_transactions_file = transactions_file + '.filtered'
+            filter_items(transactions_file, filtered_transactions_file, lambda item: filter_by_date(item, 'block_timestamp'))
+            shutil.move(filtered_transactions_file, transactions_file)
 
         # # # finish # # #
         end_time = time()
