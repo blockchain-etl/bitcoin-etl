@@ -32,5 +32,9 @@ from blockchainetl import misc_utils
               help='Predicate in Python code e.g. "item[\'is_erc20\']".')
 def filter_items(input, output, predicate):
     def evaluated_predicate(item):
-        return eval(predicate, globals(), {'item': item})
+        eval_environment = globals()
+        if 'datetime' in predicate:
+            import datetime
+            eval_environment['datetime'] = datetime
+        return eval(predicate, eval_environment, {'item': item})
     misc_utils.filter_items(input, output, evaluated_predicate)
