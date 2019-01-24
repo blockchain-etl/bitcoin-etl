@@ -137,10 +137,21 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 1. Export blocks & transactions:
 
     ```bash
-    > bitcoinetl export_blocks_and_transactions --start-block 0 --end-block 500000 \
-    --provider-uri http://user:pass@localhost:8332 --chain bitcoin \
-    --blocks-output blocks.json --transactions-output transactions.json
+    > bitcoinetl export_all --start 0 --end 499999  \
+    --partition-batch-size 100 \
+    --provider-uri http://user:pass@localhost:8332 --chain bitcoin
     ```
+    
+    The result will be in the `output` subdirectory, partitioned in Hive style:
+
+    ```bash
+    output/blocks/start_block=00000000/end_block=00000099/blocks_00000000_00000099.csv
+    output/blocks/start_block=00000100/end_block=00000199/blocks_00000100_=00000199.csv
+    ...
+    output/transactions/start_block=00000000/end_block=00000099/transactions_00000000_00000099.csv
+    ...
+    ```
+    
     In case `bitcoinetl` command is not available in PATH, use `python -m bitcoinetl` instead.
 
 ### Running in Docker
