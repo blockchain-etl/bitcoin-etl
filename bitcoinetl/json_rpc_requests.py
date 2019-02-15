@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from bitcoinetl.enum.chain import Chain
+from bitcoinetl.enumeration.chain import Chain
 
 
 def generate_get_block_by_hash_json_rpc(block_hashes, include_transactions, chain=Chain.BITCOIN):

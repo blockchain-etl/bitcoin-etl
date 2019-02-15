@@ -36,6 +36,9 @@ setup(
         'click==7.0'
     ],
     extras_require={
+        'streaming': [
+            'google-cloud-pubsub==0.37.2'
+        ],
         'dev': [
             'pytest~=3.2.0',
         ],

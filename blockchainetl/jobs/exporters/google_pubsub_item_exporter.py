@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,30 +18,42 @@
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-import click
+import json
 
-from bitcoinetl.cli.export_blocks_and_transactions import export_blocks_and_transactions
-from bitcoinetl.cli.export_all import export_all
-from bitcoinetl.cli.filter_items import filter_items
-from bitcoinetl.cli.get_block_range_for_date import get_block_range_for_date
-from bitcoinetl.cli.stream import stream
+from google.cloud import pubsub_v1
 
 
-@click.group()
-@click.version_option(version='1.1.0')
-@click.pass_context
-def cli(ctx):
-    pass
+class GooglePubSubItemExporter:
 
+    def __init__(self, topic_path):
+        self.topic_path = topic_path
 
-# export
-cli.add_command(export_blocks_and_transactions, "export_blocks_and_transactions")
-cli.add_command(export_all, "export_all")
+        batch_settings = pubsub_v1.types.BatchSettings(
+            max_bytes=1024 * 5,  # 5 kilobytes
+            max_latency=2,  # 2 seconds
+        )
 
-# streaming
-cli.add_command(stream, "stream")
+        self.publisher = pubsub_v1.PublisherClient(batch_settings)
 
-# utils
-cli.add_command(filter_items, "filter_items")
-cli.add_command(get_block_range_for_date, "get_block_range_for_date")
+    def open(self):
+        pass
+
+    def export_items(self, items):
+        futures = []
+        for item in items:
+            message_future = self.export_item(item)
+            futures.append(message_future)
+
+        for future in futures:
+            # result() blocks until the message is published.
+            future.result()
+
+    def export_item(self, item):
+        data = json.dumps(item).encode('utf-8')
+        message_future = self.publisher.publish(self.topic_path, data=data)
+        return message_future
+
+    def close(self):
+        pass

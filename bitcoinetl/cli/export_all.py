@@ -25,7 +25,7 @@ import click
 import re
 
 from datetime import datetime, timedelta
-from bitcoinetl.enum.chain import Chain
+from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.jobs.export_all_common import export_all_common
 from bitcoinetl.service.btc_block_range_service import BtcBlockRangeService
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc

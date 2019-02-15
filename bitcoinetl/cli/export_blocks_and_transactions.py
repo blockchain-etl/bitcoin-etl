@@ -23,7 +23,7 @@
 
 import click
 
-from bitcoinetl.enum.chain import Chain
+from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc

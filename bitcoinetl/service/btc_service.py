@@ -22,7 +22,7 @@
 
 from bitcoinetl.domain.transaction_input import BtcTransactionInput
 from bitcoinetl.domain.transaction_output import BtcTransactionOutput
-from bitcoinetl.enum.chain import Chain
+from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.json_rpc_requests import generate_get_block_hash_by_number_json_rpc, \
     generate_get_block_by_hash_json_rpc, generate_get_transaction_by_id_json_rpc
 from bitcoinetl.mappers.block_mapper import BtcBlockMapper

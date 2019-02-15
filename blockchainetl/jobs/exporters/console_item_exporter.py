@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,30 +18,22 @@
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-import click
-
-from bitcoinetl.cli.export_blocks_and_transactions import export_blocks_and_transactions
-from bitcoinetl.cli.export_all import export_all
-from bitcoinetl.cli.filter_items import filter_items
-from bitcoinetl.cli.get_block_range_for_date import get_block_range_for_date
-from bitcoinetl.cli.stream import stream
+import json
+import logging
 
 
-@click.group()
-@click.version_option(version='1.1.0')
-@click.pass_context
-def cli(ctx):
-    pass
+class ConsoleItemExporter:
+    def open(self):
+        pass
 
+    def export_items(self, items):
+        for item in items:
+            self.export_item(item)
 
-# export
-cli.add_command(export_blocks_and_transactions, "export_blocks_and_transactions")
-cli.add_command(export_all, "export_all")
+    def export_item(self, item):
+        logging.info(json.dumps(item))
 
-# streaming
-cli.add_command(stream, "stream")
-
-# utils
-cli.add_command(filter_items, "filter_items")
-cli.add_command(get_block_range_for_date, "get_block_range_for_date")
+    def close(self):
+        pass

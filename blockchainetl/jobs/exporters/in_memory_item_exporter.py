@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,30 +18,27 @@
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-
-import click
-
-from bitcoinetl.cli.export_blocks_and_transactions import export_blocks_and_transactions
-from bitcoinetl.cli.export_all import export_all
-from bitcoinetl.cli.filter_items import filter_items
-from bitcoinetl.cli.get_block_range_for_date import get_block_range_for_date
-from bitcoinetl.cli.stream import stream
+# SOFTWARE.
 
 
-@click.group()
-@click.version_option(version='1.1.0')
-@click.pass_context
-def cli(ctx):
-    pass
+class InMemoryItemExporter:
+    def __init__(self, item_types):
+        self.item_types = item_types
+        self.items = {}
 
+    def open(self):
+        for item_type in self.item_types:
+            self.items[item_type] = []
 
-# export
-cli.add_command(export_blocks_and_transactions, "export_blocks_and_transactions")
-cli.add_command(export_all, "export_all")
+    def export_item(self, item):
+        item_type = item.get('type', None)
+        if item_type is None:
+            raise ValueError('type key is not found in item {}'.format(repr(item)))
 
-# streaming
-cli.add_command(stream, "stream")
+        self.items[item_type].append(item)
 
-# utils
-cli.add_command(filter_items, "filter_items")
-cli.add_command(get_block_range_for_date, "get_block_range_for_date")
+    def close(self):
+        pass
+
+    def get_items(self, item_type):
+        return self.items[item_type]
