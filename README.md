@@ -172,12 +172,12 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     
 1. Run streaming to console or Pub/Sub
     ```bash
-    > docker build -t bitcoin-etl:streaming-latest -f Dockerfile_with_streaming .
+    > docker build -t bitcoin-etl:latest-streaming -f Dockerfile_with_streaming .
     > echo "Stream to console"
-    > docker run bitcoin-etl:streaming-latest stream -p http://user:pass@localhost:8332 --start-block 1000000
+    > docker run bitcoin-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 1000000
     > echo "Stream to Pub/Sub"
     > export GOOGLE_APPLICATION_CREDENTIALS=/path_to_credentials_file.json
-    > docker run bitcoin-etl:streaming-latest stream -p http://user:pass@localhost:8332 --start-block 1000000 --output projects/your-project/topics/bitcoin_blockchain
+    > docker run bitcoin-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 1000000 --output projects/your-project/topics/bitcoin_blockchain
     ```
 
 
