@@ -26,9 +26,24 @@ Supported chains:
 - dash
 - zcash
 
+Stream blockchain data continually to console:
+
+```bash
+> pip install bitcoin-etl[streaming]
+> bitcoinetl stream -p http://user:pass@localhost:8332 --start-block 500000
+```
+
+Stream blockchain data continually to Google Pub/Sub:
+
+```bash
+> export GOOGLE_APPLICATION_CREDENTIALS=/path_to_credentials_file.json
+> bitcoinetl stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/bitcoin_blockchain
+
+```
+
 For the latest version, check out the repo and call 
 ```bash
-> pip install -e . 
+> pip install -e .[streaming] 
 > python bitcoinetl.py
 ```
 
@@ -174,10 +189,10 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     ```bash
     > docker build -t bitcoin-etl:latest-streaming -f Dockerfile_with_streaming .
     > echo "Stream to console"
-    > docker run bitcoin-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 1000000
+    > docker run bitcoin-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 500000
     > echo "Stream to Pub/Sub"
     > export GOOGLE_APPLICATION_CREDENTIALS=/path_to_credentials_file.json
-    > docker run bitcoin-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 1000000 --output projects/your-project/topics/bitcoin_blockchain
+    > docker run bitcoin-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/bitcoin_blockchain
     ```
 
 
@@ -186,6 +201,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 - [export_blocks_and_transactions](#export_blocks_and_transactions)
 - [get_block_range_for_date](#get_block_range_for_date)
 - [export_all](#export_all)
+- [stream](#stream)
 
 All the commands accept `-h` parameter for help, e.g.:
 
@@ -247,6 +263,23 @@ monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can f
 
 You can tune `--export-batch-size`, `--max-workers` for performance.
 
+#### stream
+
+```bash
+> bitcoinetl stream --provider-uri http://user:pass@localhost:8332 --start-block 500000
+```
+
+- This command outputs the blocks and transactions to the console by default.
+- Use `--output` option to specify the Google Pub/Sub topic where to publish blockchain data, 
+e.g. `projects/your-project/topics/bitcoin_blockchain`.
+- The command saves its state to `last_synced_block.txt` file where the last synced block number is saved periodically.
+- Specify either `--start-block` or `--last-synced-block-file` option. `--last-synced-block-file` should point to a file
+where the block number, from which to start streaming the blockchain data, is saved.
+- Use the `--lag` option to specify how many blocks to lag behind the tip of the blockchain. It's the simplest way to 
+handle chain reorganizations.
+- Use the `--chain` option to specify the type of the chain, e.g. `bitcoin`, `litecoin`, `dash`, `zcash`, etc.
+- You can tune `--period-seconds`, `--batch-size`, `--max-workers` for performance.
+ 
 
 ### Running Tests
 

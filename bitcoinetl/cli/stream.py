@@ -34,8 +34,8 @@ logging_basic_config()
 @click.option('--lag', default=0, type=int, help='The number of blocks to lag behind the network.')
 @click.option('-p', '--provider-uri', default='http://user:pass@localhost:8332', type=str,
               help='The URI of the remote Bitcoin node')
-@click.option('-t', '--output', type=str,
-              help='Google PubSub topic path e.g. projects/your-project/topics/ethereum_blockchain. '
+@click.option('-o', '--output', type=str,
+              help='Google PubSub topic path e.g. projects/your-project/topics/bitcoin_blockchain. '
                    'If not specified will print to console')
 @click.option('-s', '--start-block', default=None, type=int, help='Start block')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain')
