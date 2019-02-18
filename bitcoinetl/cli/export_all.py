@@ -26,7 +26,7 @@ import re
 
 from datetime import datetime, timedelta
 from bitcoinetl.enumeration.chain import Chain
-from bitcoinetl.jobs.export_all_common import export_all_common
+from bitcoinetl.jobs.export_all import export_all as do_export_all
 from bitcoinetl.service.btc_block_range_service import BtcBlockRangeService
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
@@ -97,5 +97,5 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
               help='The type of chain')
 def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size, chain):
     """Exports all data for a range of blocks."""
-    export_all_common(chain, get_partitions(start, end, partition_batch_size, provider_uri),
-                      output_dir, provider_uri, max_workers, export_batch_size)
+    do_export_all(chain, get_partitions(start, end, partition_batch_size, provider_uri),
+                  output_dir, provider_uri, max_workers, export_batch_size)

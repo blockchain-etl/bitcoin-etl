@@ -19,6 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 import datetime
 import logging
 import os
@@ -36,7 +37,7 @@ logging_basic_config()
 logger = logging.getLogger('export_all')
 
 
-def export_all_common(chain, partitions, output_dir, provider_uri, max_workers, batch_size):
+def export_all(chain, partitions, output_dir, provider_uri, max_workers, batch_size):
     for batch_start_block, batch_end_block, partition_dir, *args in partitions:
         # # # start # # #
 
