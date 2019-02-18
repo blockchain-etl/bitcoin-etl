@@ -48,7 +48,9 @@ def write_last_synced_block(file, last_synced_block):
 def init_last_synced_block_file(start_block, last_synced_block_file):
     if os.path.isfile(last_synced_block_file):
         raise ValueError(
-            '{} should not exist if --start-block option is specified'.format(last_synced_block_file))
+            '{} should not exist if --start-block option is specified. '
+            'Either remove the {} file or the --start-block option.'
+                .format(last_synced_block_file, last_synced_block_file))
     write_last_synced_block(last_synced_block_file, start_block)
 
 
