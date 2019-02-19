@@ -105,6 +105,8 @@ spent_output_index      | bigint                |
 script_asm              | string                |
 script_hex              | hex_string            |
 sequence                | bigint                |
+required_signatures     | bigint                |
+type                    | string                |
 addresses               | []string              |
 value                   | bigint                |
 

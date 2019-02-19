@@ -52,10 +52,12 @@ class EnrichTransactionsJob(BaseJob):
         self.batch_work_executor.execute(self.transactions_iterable, self._enrich_transactions)
 
     def _enrich_transactions(self, transactions):
-        all_inputs = [transaction.get('inputs', []) for transaction in transactions]
+        transactions = [self.transaction_mapper.dict_to_transaction(transaction) for transaction in transactions]
+
+        all_inputs = [transaction.inputs for transaction in transactions]
         flat_inputs = [input for inputs in all_inputs for input in inputs]
-        transaction_hashes = [input.get('spent_transaction_hash') for input in flat_inputs
-                              if input.get('spent_transaction_hash') is not None]
+        transaction_hashes = [input.spent_transaction_hash for input in flat_inputs
+                              if input.spent_transaction_hash is not None]
 
         if len(transaction_hashes) == 0:
             return
@@ -66,28 +68,27 @@ class EnrichTransactionsJob(BaseJob):
         input_transactions_map = {input_transaction.hash: input_transaction for input_transaction in input_transactions}
 
         for input in flat_inputs:
-            spent_transaction_hash = input.get('spent_transaction_hash')
+            spent_transaction_hash = input.spent_transaction_hash
             if spent_transaction_hash is None:
                 continue
             input_transaction = input_transactions_map.get(spent_transaction_hash)
             if input_transaction is None:
                 raise ValueError('Input transaction with hash {} not found'.format(spent_transaction_hash))
 
-            spent_output_index = input.get('spent_output_index')
+            spent_output_index = input.spent_output_index
             if input_transaction.outputs is None or len(input_transaction.outputs) < (spent_output_index + 1):
                 raise ValueError(
                     'There is no output with index {} in transaction with hash {}'.format(
                         spent_output_index, spent_transaction_hash))
 
             output = input_transaction.outputs[spent_output_index]
-            input['required_signatures'] = output.required_signatures
-            input['type'] = output.type
-            input['addresses'] = output.addresses
-            input['value'] = output.value
+            input.required_signatures = output.required_signatures
+            input.type = output.type
+            input.addresses = output.addresses
+            input.value = output.value
 
         for transaction in transactions:
-            transaction['type'] = 'transaction'
-            self.item_exporter.export_item(transaction)
+            self.item_exporter.export_item(self.transaction_mapper.transaction_to_dict(transaction))
 
     def _end(self):
         self.batch_work_executor.shutdown()
