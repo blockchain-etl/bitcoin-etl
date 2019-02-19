@@ -40,7 +40,8 @@ setup(
             'google-cloud-pubsub==0.37.2'
         ],
         'dev': [
-            'pytest~=3.2.0',
+            'pytest~=4.3.0',
+            'pytest-timeout~=1.3.3'
         ],
     },
     entry_points={

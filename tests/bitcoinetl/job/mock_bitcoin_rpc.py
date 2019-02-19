@@ -33,7 +33,7 @@ class MockBitcoinRpc:
             method = req[0]
             if method == 'getblock':
                 blockhash = req[1]
-                verbosity = req[2]
+                verbosity = req[2] if len(req) > 2 else None
                 file_name = 'rpc_response_{}_{}_{}.json'.format(method, blockhash, verbosity)
             elif method == 'getblockhash':
                 number = req[1]
@@ -53,10 +53,8 @@ class MockBitcoinRpc:
         return json_loads(file_content)
 
     def getblockcount(self):
-        pass
-        # file_name = 'rpc_response_{}_{}_{}.json'.format("geblock", blockhash, verbosity)
-        # file_content = self.read_resource(file_name)
-        # return json.loads(file_content)
+        file_content = self.read_resource('rpc_response_getblockcount.json')
+        return file_content
 
     def getblockhash(self, block_number):
         file_name = 'rpc_response_{}_{}.json'.format("getblockhash", block_number)

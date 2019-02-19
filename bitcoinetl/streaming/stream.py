@@ -25,17 +25,15 @@ import logging
 import os
 import time
 
+from google.api_core.exceptions import GoogleAPIError
+
 from bitcoinetl.enumeration.chain import Chain
-from blockchainetl.file_utils import smart_open
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
+from bitcoinetl.service.btc_service import BtcService
+from blockchainetl.file_utils import smart_open
 from blockchainetl.jobs.exporters.console_item_exporter import ConsoleItemExporter
-from blockchainetl.jobs.exporters.google_pubsub_item_exporter import GooglePubSubItemExporter
 from blockchainetl.jobs.exporters.in_memory_item_exporter import InMemoryItemExporter
 from blockchainetl.logging_utils import logging_basic_config
-from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
-from bitcoinetl.service.btc_service import BtcService
-from blockchainetl.thread_local_proxy import ThreadLocalProxy
-from google.api_core.exceptions import GoogleAPIError
 
 logging_basic_config()
 
@@ -63,27 +61,33 @@ def enrich_transactions(transactions):
     return transactions
 
 
-def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.BITCOIN,
-           period_seconds=10, batch_size=2, max_workers=5):
-    if start_block is not None:
-        init_last_synced_block_file(start_block, last_synced_block_file)
-
-    max_batch_size = 10
+def stream(
+        bitcoin_rpc,
+        last_synced_block_file='last_synced_block.txt',
+        lag=0,
+        item_exporter=ConsoleItemExporter(),
+        start_block=None,
+        end_block=None,
+        chain=Chain.BITCOIN,
+        period_seconds=10,
+        batch_size=2,
+        max_batch_size=10,
+        max_workers=5):
+    if start_block is not None or not os.path.isfile(last_synced_block_file):
+        init_last_synced_block_file((start_block or 0) - 1, last_synced_block_file)
 
     last_synced_block = read_last_synced_block(last_synced_block_file)
-    btc_service = BtcService(BitcoinRpc(provider_uri), chain)
+    btc_service = BtcService(bitcoin_rpc, chain)
 
-    if output is not None:
-        item_exporter = GooglePubSubItemExporter(output)
-    else:
-        item_exporter = ConsoleItemExporter()
+    item_exporter.open()
 
-    while True:
+    while True and (end_block is None or last_synced_block < end_block):
         blocks_to_sync = 0
         try:
             current_block = int(btc_service.get_latest_block().number)
             target_block = current_block - lag
             target_block = min(target_block, last_synced_block + max_batch_size)
+            target_block = min(target_block, end_block) if end_block is not None else target_block
             blocks_to_sync = max(target_block - last_synced_block, 0)
             logging.info('Current block {}, target block {}, last synced block {}, blocks to sync {}'.format(
                 current_block, target_block, last_synced_block, blocks_to_sync))
@@ -100,7 +104,7 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
                 start_block=last_synced_block + 1,
                 end_block=target_block,
                 batch_size=batch_size,
-                bitcoin_rpc=ThreadLocalProxy(lambda: BitcoinRpc(provider_uri)),
+                bitcoin_rpc=bitcoin_rpc,
                 max_workers=max_workers,
                 item_exporter=blocks_and_transactions_item_exporter,
                 chain=chain,
@@ -116,7 +120,7 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
             if len(enriched_transactions) != len(transactions):
                 raise ValueError('The number of transactions is wrong ' + str(enriched_transactions))
 
-            logging.info('Pushing to ' + ('console' if output is None else 'PubSub'))
+            logging.info('Pushing with ' + type(item_exporter).__name__)
             item_exporter.export_items(blocks + enriched_transactions)
 
             logging.info('Writing last synced block {}'.format(target_block))
@@ -125,6 +129,8 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
         except (GoogleAPIError, RuntimeError, OSError, IOError, TypeError, NameError, ValueError) as e:
             logging.info('An exception occurred {}'.format(repr(e)))
 
-        if blocks_to_sync != max_batch_size:
+        if blocks_to_sync != max_batch_size and last_synced_block != end_block:
             logging.info('Sleeping {} seconds...'.format(period_seconds))
             time.sleep(period_seconds)
+
+    item_exporter.close()
