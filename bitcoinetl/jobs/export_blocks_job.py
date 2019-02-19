@@ -46,19 +46,15 @@ class ExportBlocksJob(BaseJob):
         self.start_block = start_block
         self.end_block = end_block
 
-        self.bitcoin_rpc = bitcoin_rpc
-
         self.batch_work_executor = BatchWorkExecutor(batch_size, max_workers)
         self.item_exporter = item_exporter
-
-        self.chain = chain
 
         self.export_blocks = export_blocks
         self.export_transactions = export_transactions
         if not self.export_blocks and not self.export_transactions:
             raise ValueError('At least one of export_blocks or export_transactions must be True')
 
-        self.btc_service = BtcService(self.bitcoin_rpc, self.chain)
+        self.btc_service = BtcService(bitcoin_rpc, chain)
         self.block_mapper = BtcBlockMapper()
         self.transaction_mapper = BtcTransactionMapper()
 

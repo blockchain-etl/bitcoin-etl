@@ -26,6 +26,7 @@ import os
 import time
 
 from bitcoinetl.enumeration.chain import Chain
+from bitcoinetl.jobs.enrich_transactions import EnrichTransactionsJob
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from bitcoinetl.service.btc_service import BtcService
 from blockchainetl.file_utils import smart_open
@@ -53,10 +54,6 @@ def init_last_synced_block_file(start_block, last_synced_block_file):
 def read_last_synced_block(file):
     with smart_open(file, 'r') as last_synced_block_file:
         return int(last_synced_block_file.read())
-
-
-def enrich_transactions(transactions):
-    return transactions
 
 
 def stream(
@@ -116,7 +113,19 @@ def stream(
             blocks = blocks_and_transactions_item_exporter.get_items('block')
             transactions = blocks_and_transactions_item_exporter.get_items('transaction')
 
-            enriched_transactions = enrich_transactions(transactions)
+            # Enrich transactions
+            enriched_transactions_item_exporter = InMemoryItemExporter(item_types=['transaction'])
+
+            enrich_transactions_job = EnrichTransactionsJob(
+                transactions_iterable=transactions,
+                batch_size=10,
+                bitcoin_rpc=bitcoin_rpc,
+                max_workers=max_workers,
+                item_exporter=enriched_transactions_item_exporter,
+                chain=chain
+            )
+            enrich_transactions_job.run()
+            enriched_transactions = enriched_transactions_item_exporter.get_items('transaction')
             if len(enriched_transactions) != len(transactions):
                 raise ValueError('The number of transactions is wrong ' + str(enriched_transactions))
 
