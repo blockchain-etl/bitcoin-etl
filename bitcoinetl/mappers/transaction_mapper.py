@@ -77,11 +77,14 @@ class BtcTransactionMapper(object):
             'block_timestamp': transaction.block_timestamp,
             'is_coinbase': transaction.is_coinbase,
 
+            'inputs': self.transaction_input_mapper.inputs_to_dicts(transaction.inputs),
+            'outputs': self.transaction_output_mapper.outputs_to_dicts(transaction.outputs),
+
             'input_count': len(transaction.inputs),
             'output_count': len(transaction.outputs),
-
-            'inputs': self.transaction_input_mapper.inputs_to_dicts(transaction.inputs),
-            'outputs': self.transaction_output_mapper.outputs_to_dicts(transaction.outputs)
+            'input_value': transaction.calculate_input_value(),
+            'output_value': transaction.calculate_output_value(),
+            'fee': transaction.calculate_fee(),
         }
         return result
 

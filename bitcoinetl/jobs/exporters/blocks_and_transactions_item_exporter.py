@@ -49,10 +49,14 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'block_timestamp',
     'is_coinbase',
 
+    'inputs',
+    'outputs',
+
     'input_count',
     'output_count',
-    'inputs',
-    'outputs'
+    'input_value',
+    'output_value',
+    'fee'
 ]
 
 

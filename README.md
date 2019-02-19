@@ -90,10 +90,13 @@ block_number            | bigint                |
 block_hash              | hex_string            |
 block_timestamp         | bigint                |
 is_coinbase             | boolean               |
-input_count             | bigint                |
-output_count            | bigint                |
 inputs                  | []transaction_input   |
 outputs                 | []transaction_output  |
+input_count             | bigint                |
+output_count            | bigint                |
+input_value             | bigint                |
+output_value            | bigint                |
+fee                     | bigint                |
 
 ### transaction_input
 
