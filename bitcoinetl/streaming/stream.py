@@ -135,7 +135,7 @@ def stream(
             logging.info('Writing last synced block {}'.format(target_block))
             write_last_synced_block(last_synced_block_file, target_block)
             last_synced_block = target_block
-        except retry_errors as e:
+        except tuple(retry_errors) as e:
             logging.info('An exception occurred {}'.format(repr(e)))
 
         if blocks_to_sync != max_batch_size and last_synced_block != end_block:
