@@ -27,7 +27,7 @@ from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
 
 
-# Add input addresses and values to transactions
+# Add required_signatures, type, addresses, and value to transaction inputs
 class EnrichTransactionsJob(BaseJob):
     def __init__(
             self,
@@ -80,6 +80,8 @@ class EnrichTransactionsJob(BaseJob):
                         spent_output_index, spent_transaction_hash))
 
             output = input_transaction.outputs[spent_output_index]
+            input['required_signatures'] = output.required_signatures
+            input['type'] = output.type
             input['addresses'] = output.addresses
             input['value'] = output.value
 
