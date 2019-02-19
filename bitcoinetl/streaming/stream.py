@@ -25,8 +25,6 @@ import logging
 import os
 import time
 
-from google.api_core.exceptions import GoogleAPIError
-
 from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from bitcoinetl.service.btc_service import BtcService
@@ -83,6 +81,8 @@ def stream(
 
     while True and (end_block is None or last_synced_block < end_block):
         blocks_to_sync = 0
+
+        retry_errors = get_retry_errors()
         try:
             current_block = int(btc_service.get_latest_block().number)
             target_block = current_block - lag
@@ -126,7 +126,7 @@ def stream(
             logging.info('Writing last synced block {}'.format(target_block))
             write_last_synced_block(last_synced_block_file, target_block)
             last_synced_block = target_block
-        except (GoogleAPIError, RuntimeError, OSError, IOError, TypeError, NameError, ValueError) as e:
+        except retry_errors as e:
             logging.info('An exception occurred {}'.format(repr(e)))
 
         if blocks_to_sync != max_batch_size and last_synced_block != end_block:
@@ -134,3 +134,15 @@ def stream(
             time.sleep(period_seconds)
 
     item_exporter.close()
+
+
+def get_retry_errors():
+    retry_errors = [RuntimeError, OSError, IOError, TypeError, NameError, ValueError]
+    try:
+        from google.api_core.exceptions import GoogleAPIError
+    except ImportError:
+        pass
+    else:
+        retry_errors.append(GoogleAPIError)
+
+    return retry_errors
