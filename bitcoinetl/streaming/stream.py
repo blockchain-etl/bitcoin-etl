@@ -66,7 +66,7 @@ def stream(
         chain=Chain.BITCOIN,
         period_seconds=10,
         batch_size=2,
-        max_batch_size=10,
+        block_batch_size=10,
         max_workers=5):
     if start_block is not None or not os.path.isfile(last_synced_block_file):
         init_last_synced_block_file((start_block or 0) - 1, last_synced_block_file)
@@ -83,7 +83,7 @@ def stream(
         try:
             current_block = int(btc_service.get_latest_block().number)
             target_block = current_block - lag
-            target_block = min(target_block, last_synced_block + max_batch_size)
+            target_block = min(target_block, last_synced_block + block_batch_size)
             target_block = min(target_block, end_block) if end_block is not None else target_block
             blocks_to_sync = max(target_block - last_synced_block, 0)
             logging.info('Current block {}, target block {}, last synced block {}, blocks to sync {}'.format(
@@ -118,7 +118,7 @@ def stream(
 
             enrich_transactions_job = EnrichTransactionsJob(
                 transactions_iterable=transactions,
-                batch_size=10,
+                batch_size=batch_size,
                 bitcoin_rpc=bitcoin_rpc,
                 max_workers=max_workers,
                 item_exporter=enriched_transactions_item_exporter,
@@ -127,7 +127,7 @@ def stream(
             enrich_transactions_job.run()
             enriched_transactions = enriched_transactions_item_exporter.get_items('transaction')
             if len(enriched_transactions) != len(transactions):
-                raise ValueError('The number of transactions is wrong ' + str(enriched_transactions))
+                raise ValueError('The number of transactions is wrong ' + str(transactions))
 
             logging.info('Pushing with ' + type(item_exporter).__name__)
             item_exporter.export_items(blocks + enriched_transactions)
@@ -136,9 +136,9 @@ def stream(
             write_last_synced_block(last_synced_block_file, target_block)
             last_synced_block = target_block
         except tuple(retry_errors) as e:
-            logging.info('An exception occurred {}'.format(repr(e)))
+            logging.exception('An exception occurred while fetching block data.')
 
-        if blocks_to_sync != max_batch_size and last_synced_block != end_block:
+        if blocks_to_sync != block_batch_size and last_synced_block != end_block:
             logging.info('Sleeping {} seconds...'.format(period_seconds))
             time.sleep(period_seconds)
 

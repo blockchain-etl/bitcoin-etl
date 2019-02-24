@@ -43,10 +43,10 @@ logging_basic_config()
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain')
 @click.option('-s', '--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs')
 @click.option('-b', '--batch-size', default=2, type=int, help='How many blocks to batch in single request')
-@click.option('-B', '--max-batch-size', default=10, type=int, help='How many blocks to batch in single sync round')
+@click.option('-B', '--block-batch-size', default=10, type=int, help='How many blocks to batch in single sync round')
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers')
 def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.BITCOIN,
-           period_seconds=10, batch_size=2, max_batch_size=10, max_workers=5):
+           period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5):
     """Streams all data types to console or Google Pub/Sub."""
     from bitcoinetl.streaming.streaming_utils import get_item_exporter
     from bitcoinetl.streaming.stream import stream as do_stream
@@ -60,6 +60,6 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
         chain=chain,
         period_seconds=period_seconds,
         batch_size=batch_size,
-        max_batch_size=max_batch_size,
+        block_batch_size=block_batch_size,
         max_workers=max_workers
     )
