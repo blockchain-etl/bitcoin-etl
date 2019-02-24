@@ -90,7 +90,7 @@ def stream(
                 current_block, target_block, last_synced_block, blocks_to_sync))
 
             if blocks_to_sync == 0:
-                logging.info('Nothing to sync. Sleeping {} seconds...'.format(period_seconds))
+                logging.info('Nothing to sync. Sleeping for {} seconds...'.format(period_seconds))
                 time.sleep(period_seconds)
                 continue
 
@@ -129,7 +129,7 @@ def stream(
             if len(enriched_transactions) != len(transactions):
                 raise ValueError('The number of transactions is wrong ' + str(transactions))
 
-            logging.info('Pushing with ' + type(item_exporter).__name__)
+            logging.info('Exporting with ' + type(item_exporter).__name__)
             item_exporter.export_items(blocks + enriched_transactions)
 
             logging.info('Writing last synced block {}'.format(target_block))
