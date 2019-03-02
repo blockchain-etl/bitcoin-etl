@@ -149,9 +149,10 @@ def get_retry_errors():
     retry_errors = [RuntimeError, OSError, IOError, TypeError, NameError, ValueError]
     try:
         from google.api_core.exceptions import GoogleAPIError
+        from grpc import RpcError
     except ImportError:
         pass
     else:
-        retry_errors.append(GoogleAPIError)
+        retry_errors.extend([GoogleAPIError, RpcError])
 
     return retry_errors
