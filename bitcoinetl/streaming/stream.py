@@ -79,7 +79,6 @@ def stream(
     while True and (end_block is None or last_synced_block < end_block):
         blocks_to_sync = 0
 
-        retry_errors = get_retry_errors()
         try:
             current_block = int(btc_service.get_latest_block().number)
             target_block = current_block - lag
@@ -135,7 +134,8 @@ def stream(
             logging.info('Writing last synced block {}'.format(target_block))
             write_last_synced_block(last_synced_block_file, target_block)
             last_synced_block = target_block
-        except tuple(retry_errors) as e:
+        except Exception as e:
+            # https://stackoverflow.com/a/4992124/1580227
             logging.exception('An exception occurred while fetching block data.')
 
         if blocks_to_sync != block_batch_size and last_synced_block != end_block:
@@ -143,16 +143,3 @@ def stream(
             time.sleep(period_seconds)
 
     item_exporter.close()
-
-
-def get_retry_errors():
-    retry_errors = [RuntimeError, OSError, IOError, TypeError, NameError, ValueError]
-    try:
-        from google.api_core.exceptions import GoogleAPIError
-        from grpc import RpcError
-    except ImportError:
-        pass
-    else:
-        retry_errors.extend([GoogleAPIError, RpcError])
-
-    return retry_errors
