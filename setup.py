@@ -37,7 +37,7 @@ setup(
     ],
     extras_require={
         'streaming': [
-            'google-cloud-pubsub==0.37.2'
+            'google-cloud-pubsub==0.39.1'
         ],
         'dev': [
             'pytest~=4.3.0',
