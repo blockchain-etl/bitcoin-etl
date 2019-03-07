@@ -28,7 +28,7 @@ from google.cloud import pubsub_v1
 
 class GooglePubSubItemExporter:
 
-    def __init__(self, item_type_to_topic_mapping):
+    def __init__(self, item_type_to_topic_mapping, timeout=300):
         self.item_type_to_topic_mapping = item_type_to_topic_mapping
 
         batch_settings = pubsub_v1.types.BatchSettings(
@@ -38,6 +38,7 @@ class GooglePubSubItemExporter:
         )
 
         self.publisher = pubsub_v1.PublisherClient(batch_settings)
+        self.timeout = timeout
 
     def open(self):
         pass
@@ -50,7 +51,7 @@ class GooglePubSubItemExporter:
 
         for future in futures:
             # result() blocks until the message is published.
-            future.result()
+            future.result(timeout=self.timeout)
 
     def export_item(self, item):
         item_type = item.get('type')
