@@ -22,7 +22,7 @@
 
 from bitcoinetl.domain.transaction_input import BtcTransactionInput
 from bitcoinetl.domain.transaction_output import BtcTransactionOutput
-from bitcoinetl.enum.chain import Chain
+from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.json_rpc_requests import generate_get_block_hash_by_number_json_rpc, \
     generate_get_block_by_hash_json_rpc, generate_get_transaction_by_id_json_rpc
 from bitcoinetl.mappers.block_mapper import BtcBlockMapper
@@ -75,9 +75,11 @@ class BtcService(object):
 
         for block in blocks:
             self._remove_coinbase_input(block)
-            self._add_non_standard_addresses(block)
-            if self.chain == Chain.ZCASH:
-                self._add_shielded_inputs_and_outputs(block)
+            if block.has_full_transactions():
+                for transaction in block.transactions:
+                    self._add_non_standard_addresses(transaction)
+                    if self.chain == Chain.ZCASH:
+                        self._add_shielded_inputs_and_outputs(transaction)
 
         return blocks
 
@@ -86,6 +88,18 @@ class BtcService(object):
         block_hashes_response = self.bitcoin_rpc.batch(block_hash_rpc)
         block_hashes = rpc_response_batch_to_results(block_hashes_response)
         return block_hashes
+
+    def get_transactions_by_hashes(self, hashes):
+        if hashes is None or len(hashes) == 0:
+            return []
+
+        raw_transactions = self._get_raw_transactions_by_hashes_batched(hashes)
+        transactions = [self.transaction_mapper.json_dict_to_transaction(tx) for tx in raw_transactions]
+        for transaction in transactions:
+            self._add_non_standard_addresses(transaction)
+            if self.chain == Chain.ZCASH:
+                self._add_shielded_inputs_and_outputs(transaction)
+        return transactions
 
     def _fetch_transactions(self, blocks):
         all_transaction_hashes = [block.transactions for block in blocks]
@@ -139,42 +153,38 @@ class BtcService(object):
                     transaction.inputs = [input for input in transaction.inputs if not input.is_coinbase()]
                     transaction.is_coinbase = True
 
-    def _add_non_standard_addresses(self, block):
-        if block.has_full_transactions():
-            for transaction in block.transactions:
-                for output in transaction.outputs:
-                    if output.addresses is None or len(output.addresses) == 0:
-                        output.type = 'nonstandard'
-                        output.addresses = [script_hex_to_non_standard_address(output.script_hex)]
+    def _add_non_standard_addresses(self, transaction):
+        for output in transaction.outputs:
+            if output.addresses is None or len(output.addresses) == 0:
+                output.type = 'nonstandard'
+                output.addresses = [script_hex_to_non_standard_address(output.script_hex)]
 
-    def _add_shielded_inputs_and_outputs(self, block):
-        if block.has_full_transactions():
-            for transaction in block.transactions:
-                if transaction.join_splits is not None and len(transaction.join_splits) > 0:
-                    for join_split in transaction.join_splits:
-                        input_value = join_split.public_input_value or 0
-                        output_value = join_split.public_output_value or 0
-                        if input_value > 0:
-                            input = BtcTransactionInput()
-                            input.type = ADDRESS_TYPE_SHIELDED
-                            input.value = input_value
-                            transaction.add_input(input)
-                        if output_value > 0:
-                            output = BtcTransactionOutput()
-                            output.type = ADDRESS_TYPE_SHIELDED
-                            output.value = output_value
-                            transaction.add_output(output)
-                if transaction.value_balance is not None and transaction.value_balance != 0:
-                    if transaction.value_balance > 0:
-                        input = BtcTransactionInput()
-                        input.type = ADDRESS_TYPE_SHIELDED
-                        input.value = transaction.value_balance
-                        transaction.add_input(input)
-                    if transaction.value_balance < 0:
-                        output = BtcTransactionOutput()
-                        output.type = ADDRESS_TYPE_SHIELDED
-                        output.value = transaction.value_balance
-                        transaction.add_output(output)
+    def _add_shielded_inputs_and_outputs(self, transaction):
+        if transaction.join_splits is not None and len(transaction.join_splits) > 0:
+            for join_split in transaction.join_splits:
+                input_value = join_split.public_input_value or 0
+                output_value = join_split.public_output_value or 0
+                if input_value > 0:
+                    input = BtcTransactionInput()
+                    input.type = ADDRESS_TYPE_SHIELDED
+                    input.value = input_value
+                    transaction.add_input(input)
+                if output_value > 0:
+                    output = BtcTransactionOutput()
+                    output.type = ADDRESS_TYPE_SHIELDED
+                    output.value = output_value
+                    transaction.add_output(output)
+        if transaction.value_balance is not None and transaction.value_balance != 0:
+            if transaction.value_balance > 0:
+                input = BtcTransactionInput()
+                input.type = ADDRESS_TYPE_SHIELDED
+                input.value = transaction.value_balance
+                transaction.add_input(input)
+            if transaction.value_balance < 0:
+                output = BtcTransactionOutput()
+                output.type = ADDRESS_TYPE_SHIELDED
+                output.value = transaction.value_balance
+                transaction.add_output(output)
 
 
 ADDRESS_TYPE_SHIELDED = 'shielded'

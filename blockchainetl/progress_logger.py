@@ -28,7 +28,7 @@ from blockchainetl.atomic_counter import AtomicCounter
 
 # Thread safe progress logger.
 class ProgressLogger:
-    def __init__(self, name='work', logger=None, log_percentage_step=10, log_item_step=1000):
+    def __init__(self, name='work', logger=None, log_percentage_step=10, log_item_step=200):
         self.name = name
         self.total_items = None
 

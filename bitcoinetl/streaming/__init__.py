@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Omidiora Samuel, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,26 +19,5 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from bitcoinetl.enumeration.chain import Chain
 
 
-def generate_get_block_by_hash_json_rpc(block_hashes, include_transactions, chain=Chain.BITCOIN):
-    for _, block_hash in enumerate(block_hashes):
-        if not include_transactions:
-            yield ["getblock", block_hash]
-        else:
-            if chain in Chain.HAVE_OLD_API:
-                verbosity = include_transactions
-            else:
-                verbosity = 2 if include_transactions else 1
-            yield ["getblock", block_hash, verbosity]
-
-
-def generate_get_block_hash_by_number_json_rpc(block_numbers):
-    for _, block_number in enumerate(block_numbers):
-        yield ["getblockhash", block_number]
-
-
-def generate_get_transaction_by_id_json_rpc(hashes):
-    for hash in hashes:
-        yield ["getrawtransaction", hash, 1]

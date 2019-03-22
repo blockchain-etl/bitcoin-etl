@@ -64,3 +64,18 @@ class BtcTransactionOutputMapper(object):
             }
             result.append(item)
         return result
+
+    def dicts_to_outputs(self, dicts):
+        result = []
+        for dict in dicts:
+            input = BtcTransactionOutput()
+            input.index = dict.get('index')
+            input.script_asm = dict.get('script_asm')
+            input.script_hex = dict.get('script_hex')
+            input.required_signatures = dict.get('required_signatures')
+            input.type = dict.get('type')
+            input.addresses = dict.get('addresses')
+            input.value = dict.get('value')
+
+            result.append(input)
+        return result

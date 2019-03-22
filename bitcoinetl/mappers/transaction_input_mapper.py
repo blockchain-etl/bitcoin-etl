@@ -58,9 +58,29 @@ class BtcTransactionInputMapper(object):
                 'spent_output_index': input.spent_output_index,
                 'script_asm': input.script_asm,
                 'script_hex': input.script_hex,
-                'type': input.type,
                 'sequence': input.sequence,
+                'required_signatures': input.required_signatures,
+                'type': input.type,
+                'addresses': input.addresses,
                 'value': input.value,
             }
             result.append(item)
+        return result
+
+    def dicts_to_inputs(self, dicts):
+        result = []
+        for dict in dicts:
+            input = BtcTransactionInput()
+            input.index = dict.get('index')
+            input.spent_transaction_hash = dict.get('spent_transaction_hash')
+            input.spent_output_index = dict.get('spent_output_index')
+            input.script_asm = dict.get('script_asm')
+            input.script_hex = dict.get('script_hex')
+            input.sequence = dict.get('sequence')
+            input.required_signatures = dict.get('required_signatures')
+            input.type = dict.get('type')
+            input.addresses = dict.get('addresses')
+            input.value = dict.get('value')
+
+            result.append(input)
         return result

@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Evgeny Medvedev, Omidiora Samuel evge.medvedev@gmail.com, samparsky@gmail.com
+# Copyright (c) 2018 Evgeny Medvedev, evge.medvedev@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import json
 
 import click
-
 from bitcoinetl.enumeration.chain import Chain
-from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
+from bitcoinetl.jobs.enrich_transactions import EnrichTransactionsJob
 from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
+from blockchainetl.file_utils import smart_open
 from blockchainetl.logging_utils import logging_basic_config
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
 
@@ -34,34 +35,25 @@ logging_basic_config()
 
 
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
-@click.option('-s', '--start-block', default=0, type=int, help='Start block')
-@click.option('-e', '--end-block', required=True, type=int, help='End block')
-@click.option('-b', '--batch-size', default=1, type=int, help='The number of blocks to export at a time.')
+@click.option('-b', '--batch-size', default=10, type=int, help='The number of transactions to enrich at a time.')
 @click.option('-p', '--provider-uri', default='http://user:pass@localhost:8332', type=str,
               help='The URI of the remote Bitcoin node')
 @click.option('-w', '--max-workers', default=5, type=int, help='The maximum number of workers.')
-@click.option('--blocks-output', default=None, type=str,
-              help='The output file for blocks. '
-                   'If not provided blocks will not be exported. Use "-" for stdout')
+@click.option('--transactions-input', default=None, type=str,
+              help='The JSON newline-delimited input file with transactions.')
 @click.option('--transactions-output', default=None, type=str,
-              help='The output file for transactions. '
-                   'If not provided transactions will not be exported. Use "-" for stdout')
-@click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL),
-              help='The type of chain')
-def export_blocks_and_transactions(start_block, end_block, batch_size, provider_uri,
-                                   max_workers, blocks_output, transactions_output, chain):
-    """Export blocks and transactions."""
-    if blocks_output is None and transactions_output is None:
-        raise ValueError('Either --blocks-output or --transactions-output options must be provided')
+              help='The JSON newline-delimited output file with transactions.')
+@click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain')
+def enrich_transactions(batch_size, provider_uri, max_workers, transactions_input, transactions_output, chain):
+    """Enrich transactions."""
 
-    job = ExportBlocksJob(
-        start_block=start_block,
-        end_block=end_block,
-        batch_size=batch_size,
-        bitcoin_rpc=ThreadLocalProxy(lambda: BitcoinRpc(provider_uri)),
-        max_workers=max_workers,
-        item_exporter=blocks_and_transactions_item_exporter(blocks_output, transactions_output),
-        chain=chain,
-        export_blocks=blocks_output is not None,
-        export_transactions=transactions_output is not None)
-    job.run()
+    with smart_open(transactions_input, 'r') as transactions_input_file:
+        job = EnrichTransactionsJob(
+            transactions_iterable = (json.loads(transaction) for transaction in transactions_input_file),
+            batch_size = batch_size,
+            bitcoin_rpc = ThreadLocalProxy(lambda: BitcoinRpc(provider_uri)),
+            max_workers = max_workers,
+            item_exporter = blocks_and_transactions_item_exporter(None, transactions_output),
+            chain = chain
+        )
+        job.run()

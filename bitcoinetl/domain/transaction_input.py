@@ -31,6 +31,7 @@ class BtcTransactionInput(object):
         self.coinbase_param = None
         self.sequence = None
 
+        self.required_signatures = None
         self.type = None
         self.addresses = []
         self.value = None
