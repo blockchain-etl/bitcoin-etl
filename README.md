@@ -287,7 +287,7 @@ You can tune `--export-batch-size`, `--max-workers` for performance.
 > bitcoinetl stream --provider-uri http://user:pass@localhost:8332 --start-block 500000
 ```
 
-- This command outputs the blocks and transactions to the console by default.
+- This command outputs blocks and transactions to the console by default.
 - Use `--output` option to specify the Google Pub/Sub topic where to publish blockchain data, 
 e.g. `projects/your-project/topics/bitcoin_blockchain`.
 - The command saves its state to `last_synced_block.txt` file where the last synced block number is saved periodically.
