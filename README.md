@@ -291,8 +291,8 @@ You can tune `--export-batch-size`, `--max-workers` for performance.
 - Use `--output` option to specify the Google Pub/Sub topic where to publish blockchain data, 
 e.g. `projects/your-project/topics/bitcoin_blockchain`.
 - The command saves its state to `last_synced_block.txt` file where the last synced block number is saved periodically.
-- Specify either `--start-block` or `--last-synced-block-file` option. `--last-synced-block-file` should point to a file
-where the block number, from which to start streaming the blockchain data, is saved.
+- Specify either `--start-block` or `--last-synced-block-file` option. `--last-synced-block-file` should point to the 
+file where the block number, from which to start streaming the blockchain data, is saved.
 - Use the `--lag` option to specify how many blocks to lag behind the tip of the blockchain. It's the simplest way to 
 handle chain reorganizations.
 - Use the `--chain` option to specify the type of the chain, e.g. `bitcoin`, `litecoin`, `dash`, `zcash`, etc.
