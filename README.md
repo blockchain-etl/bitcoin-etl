@@ -203,6 +203,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 ### Command Reference
 
 - [export_blocks_and_transactions](#export_blocks_and_transactions)
+- [enrich_transactions](#enrich_transactions)
 - [get_block_range_for_date](#get_block_range_for_date)
 - [export_all](#export_all)
 - [stream](#stream)
@@ -240,6 +241,19 @@ For the `--output` parameters the supported type is json. The format type is inf
 ```
 
 Omit `--blocks-output` or `--transactions-output` options if you want to export only transactions/blocks.
+
+You can tune `--batch-size`, `--max-workers` for performance.
+
+Note that `required_signatures`, `type`, `addresses`, and `value` fields will be empty in transactions inputs. 
+Use [enrich_transactions](#enrich_transactions) to populate those fields.
+
+#### enrich_transactions
+
+```bash
+> bitcoinetl enrich_transactions  \
+  --provider-uri http://user:pass@localhost:8332 \
+  --transactions-input transactions.json --transactions-output enriched_transactions.json
+```
 
 You can tune `--batch-size`, `--max-workers` for performance.
 
