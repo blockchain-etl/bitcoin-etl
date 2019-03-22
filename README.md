@@ -321,4 +321,5 @@ handle chain reorganizations.
 ```
 
 ### Public Datasets in BigQuery
-Coming Soon...
+
+https://cloud.google.com/blog/products/data-analytics/introducing-six-new-cryptocurrencies-in-bigquery-public-datasets-and-how-to-analyze-them
