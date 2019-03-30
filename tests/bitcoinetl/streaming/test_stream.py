@@ -23,9 +23,11 @@ import os
 
 import pytest
 
+from bitcoinetl.streaming.btc_streamer_adapter import BtcStreamerAdapter
+from blockchainetl.streaming.streamer import Streamer
+
 import tests.resources
 from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
-from bitcoinetl.streaming.stream import stream
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
 from tests.bitcoinetl.job.helpers import get_bitcoin_rpc
 from tests.helpers import compare_lines_ignore_order, read_file, skip_if_slow_tests_disabled
@@ -37,7 +39,6 @@ def read_resource(resource_group, file_name):
     return tests.resources.read_resource([RESOURCE_GROUP, resource_group], file_name)
 
 
-@pytest.mark.timeout(10)
 @pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type,chain", [
     (50001, 50002, 1, 'bitcoin/stream_50001_50002', 'mock', 'bitcoin'),
     skip_if_slow_tests_disabled([50001, 50002, 1, 'bitcoin/stream_50001_50002', 'online', 'bitcoin']),
@@ -51,17 +52,22 @@ def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, prov
     blocks_output_file = str(tmpdir.join('actual_block.json'))
     transactions_output_file = str(tmpdir.join("actual_transactions.json"))
 
-    stream(
+    streamer_adapter = BtcStreamerAdapter(
         bitcoin_rpc=ThreadLocalProxy(
             lambda: get_bitcoin_rpc(
                 provider_type,
                 read_resource_lambda=lambda file: read_resource(resource_group, file),
                 chain=chain)),
+        batch_size=batch_size,
+        item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file),
+    )
+    streamer = Streamer(
+        blockchain_streamer_adapter=streamer_adapter,
         start_block=start_block,
         end_block=end_block,
-        batch_size=batch_size,
-        item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file)
+        retry_errors=False
     )
+    streamer.stream()
 
     print('=====================')
     print(read_file(blocks_output_file))

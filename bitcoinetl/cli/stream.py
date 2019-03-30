@@ -19,9 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
+import logging
 
 import click
+
 from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
 
@@ -41,25 +42,39 @@ logging_basic_config()
                    'If not specified will print to console')
 @click.option('-s', '--start-block', default=None, type=int, help='Start block')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain')
-@click.option('-s', '--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs')
+@click.option('--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs')
 @click.option('-b', '--batch-size', default=2, type=int, help='How many blocks to batch in single request')
 @click.option('-B', '--block-batch-size', default=10, type=int, help='How many blocks to batch in single sync round')
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers')
+@click.option('--log-file', default=None, type=str, help='Log file')
 def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.BITCOIN,
-           period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5):
+           period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5, log_file=None):
     """Streams all data types to console or Google Pub/Sub."""
-    from bitcoinetl.streaming.streaming_utils import get_item_exporter
-    from bitcoinetl.streaming.stream import stream as do_stream
+    configure_logging(log_file)
 
-    do_stream(
+    from bitcoinetl.streaming.streaming_utils import get_item_exporter
+    from bitcoinetl.streaming.btc_streamer_adapter import BtcStreamerAdapter
+    from blockchainetl.streaming.streamer import Streamer
+
+    streamer_adapter = BtcStreamerAdapter(
         bitcoin_rpc=ThreadLocalProxy(lambda: BitcoinRpc(provider_uri)),
-        last_synced_block_file=last_synced_block_file,
-        lag=lag,
         item_exporter=get_item_exporter(output),
-        start_block=start_block,
         chain=chain,
-        period_seconds=period_seconds,
         batch_size=batch_size,
-        block_batch_size=block_batch_size,
         max_workers=max_workers
     )
+    streamer = Streamer(
+        blockchain_streamer_adapter=streamer_adapter,
+        last_synced_block_file=last_synced_block_file,
+        lag=lag,
+        start_block=start_block,
+        period_seconds=period_seconds,
+        block_batch_size=block_batch_size,
+    )
+    streamer.stream()
+
+
+def configure_logging(filename):
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+    logging_basic_config(filename=filename)

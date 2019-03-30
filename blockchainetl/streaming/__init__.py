@@ -20,19 +20,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import json
 
-
-class ConsoleItemExporter:
-    def open(self):
-        pass
-
-    def export_items(self, items):
-        for item in items:
-            self.export_item(item)
-
-    def export_item(self, item):
-        print(json.dumps(item))
-
-    def close(self):
-        pass
