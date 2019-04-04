@@ -19,7 +19,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-import logging
 
 import click
 
@@ -27,6 +26,7 @@ from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
 
 from blockchainetl.logging_utils import logging_basic_config
+from blockchainetl.streaming.streaming_utils import configure_logging, configure_signals
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
 
 logging_basic_config()
@@ -47,10 +47,12 @@ logging_basic_config()
 @click.option('-B', '--block-batch-size', default=10, type=int, help='How many blocks to batch in single sync round')
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers')
 @click.option('--log-file', default=None, type=str, help='Log file')
+@click.option('--pid-file', default=None, type=str, help='pid file')
 def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.BITCOIN,
-           period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5, log_file=None):
+           period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5, log_file=None, pid_file=None):
     """Streams all data types to console or Google Pub/Sub."""
     configure_logging(log_file)
+    configure_signals()
 
     from bitcoinetl.streaming.streaming_utils import get_item_exporter
     from bitcoinetl.streaming.btc_streamer_adapter import BtcStreamerAdapter
@@ -70,11 +72,6 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
         start_block=start_block,
         period_seconds=period_seconds,
         block_batch_size=block_batch_size,
+        pid_file=pid_file,
     )
     streamer.stream()
-
-
-def configure_logging(filename):
-    for handler in logging.root.handlers[:]:
-        logging.root.removeHandler(handler)
-    logging_basic_config(filename=filename)
