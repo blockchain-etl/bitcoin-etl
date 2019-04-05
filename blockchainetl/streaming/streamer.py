@@ -59,6 +59,7 @@ class Streamer:
     def stream(self):
         try:
             if self.pid_file is not None:
+                logging.info('Creating pid file {}'.format(self.pid_file))
                 write_to_file(self.pid_file, str(os.getpid()))
             self.blockchain_streamer_adapter.open()
             self._do_stream()
