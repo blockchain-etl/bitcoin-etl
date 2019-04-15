@@ -26,14 +26,14 @@ Supported chains:
 - dash
 - zcash
 
-Stream blockchain data continually to console:
+Stream blockchain data continually to console ([Reference](#stream)):
 
 ```bash
 > pip install bitcoin-etl[streaming]
 > bitcoinetl stream -p http://user:pass@localhost:8332 --start-block 500000
 ```
 
-Stream blockchain data continually to Google Pub/Sub:
+Stream blockchain data continually to Google Pub/Sub ([Reference](#stream)):
 
 ```bash
 > export GOOGLE_APPLICATION_CREDENTIALS=/path_to_credentials_file.json
