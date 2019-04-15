@@ -11,7 +11,7 @@ long_description = read('README.md') if os.path.isfile("README.md") else ""
 
 setup(
     name='bitcoin-etl',
-    version='1.2.0',
+    version='1.2.1',
     author='Evgeny Medvedev',
     author_email='evge.medvedev@gmail.com',
     description='Tools for exporting Bitcoin blockchain data to JSON',
@@ -37,11 +37,11 @@ setup(
     ],
     extras_require={
         'streaming': [
+            'timeout-decorator==0.4.1',
             'google-cloud-pubsub==0.39.1'
         ],
         'dev': [
-            'pytest~=4.3.0',
-            'pytest-timeout~=1.3.3'
+            'pytest~=4.3.0'
         ],
     },
     entry_points={

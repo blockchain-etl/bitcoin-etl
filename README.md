@@ -37,7 +37,7 @@ Stream blockchain data continually to Google Pub/Sub:
 
 ```bash
 > export GOOGLE_APPLICATION_CREDENTIALS=/path_to_credentials_file.json
-> bitcoinetl stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/bitcoin_blockchain
+> bitcoinetl stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/crypto_bitcoin
 
 ```
 
@@ -291,7 +291,9 @@ You can tune `--export-batch-size`, `--max-workers` for performance.
 
 - This command outputs blocks and transactions to the console by default.
 - Use `--output` option to specify the Google Pub/Sub topic where to publish blockchain data, 
-e.g. `projects/your-project/topics/bitcoin_blockchain`.
+e.g. `projects/your-project/topics/crypto_bitcoin`. Blocks and transactions will be pushed to 
+`projects/your-project/topics/crypto_bitcoin.blocks` and `projects/your-project/topics/crypto_bitcoin.transactions`
+topics.
 - The command saves its state to `last_synced_block.txt` file where the last synced block number is saved periodically.
 - Specify either `--start-block` or `--last-synced-block-file` option. `--last-synced-block-file` should point to the 
 file where the block number, from which to start streaming the blockchain data, is saved.

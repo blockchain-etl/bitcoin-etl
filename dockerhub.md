@@ -1,10 +1,11 @@
 # Uploading to Docker Hub
 
 ```bash
-> docker build -t bitcoin-etl:1.0-streaming -f Dockerfile_with_streaming .
-> docker tag bitcoin-etl:1.0-streaming blockchainetl/bitcoin-etl:1.0-streaming
-> docker push blockchainetl/bitcoin-etl:1.0-streaming
+> BITCOINETL_STREAMING_VERSION=1.2.1-streaming
+> docker build -t bitcoin-etl:${BITCOINETL_STREAMING_VERSION} -f Dockerfile_with_streaming .
+> docker tag bitcoin-etl:${BITCOINETL_STREAMING_VERSION} blockchainetl/bitcoin-etl:${BITCOINETL_STREAMING_VERSION}
+> docker push blockchainetl/bitcoin-etl:${BITCOINETL_STREAMING_VERSION}
 
-> docker tag bitcoin-etl:1.0-streaming blockchainetl/bitcoin-etl:latest-streaming
+> docker tag bitcoin-etl:${BITCOINETL_STREAMING_VERSION} blockchainetl/bitcoin-etl:latest-streaming
 > docker push blockchainetl/bitcoin-etl:latest-streaming
 ```
