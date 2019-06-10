@@ -83,5 +83,32 @@ GENESIS_TRANSACTIONS = {
             }
         ],
         'version': 1
-    }
+    },
+    'monacoin': {
+        'txid': '35e405a8a46f4dbc1941727aaf338939323c3b955232d0317f8731fe07ac4ba6',
+        'blockhash': 'ff9f1c0116d19de7c9963845e129f9ed1bfc0b376eb54fd7afa42e0d418c8bb6',
+        'locktime': 0,
+        'vin': [
+            {
+                "coinbase": "04ffff001d01044c564465632e20333174682032303133204a6170616e2c205468652077696e6e696e67206e756d62657273206f6620746865203230313320596561722d456e64204a756d626f204c6f74746572793a32332d313330393136",
+                "sequence": 4294967295
+            }
+        ],
+        'vout': [
+            {
+                "value": Decimal('50.00000000'),
+                "n": 0,
+                "scriptPubKey": {
+                    "asm": "040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac OP_CHECKSIG",
+                    "hex": "41040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac",
+                    "reqSigs": 1,
+                    "type": "pubkeyhash",
+                    "addresses": [
+                        "MTXGFakp6JUSpdYhf63fN3Yx5Rz88pantR"
+                    ]
+                }
+            }
+        ],
+        'version': 1
+    },
 }
