@@ -95,7 +95,8 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 @click.option('-B', '--export-batch-size', default=1, type=int, help='The number of requests in JSON RPC batches.')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL),
               help='The type of chain')
-def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size, chain):
+@click.option('--enrich', default=False, type=bool, help="Enable filling in transactions inputs fields.")
+def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size, chain, enrich):
     """Exports all data for a range of blocks."""
     do_export_all(chain, get_partitions(start, end, partition_batch_size, provider_uri),
-                  output_dir, provider_uri, max_workers, export_batch_size)
+                  output_dir, provider_uri, max_workers, export_batch_size, enrich)
