@@ -183,7 +183,7 @@ class BtcService(object):
             if transaction.value_balance < 0:
                 output = BtcTransactionOutput()
                 output.type = ADDRESS_TYPE_SHIELDED
-                output.value = transaction.value_balance
+                output.value = -transaction.value_balance
                 transaction.add_output(output)
 
 
