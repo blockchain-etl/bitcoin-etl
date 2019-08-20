@@ -50,7 +50,7 @@ class BtcBlockMapper(object):
         if raw_transactions is not None and len(raw_transactions) > 0:
             if isinstance(raw_transactions[0], dict):
                 block.transactions = [
-                    self.transaction_mapper.json_dict_to_transaction(tx, block) for tx in raw_transactions
+                    self.transaction_mapper.json_dict_to_transaction(tx, block, idx) for idx, tx in enumerate(raw_transactions)
                 ]
             else:
                 # Transaction hashes
