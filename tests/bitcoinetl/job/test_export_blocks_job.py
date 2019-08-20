@@ -37,7 +37,7 @@ def read_resource(resource_group, file_name):
     return tests.resources.read_resource([RESOURCE_GROUP, resource_group], file_name)
 
 
-@pytest.mark.parametrize("start_block, end_block, batch_size, resource_group ,provider_type,chain", [
+@pytest.mark.parametrize("start_block, end_block, batch_size, resource_group, provider_type, chain", [
     (0, 0, 1, 'bitcoin/block_0', 'mock', 'bitcoin'),
     skip_if_slow_tests_disabled([0, 0, 1, 'bitcoin/block_0', 'online', 'bitcoin']),
     (1, 1, 1, 'bitcoin/block_1', 'mock', 'bitcoin'),
