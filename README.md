@@ -41,9 +41,9 @@ Stream blockchain data continually to Google Pub/Sub ([Reference](#stream)):
 
 ```
 
-For the latest version, check out the repo and call 
+For the latest version, check out the repo and call
 ```bash
-> pip install -e .[streaming] 
+> pip install -e .[streaming]
 > python bitcoinetl.py
 ```
 
@@ -64,7 +64,7 @@ For the latest version, check out the repo and call
 
 Field               | Type            |
 --------------------|-----------------|
-hash                | hex_string      | 
+hash                | hex_string      |
 size                | bigint          |
 stripped_size       | bigint          |
 weight              | bigint          |
@@ -81,7 +81,7 @@ transaction_count   | bigint          |
 
 Field                   | Type                  |
 ------------------------|-----------------------|
-hash                    | hex_string            | 
+hash                    | hex_string            |
 size                    | bigint                |
 virtual_size            | bigint                |
 version                 | bigint                |
@@ -90,6 +90,7 @@ block_number            | bigint                |
 block_hash              | hex_string            |
 block_timestamp         | bigint                |
 is_coinbase             | boolean               |
+index                   | bigint                |
 inputs                  | []transaction_input   |
 outputs                 | []transaction_output  |
 input_count             | bigint                |
@@ -102,9 +103,9 @@ fee                     | bigint                |
 
 Field                   | Type                  |
 ------------------------|-----------------------|
-index                   | bigint                | 
-spent_transaction_hash  | hex_string            | 
-spent_output_index      | bigint                | 
+index                   | bigint                |
+spent_transaction_hash  | hex_string            |
+spent_output_index      | bigint                |
 script_asm              | string                |
 script_hex              | hex_string            |
 sequence                | bigint                |
@@ -123,7 +124,7 @@ script_hex              | hex_string            |
 required_signatures     | bigint                |
 type                    | string                |
 addresses               | []string              |
-value                   | bigint                | 
+value                   | bigint                |
 
 
 You can find column descriptions in [schemas](https://github.com/blockchain-etl/bitcoin-etl-airflow/tree/master/dags/resources/stages/enrich/schemas)
@@ -131,8 +132,8 @@ You can find column descriptions in [schemas](https://github.com/blockchain-etl/
 **Notes**:
 
 1. Output values returned by Dogecoin API had precision loss in the clients prior to version 1.14.
-It's caused by this issue https://github.com/dogecoin/dogecoin/issues/1558  
-The explorers that used older versions to export the data may show incorrect address balances and transaction amounts. 
+It's caused by this issue https://github.com/dogecoin/dogecoin/issues/1558
+The explorers that used older versions to export the data may show incorrect address balances and transaction amounts.
 
 1. For Zcash, `vjoinsplit` and `valueBalance` fields are converted to inputs and outputs with type 'shielded'
 https://zcash-rpc.github.io/getrawtransaction.html, https://zcash.readthedocs.io/en/latest/rtd_pages/zips/zip-0243.html
@@ -161,7 +162,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     --partition-batch-size 100 \
     --provider-uri http://user:pass@localhost:8332 --chain bitcoin
     ```
-    
+
     The result will be in the `output` subdirectory, partitioned in Hive style:
 
     ```bash
@@ -171,7 +172,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     output/transactions/start_block=00000000/end_block=00000099/transactions_00000000_00000099.csv
     ...
     ```
-    
+
     In case `bitcoinetl` command is not available in PATH, use `python -m bitcoinetl` instead.
 
 ### Running in Docker
@@ -189,7 +190,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     > docker run -v $HOME/output:/bitcoin-etl/output bitcoin-etl:latest export_blocks_and_transactions --start-block 0 --end-block 500000 \
         --rpc-pass '' --rpc-host 'localhost' --rpc-user '' --blocks-output blocks.json --transactions-output transactions.json
     ```
-    
+
 1. Run streaming to console or Pub/Sub
     ```bash
     > docker build -t bitcoin-etl:latest-streaming -f Dockerfile_with_streaming .
@@ -199,7 +200,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     > docker run -v /path_to_credentials_file/:/bitcoin-etl/ --env GOOGLE_APPLICATION_CREDENTIALS=/bitcoin-etl/credentials_file.json bitcoin-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/crypto_bitcoin
     ```
 
-1. Refer to https://github.com/blockchain-etl/bitcoin-etl-streaming for deploying the streaming app to 
+1. Refer to https://github.com/blockchain-etl/bitcoin-etl-streaming for deploying the streaming app to
 Google Kubernetes Engine.
 
 ### Command Reference
@@ -246,7 +247,7 @@ Omit `--blocks-output` or `--transactions-output` options if you want to export 
 
 You can tune `--batch-size`, `--max-workers` for performance.
 
-Note that `required_signatures`, `type`, `addresses`, and `value` fields will be empty in transactions inputs. 
+Note that `required_signatures`, `type`, `addresses`, and `value` fields will be empty in transactions inputs.
 Use [enrich_transactions](#enrich_transactions) to populate those fields.
 
 #### enrich_transactions
@@ -266,8 +267,8 @@ You can tune `--batch-size`, `--max-workers` for performance.
 ```
 
 This command is guaranteed to return the block range that covers all blocks with `block.time` on the specified
-date. However the returned block range may also contain blocks outside the specified date, because block times are not 
-monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can filter 
+date. However the returned block range may also contain blocks outside the specified date, because block times are not
+monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can filter
 `blocks.json`/`transactions.json` with the below command:
 
 ```bash
@@ -290,18 +291,18 @@ You can tune `--export-batch-size`, `--max-workers` for performance.
 ```
 
 - This command outputs blocks and transactions to the console by default.
-- Use `--output` option to specify the Google Pub/Sub topic where to publish blockchain data, 
-e.g. `projects/your-project/topics/crypto_bitcoin`. Blocks and transactions will be pushed to 
+- Use `--output` option to specify the Google Pub/Sub topic where to publish blockchain data,
+e.g. `projects/your-project/topics/crypto_bitcoin`. Blocks and transactions will be pushed to
 `projects/your-project/topics/crypto_bitcoin.blocks` and `projects/your-project/topics/crypto_bitcoin.transactions`
 topics.
 - The command saves its state to `last_synced_block.txt` file where the last synced block number is saved periodically.
-- Specify either `--start-block` or `--last-synced-block-file` option. `--last-synced-block-file` should point to the 
+- Specify either `--start-block` or `--last-synced-block-file` option. `--last-synced-block-file` should point to the
 file where the block number, from which to start streaming the blockchain data, is saved.
-- Use the `--lag` option to specify how many blocks to lag behind the head of the blockchain. It's the simplest way to 
+- Use the `--lag` option to specify how many blocks to lag behind the head of the blockchain. It's the simplest way to
 handle chain reorganizations - they are less likely the further a block from the head.
 - Use the `--chain` option to specify the type of the chain, e.g. `bitcoin`, `litecoin`, `dash`, `zcash`, etc.
 - You can tune `--period-seconds`, `--batch-size`, `--max-workers` for performance.
- 
+
 
 ### Running Tests
 
