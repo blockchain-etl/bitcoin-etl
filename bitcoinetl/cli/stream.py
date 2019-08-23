@@ -48,8 +48,10 @@ logging_basic_config()
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers')
 @click.option('--log-file', default=None, type=str, help='Log file')
 @click.option('--pid-file', default=None, type=str, help='pid file')
+@click.option('--enrich', default=True, type=bool, help="Enable filling in transactions inputs fields.")
 def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.BITCOIN,
-           period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5, log_file=None, pid_file=None):
+           period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5, log_file=None, pid_file=None,
+           enrich=True):
     """Streams all data types to console or Google Pub/Sub."""
     configure_logging(log_file)
     configure_signals()
@@ -63,6 +65,7 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
         item_exporter=get_item_exporter(output),
         chain=chain,
         batch_size=batch_size,
+        enable_enrich=enrich,
         max_workers=max_workers
     )
     streamer = Streamer(
