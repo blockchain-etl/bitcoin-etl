@@ -33,9 +33,9 @@ class BtcBlockRangeService(object):
         self._graph_operations = GraphOperations(graph)
 
     def get_block_range_for_date(self, date, start_hour=0, end_hour=24):
-        max_datetime = datetime(date.year, date.month, date.day, 23, 59, 59)
-        start_datetime = date + timedelta(hours=start_hour)
-        end_datetime = date + timedelta(hours=end_hour)
+        max_datetime = datetime(date.year, date.month, date.day, 23, 59, 59, tzinfo=timezone.utc)
+        start_datetime = (date + timedelta(hours=start_hour, minutes=0, seconds=0)).replace(tzinfo=timezone.utc)
+        end_datetime = (date + timedelta(hours=end_hour, minutes=59, seconds=59)).replace(tzinfo=timezone.utc)
         if end_datetime > max_datetime:
             end_datetime = max_datetime
         return self.get_block_range_for_timestamps(start_datetime.timestamp(), end_datetime.timestamp())
