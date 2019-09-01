@@ -39,15 +39,15 @@ logging_basic_config()
 @click.option('-d', '--date', required=True, type=lambda d: datetime.strptime(d, '%Y-%m-%d'),
               help='The date e.g. 2018-01-01.')
 @click.option('-s', '--start-hour', default=0, required=False, type=click.IntRange(0, 23, clamp=True),
-              help='The start hour in date e.g. 0. Which is inclusived, (means the block starts at starthour:00:00)')
+              help='The start hour in date e.g. 0, which is inclusive (means the block starts at starthour:00:00)')
 @click.option('-e', '--end-hour', default=23, required=False, type=click.IntRange(0, 23, clamp=True),
-              help='The end hour in date e.g. 23. Which is inclusived (means the block ends at endhour:59:59)')
+              help='The end hour in date e.g. 23, which is inclusive (means the block ends at endhour:59:59)')
 @click.option('-o', '--output', default='-', type=str, help='The output file. If not specified stdout is used.')
 def get_block_range_for_date(provider_uri, date, start_hour, end_hour, output):
     """Outputs start and end blocks for given date."""
 
     if start_hour > end_hour:
-        raise ValueError('end_hour should be greater than start_hour')
+        raise ValueError('end_hour should be greater than or equal to start_hour')
 
     bitcoin_rpc = BitcoinRpc(provider_uri)
     btc_service = BtcBlockRangeService(bitcoin_rpc)
