@@ -38,12 +38,14 @@ class BtcStreamerAdapter:
             item_exporter=ConsoleItemExporter(),
             chain=Chain.BITCOIN,
             batch_size=2,
+            enable_enrich=True,
             max_workers=5):
         self.bitcoin_rpc = bitcoin_rpc
         self.chain = chain
         self.btc_service = BtcService(bitcoin_rpc, chain)
         self.item_exporter = item_exporter
         self.batch_size = batch_size
+        self.enable_enrich = enable_enrich
         self.max_workers = max_workers
 
     def open(self):
@@ -72,24 +74,26 @@ class BtcStreamerAdapter:
         blocks = blocks_and_transactions_item_exporter.get_items('block')
         transactions = blocks_and_transactions_item_exporter.get_items('transaction')
 
-        # Enrich transactions
-        enriched_transactions_item_exporter = InMemoryItemExporter(item_types=['transaction'])
+        if self.enable_enrich:
+            # Enrich transactions
+            enriched_transactions_item_exporter = InMemoryItemExporter(item_types=['transaction'])
 
-        enrich_transactions_job = EnrichTransactionsJob(
-            transactions_iterable=transactions,
-            batch_size=self.batch_size,
-            bitcoin_rpc=self.bitcoin_rpc,
-            max_workers=self.max_workers,
-            item_exporter=enriched_transactions_item_exporter,
-            chain=self.chain
-        )
-        enrich_transactions_job.run()
-        enriched_transactions = enriched_transactions_item_exporter.get_items('transaction')
-        if len(enriched_transactions) != len(transactions):
-            raise ValueError('The number of transactions is wrong ' + str(transactions))
+            enrich_transactions_job = EnrichTransactionsJob(
+                transactions_iterable=transactions,
+                batch_size=self.batch_size,
+                bitcoin_rpc=self.bitcoin_rpc,
+                max_workers=self.max_workers,
+                item_exporter=enriched_transactions_item_exporter,
+                chain=self.chain
+            )
+            enrich_transactions_job.run()
+            enriched_transactions = enriched_transactions_item_exporter.get_items('transaction')
+            if len(enriched_transactions) != len(transactions):
+                raise ValueError('The number of transactions is wrong ' + str(transactions))
+            transactions = enriched_transactions
 
         logging.info('Exporting with ' + type(self.item_exporter).__name__)
-        self.item_exporter.export_items(blocks + enriched_transactions)
+        self.item_exporter.export_items(blocks + transactions)
 
     def close(self):
         self.item_exporter.close()
