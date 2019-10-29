@@ -35,7 +35,8 @@ BLOCK_FIELDS_TO_EXPORT = [
     'nonce',
     'bits',
     'coinbase_param',
-    'transaction_count'
+    'transaction_count',
+    "coin_price_usd",
 ]
 
 TRANSACTION_FIELDS_TO_EXPORT = [
@@ -57,7 +58,8 @@ TRANSACTION_FIELDS_TO_EXPORT = [
     'output_count',
     'input_value',
     'output_value',
-    'fee'
+    'fee',
+    'coin_price_usd',
 ]
 
 

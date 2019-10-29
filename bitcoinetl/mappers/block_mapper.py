@@ -58,6 +58,7 @@ class BtcBlockMapper(object):
 
             block.transaction_count = len(raw_transactions)
 
+        block.coin_price_usd = json_dict.get('coin_price_usd')
         return block
 
     def block_to_dict(self, block):
@@ -74,7 +75,8 @@ class BtcBlockMapper(object):
             'nonce': block.nonce,
             'bits': block.bits,
             'coinbase_param': block.coinbase_param,
-            'transaction_count': len(block.transactions)
+            'transaction_count': len(block.transactions),
+            "coin_price_usd": block.coin_price_usd,
         }
 
 

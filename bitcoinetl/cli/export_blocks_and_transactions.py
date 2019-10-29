@@ -23,7 +23,7 @@
 
 import click
 
-from bitcoinetl.enumeration.chain import Chain
+from bitcoinetl.enumeration.chain import Chain, CoinPriceType
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
@@ -48,8 +48,11 @@ logging_basic_config()
                    'If not provided transactions will not be exported. Use "-" for stdout')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL),
               help='The type of chain')
+@click.option('--coin-price-type', default=CoinPriceType.empty, type=int,
+              help='Enable querying CryptoCompare for coin prices. 0 for no price, 1 for daily price, 2 for hourly price.')
 def export_blocks_and_transactions(start_block, end_block, batch_size, provider_uri,
-                                   max_workers, blocks_output, transactions_output, chain):
+                                   max_workers, blocks_output, transactions_output, chain,
+                                   coin_price_type):
     """Export blocks and transactions."""
     if blocks_output is None and transactions_output is None:
         raise ValueError('Either --blocks-output or --transactions-output options must be provided')
@@ -63,5 +66,7 @@ def export_blocks_and_transactions(start_block, end_block, batch_size, provider_
         item_exporter=blocks_and_transactions_item_exporter(blocks_output, transactions_output),
         chain=chain,
         export_blocks=blocks_output is not None,
-        export_transactions=transactions_output is not None)
+        export_transactions=transactions_output is not None,
+        coin_price_type=coin_price_type
+    )
     job.run()
