@@ -38,7 +38,7 @@ class BtcTransactionMapper(object):
 
     def json_dict_to_transaction(self, json_dict, block=None, index=None, coin_price_usd=None):
         transaction = BtcTransaction()
-        transaction.hash = json_dict.get('txid')
+        transaction.hash = json_dict.get('hash')
         transaction.size = json_dict.get('size')
         transaction.virtual_size = json_dict.get('vsize')
         transaction.version = json_dict.get('version')
