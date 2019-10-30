@@ -156,6 +156,7 @@ class BtcService(object):
         if block.has_full_transactions():
             for transaction in block.transactions:
                 coinbase_inputs = [input for input in transaction.inputs if input.is_coinbase()]
+
                 if len(coinbase_inputs) > 1:
                     raise ValueError('There must be no more than 1 coinbase input in any transaction. Was {}, hash {}'
                                      .format(len(coinbase_inputs), transaction.hash))
@@ -164,6 +165,14 @@ class BtcService(object):
                     block.coinbase_param = coinbase_input.coinbase_param
                     transaction.inputs = [input for input in transaction.inputs if not input.is_coinbase()]
                     transaction.is_coinbase = True
+
+                    block.coinbase_param = coinbase_input.coinbase_param
+                    block.coinbase_param_decoded = bytes.fromhex(coinbase_input.coinbase_param).decode('utf-8', 'replace')
+                    block.coinbase_tx = transaction
+                    block.coinbase_txid = transaction.transaction_id
+
+                    block.block_reward = self.get_block_reward(block)
+                    transaction.input_count = 0
 
     def _add_non_standard_addresses(self, transaction):
         for output in transaction.outputs:
@@ -198,21 +207,8 @@ class BtcService(object):
                 output.value = -transaction.value_balance
                 transaction.add_output(output)
 
-    def non_coinbase_txs(self, block):
-        return [transaction
-                for transaction in block.transactions
-                if not transaction.transaction_id != block.coinbase_tx
-                ]
-
-    def get_transaction_ids(self, block):
-        return [tx.transaction_id for tx in block.transactions]
-
     def get_block_reward(self, block):
         return block.coinbase_tx.calculate_output_value()
-
-    def get_input_value(self, block):
-        non_coinbase_txs = self.non_coinbase_txs(block)
-        return sum([tx.calculate_input_value() for tx in non_coinbase_txs])
 
     def _add_coin_price_to_blocks(self, blocks, coin_price_type):
         from_currency_code = Chain.ticker_symbol(self.chain)

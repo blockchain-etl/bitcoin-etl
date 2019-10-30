@@ -24,6 +24,7 @@ from bitcoinetl.domain.transaction import BtcTransaction
 
 class BtcBlock(object):
 
+
     def __init__(self):
         self.hash = None
         self.size = None
@@ -36,9 +37,26 @@ class BtcBlock(object):
         self.nonce = None
         self.bits = None
         self.coinbase_param = None
+        self.transaction_count = None
 
         self.transactions = []
+
+        # New fields added
+        self.transaction_ids = []
+
+        self.version_hex = None
+        self.median_timestamp = None
+        self.difficulty = None
+        self.chain_work = None
+        self.previous_block_hash = None
+        self.next_block_hash = None
+        self.input_value = None
+
+        self.block_reward = None
+        self.transaction_fees = None
         self.coin_price_usd = None
+        self.coinbase_txid = None
+        self.coinbase_param_decoded = None
 
     def has_full_transactions(self):
         return len(self.transactions) > 0 and isinstance(self.transactions[0], BtcTransaction)
