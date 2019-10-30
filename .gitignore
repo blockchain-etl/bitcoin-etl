@@ -48,3 +48,5 @@ coverage.xml
 .venv
 venv/
 ENV/
+
+.idea/
