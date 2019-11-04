@@ -26,20 +26,22 @@ from bitcoinetl.domain.transaction_output import BtcTransactionOutput
 
 class BtcTransactionOutputMapper(object):
 
-    def vout_to_outputs(self, vout):
+    def vout_to_outputs(self, vout, create_transaction_id=None):
         outputs = []
         for item in (vout or []):
-            output = self.json_dict_to_output(item)
+            output = self.json_dict_to_output(json_dict=item, create_transaction_id=create_transaction_id)
             outputs.append(output)
         return outputs
 
-    def json_dict_to_output(self, json_dict):
+    def json_dict_to_output(self, json_dict, create_transaction_id=None):
         output = BtcTransactionOutput()
 
         output.index = json_dict.get('n')
         output.addresses = json_dict.get('addresses')
         output.txinwitness = json_dict.get('txinwitness')
         output.value = bitcoin_to_satoshi(json_dict.get('value'))
+        output.create_transaction_id = create_transaction_id
+
         if 'scriptPubKey' in json_dict:
             script_pub_key = json_dict.get('scriptPubKey')
             output.script_asm = script_pub_key.get('asm')
@@ -55,13 +57,20 @@ class BtcTransactionOutputMapper(object):
         for output in outputs:
             item = {
                 'index': output.index,
+                'create_transaction_id': output.create_transaction_id,
+                'spending_transaction_id': None,
+
                 'script_asm': output.script_asm,
                 'script_hex': output.script_hex,
-                'required_signatures': output.required_signatures,
+
                 'type': output.type,
                 'addresses': output.addresses,
-                'value': output.value
+                'value': output.value,
+                'required_signatures': output.required_signatures,
             }
+            if output.txinwitness:
+                item['witness'] = output.txinwitness
+
             result.append(item)
         return result
 
@@ -76,6 +85,9 @@ class BtcTransactionOutputMapper(object):
             input.type = dict.get('type')
             input.addresses = dict.get('addresses')
             input.value = dict.get('value')
+            input.witness = dict.get('witness')
+            input.create_transaction_id = dict.get('create_transaction_id')
+            input.spending_transaction_id = dict.get('spending_transaction_id')
 
             result.append(input)
         return result

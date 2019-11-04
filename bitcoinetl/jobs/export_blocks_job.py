@@ -27,6 +27,7 @@ from bitcoinetl.service.btc_service import BtcService
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
 from blockchainetl.utils import validate_range
+from bitcoinetl.enumeration.chain import CoinPriceType
 
 
 # Exports blocks and transactions
@@ -41,8 +42,10 @@ class ExportBlocksJob(BaseJob):
             item_exporter,
             chain,
             export_blocks=True,
-            export_transactions=True):
+            export_transactions=True,
+            coin_price_type=CoinPriceType.empty):
         validate_range(start_block, end_block)
+
         self.start_block = start_block
         self.end_block = end_block
 
@@ -54,7 +57,7 @@ class ExportBlocksJob(BaseJob):
         if not self.export_blocks and not self.export_transactions:
             raise ValueError('At least one of export_blocks or export_transactions must be True')
 
-        self.btc_service = BtcService(bitcoin_rpc, chain)
+        self.btc_service = BtcService(bitcoin_rpc, chain, coin_price_type)
         self.block_mapper = BtcBlockMapper()
         self.transaction_mapper = BtcTransactionMapper()
 

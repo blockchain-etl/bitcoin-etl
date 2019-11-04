@@ -36,13 +36,14 @@ class BtcTransactionMapper(object):
         self.transaction_output_mapper = BtcTransactionOutputMapper()
         self.join_split_mapper = BtcJoinSplitMapper()
 
-    def json_dict_to_transaction(self, json_dict, block=None, index=None):
+    def json_dict_to_transaction(self, json_dict, block=None, index=None, coin_price_usd=None):
         transaction = BtcTransaction()
-        transaction.hash = json_dict.get('txid')
+        transaction.hash = json_dict.get('hash')
         transaction.size = json_dict.get('size')
         transaction.virtual_size = json_dict.get('vsize')
         transaction.version = json_dict.get('version')
         transaction.lock_time = json_dict.get('locktime')
+        transaction.transaction_id = json_dict.get('txid')
 
         if block is not None:
             transaction.block_number = block.number
@@ -58,19 +59,33 @@ class BtcTransactionMapper(object):
         if index is not None:
             transaction.index = index
 
-        transaction.inputs = self.transaction_input_mapper.vin_to_inputs(json_dict.get('vin'))
-        transaction.outputs = self.transaction_output_mapper.vout_to_outputs(json_dict.get('vout'))
+        transaction.inputs = self.transaction_input_mapper.vin_to_inputs(
+            vin=json_dict.get('vin'),
+            spending_transaction_id=transaction.transaction_id
+        )
+        transaction.outputs = self.transaction_output_mapper.vout_to_outputs(
+            vout=json_dict.get('vout'),
+            create_transaction_id=transaction.transaction_id
+        )
 
         # Only Zcash
         transaction.join_splits = self.join_split_mapper.vjoinsplit_to_join_splits(json_dict.get('vjoinsplit'))
         transaction.value_balance = bitcoin_to_satoshi(json_dict.get('valueBalance'))
 
+        # New fields
+        transaction.coin_price_usd = coin_price_usd
+        transaction.weight = json_dict.get('weight')
+        transaction.output_addresses = self.get_output_addresses(transaction)
         return transaction
+
+    def get_output_addresses(self, transaction):
+        return [','.join(output.addresses) if output.addresses else output.addresses for output in transaction.outputs]
 
     def transaction_to_dict(self, transaction):
         result = {
             'type': 'transaction',
             'hash': transaction.hash,
+            'transaction_id': transaction.transaction_id,
             'size': transaction.size,
             'virtual_size': transaction.virtual_size,
             'version': transaction.version,
@@ -89,12 +104,16 @@ class BtcTransactionMapper(object):
             'input_value': transaction.calculate_input_value(),
             'output_value': transaction.calculate_output_value(),
             'fee': transaction.calculate_fee(),
+            'coin_price_usd': transaction.coin_price_usd,
+            'weight': transaction.weight,
+            'output_addresses': transaction.output_addresses
         }
         return result
 
     def dict_to_transaction(self, dict):
         transaction = BtcTransaction()
         transaction.hash = dict.get('hash')
+        transaction.transaction_id = dict.get('transaction_id')
         transaction.size = dict.get('size')
         transaction.virtual_size = dict.get('virtual_size')
         transaction.version = dict.get('version')
@@ -104,6 +123,15 @@ class BtcTransactionMapper(object):
         transaction.block_timestamp = dict.get('block_timestamp')
         transaction.is_coinbase = dict.get('is_coinbase')
         transaction.index = dict.get('index')
+        transaction.coin_price_usd = dict.get('coin_price_usd')
+        transaction.weight = dict.get('weight')
+        transaction.output_addresses = dict.get('output_addresses')
+        transaction.input_addresses = dict.get('input_addresses')
+        transaction.input_count = dict.get('input_count')
+        transaction.input_value = dict.get('input_value')
+        transaction.output_count = dict.get('output_count')
+        transaction.output_value = dict.get('output_value')
+        transaction.fee = dict.get('fee')
 
         transaction.inputs = self.transaction_input_mapper.dicts_to_inputs(dict.get('inputs'))
         transaction.outputs = self.transaction_output_mapper.dicts_to_outputs(dict.get('outputs'))

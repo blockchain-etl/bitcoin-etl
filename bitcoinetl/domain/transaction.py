@@ -43,6 +43,15 @@ class BtcTransaction(object):
         self.join_splits = []
         self.value_balance = 0
 
+        # New fields
+        self.transaction_id = None
+        self.weight = None
+        self.input_count = None
+        self.input_value = None
+        self.output_count = None
+        self.output_value = None
+        self.coin_price_usd = None
+
     def add_input(self, input):
         if len(self.inputs) > 0:
             input.index = self.inputs[len(self.inputs) - 1].index + 1
