@@ -34,7 +34,6 @@ BLOCK_FIELDS_TO_EXPORT = [
     "coinbase_param_decoded",
     "coinbase_txid",
     "previous_block_hash",
-    "next_block_hash",
     "nonce",
     "difficulty",
     "chain_work",
@@ -45,9 +44,7 @@ BLOCK_FIELDS_TO_EXPORT = [
     "weight",
     "bits",
     "transaction_count",
-    "transaction_fees",
     "block_reward",
-    "input_value",
     "transaction_ids",
     "coin_price_usd",
 ]
