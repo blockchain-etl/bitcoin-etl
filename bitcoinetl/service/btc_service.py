@@ -243,7 +243,7 @@ class BtcService(object):
 
             for block in blocks:
                 block_day_id = get_day_id_from_ts(block.timestamp)
-                block.coin_price_usd = coin_price_days[block_day_id]
+                block.coin_price_usd = self.cached_prices[block_day_id]
 
     def _add_coin_price_to_transaction(self, transaction, coin_price_usd):
         transaction.coin_price_usd = coin_price_usd
