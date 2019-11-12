@@ -56,6 +56,7 @@ class BtcBlockMapper(object):
             else:
                 # Transaction hashes
                 block.transactions = raw_transactions
+                block.transaction_ids = raw_transactions
 
             block.transaction_count = len(raw_transactions)
 
