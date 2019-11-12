@@ -52,9 +52,11 @@ class BtcBlockMapper(object):
                 block.transactions = [
                     self.transaction_mapper.json_dict_to_transaction(tx, block, idx) for idx, tx in enumerate(raw_transactions)
                 ]
+                block.transaction_ids = [tx.transaction_id for tx in block.transactions]
             else:
                 # Transaction hashes
                 block.transactions = raw_transactions
+                block.transaction_ids = raw_transactions
 
             block.transaction_count = len(raw_transactions)
 
@@ -67,7 +69,6 @@ class BtcBlockMapper(object):
         block.coinbase_txid = json_dict.get("coinbase_txid")
         block.previous_block_hash = json_dict.get("previousblockhash")
         block.coin_price_usd = json_dict.get('coin_price_usd')
-        block.transaction_ids = [tx.transaction_id for tx in block.transactions]
         return block
 
     def block_to_dict(self, block):
