@@ -46,6 +46,7 @@ class BtcService(object):
         self.transaction_mapper = BtcTransactionMapper()
         self.chain = chain
         self.coin_price_type = coin_price_type
+        self.cached_prices = {}
 
     def get_block(self, block_number, with_transactions=False):
         block_hashes = self.get_block_hashes([block_number])
@@ -219,22 +220,26 @@ class BtcService(object):
         elif coin_price_type == CoinPriceType.hourly:
             block_hour_ids = list(set([get_hour_id_from_ts(block.timestamp) for block in blocks]))
             block_hours_ts = {hour_id: get_ts_from_hour_id(hour_id) for hour_id in block_hour_ids}
-            coin_price_hours = {
-                hour_id: get_coin_price(from_currency_code=from_currency_code, timestamp=hour_ts, resource="histohour")
-                for hour_id, hour_ts in block_hours_ts.items()
-            }
+
+            for hour_id, hour_ts in block_hours_ts.items():
+                if hour_id in self.cached_prices:
+                    continue
+
+                self.cached_prices[hour_id] = get_coin_price(from_currency_code=from_currency_code, timestamp=hour_ts, resource="histohour")
 
             for block in blocks:
                 block_hour_id = get_hour_id_from_ts(block.timestamp)
-                block.coin_price_usd = coin_price_hours[block_hour_id]
+                block.coin_price_usd = self.cached_prices[block_hour_id]
 
         elif coin_price_type == CoinPriceType.daily:
             block_day_ids = list(set([get_day_id_from_ts(block.timestamp) for block in blocks]))
             block_days_ts = {day_id: get_ts_from_day_id(day_id) for day_id in block_day_ids}
-            coin_price_days = {
-                day_id: get_coin_price(from_currency_code=from_currency_code, timestamp=day_ts, resource="histoday")
-                for day_id, day_ts in block_days_ts.items()
-            }
+
+            for day_id, day_ts in block_days_ts.items():
+                if day_id in self.cached_prices:
+                    continue
+
+                self.cached_prices[day_id] = get_coin_price(from_currency_code=from_currency_code, timestamp=day_ts, resource="histoday")
 
             for block in blocks:
                 block_day_id = get_day_id_from_ts(block.timestamp)
