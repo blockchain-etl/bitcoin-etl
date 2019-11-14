@@ -21,6 +21,7 @@ Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_block
 Supported chains:
 - bitcoin
 - bitcoin_cash
+- bitcoin_gold
 - dogecoin
 - litecoin
 - dash
@@ -49,13 +50,24 @@ For the latest version, check out the repo and call
 
 ## Table of Contents
 
-- [Schema](#schema)
-  - [blocks.json](#blocksjson)
-  - [transactions.json](#transactionsjson)
-- [Exporting the Blockchain](#exporting-the-blockchain)
-  - [Running in Docker](#running-in-docker)
-  - [Command Reference](#command-reference)
-- [Public Datasets in BigQuery](#public-datasets-in-bigquery)
+- [Bitcoin ETL](#bitcoin-etl)
+  - [Table of Contents](#table-of-contents)
+  - [Schema](#schema)
+    - [blocks.json](#blocksjson)
+    - [transactions.json](#transactionsjson)
+    - [transaction_input](#transactioninput)
+    - [transaction_output](#transactionoutput)
+  - [Exporting the Blockchain](#exporting-the-blockchain)
+    - [Running in Docker](#running-in-docker)
+    - [Command Reference](#command-reference)
+      - [export_blocks_and_transactions](#exportblocksandtransactions)
+      - [enrich_transactions](#enrichtransactions)
+      - [get_block_range_for_date](#getblockrangefordate)
+      - [export_all](#exportall)
+      - [stream](#stream)
+    - [Running Tests](#running-tests)
+    - [Running Tox Tests](#running-tox-tests)
+    - [Public Datasets in BigQuery](#public-datasets-in-bigquery)
 
 
 ## Schema
