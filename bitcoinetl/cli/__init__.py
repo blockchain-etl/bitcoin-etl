@@ -29,8 +29,8 @@ from bitcoinetl.cli.get_block_range_for_date import get_block_range_for_date
 from bitcoinetl.cli.stream import stream
 
 
-@click.group()
-@click.version_option(version='1.3.1')
+@click.group(context_settings=dict(help_option_names=["-h", "--help"]))
+@click.version_option(version="1.3.1")
 @click.pass_context
 def cli(ctx):
     pass
