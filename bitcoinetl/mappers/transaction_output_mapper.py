@@ -38,7 +38,7 @@ class BtcTransactionOutputMapper(object):
 
         output.index = json_dict.get('n')
         output.addresses = json_dict.get('addresses')
-        output.txinwitness = json_dict.get('txinwitness')
+        output.witness = json_dict.get('txinwitness')
         output.value = bitcoin_to_satoshi(json_dict.get('value'))
         output.create_transaction_id = create_transaction_id
 
@@ -68,8 +68,8 @@ class BtcTransactionOutputMapper(object):
                 'value': output.value,
                 'required_signatures': output.required_signatures,
             }
-            if output.txinwitness:
-                item['witness'] = output.txinwitness
+            if output.witness:
+                item['witness'] = output.witness
 
             result.append(item)
         return result

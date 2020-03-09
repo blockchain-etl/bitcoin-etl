@@ -3,8 +3,8 @@
 ```bash
 > BITCOINETL_STREAMING_VERSION=1.3.0-streaming
 > docker build -t bitcoin-etl:${BITCOINETL_STREAMING_VERSION} -f Dockerfile_with_streaming .
-> docker tag bitcoin-etl:${BITCOINETL_STREAMING_VERSION} blockchainetl/bitcoin-etl:${BITCOINETL_STREAMING_VERSION}
-> docker push blockchainetl/bitcoin-etl:${BITCOINETL_STREAMING_VERSION}
+> docker tag bitcoin-etl:${BITCOINETL_STREAMING_VERSION} merklescience/bitcoin-etl:${BITCOINETL_STREAMING_VERSION}
+> docker push merklescience/bitcoin-etl:${BITCOINETL_STREAMING_VERSION}
 
 > docker tag bitcoin-etl:${BITCOINETL_STREAMING_VERSION} blockchainetl/bitcoin-etl:latest-streaming
 > docker push blockchainetl/bitcoin-etl:latest-streaming
