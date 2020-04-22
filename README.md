@@ -200,7 +200,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 1. Run a container out of the image
     ```bash
     > docker run -v $HOME/output:/bitcoin-etl/output bitcoin-etl:latest export_blocks_and_transactions --start-block 0 --end-block 500000 \
-        --rpc-pass '' --rpc-host 'localhost' --rpc-user '' --blocks-output blocks.json --transactions-output transactions.json
+        --provider-uri http://user:pass@localhost:8332 --blocks-output output/blocks.json --transactions-output output/transactions.json
     ```
 
 1. Run streaming to console or Pub/Sub
