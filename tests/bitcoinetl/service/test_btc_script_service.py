@@ -22,12 +22,11 @@
 
 import pytest
 
-from bitcoinetl.service.btc_script_service import script_hex_to_non_standard_address
+from bitcoinetl.service.btc_script_service import script_asm_to_non_standard_address
 
 
-@pytest.mark.parametrize('script_hex,expected_address', [
-    ('204e0000c93ad870ee0ca407cdc17ddc61c71b12906ad1fa476a9b56', 'nonstandard0cbd12ed8f1b1d8979f7f50d5083e9f21b7f5f78'),
-    ('', 'nonstandarde3b0c44298fc1c149afbf4c8996fb92427ae41e4'),
+@pytest.mark.parametrize('script_asm,expected_address', [
+    ('04a39b9e4fbd213ef24bb9be69de4a118dd0644082e47c01fd9159d38637b83fbcdc115a5d6e970586a012d1cfe3e3a8b1a3d04e763bdc5a071c0e827c0bd834a5 OP_CHECKSIG', '1VayNert3x1KzbpzMGt2qdqrAThiRovi8'),
 ])
-def test_script_hex_to_non_standard_address(script_hex, expected_address):
-    assert script_hex_to_non_standard_address(script_hex) == expected_address
+def test_script_asm_to_non_standard_address(script_asm, expected_address):
+    assert script_asm_to_non_standard_address(script_asm) == expected_address
