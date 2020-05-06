@@ -156,11 +156,11 @@ class BtcService(object):
     def _add_non_standard_addresses(self, transaction):
         for output in transaction.outputs:
             if output.addresses is None or len(output.addresses) == 0:
-	        if output.type == 'pubkey':
+                if output.type == 'pubkey':
                     output.addresses = [script_asm_to_non_standard_address(output.script_asm)]
-		else:
-		    output.type = 'nonstandard'
-		    output.addresses = ['nonstandard address']
+                else:
+                    output.type = 'nonstandard'
+                    output.addresses = ['nonstandard address']
 
     def _add_shielded_inputs_and_outputs(self, transaction):
         if transaction.join_splits is not None and len(transaction.join_splits) > 0:
