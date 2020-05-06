@@ -3,6 +3,9 @@ import sys
 
 # 58 character alphabet used
 BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+# code reference url:https://www.cnblogs.com/zhaoweiwei/p/address.html
+
+
 
 def from_bytes (data, big_endian = False):
     if isinstance(data, str):
