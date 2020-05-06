@@ -42,25 +42,21 @@ def base58_encode(version, public_address):
     return padding*"1" + "".join(encoded)[::-1]
 
 def get_public_address(public_key):
-    address = hashlib.sha256(public_key).digest()
+    hash_addr = hashlib.sha256(public_key).digest()
     h = hashlib.new('ripemd160')
-    h.update(address)
-    address = h.digest()
+    h.update(hash_addr)
+    public_address = h.digest()
     #print("RIPEMD-160: %s"%h.hexdigest().upper())
-    return address
+    return public_address
 
-def script_asm_to_non_standard_address(script_asm):
-    if script_asm is None:
-      script_asm = ''
-
-    if script_asm[0:2]=='04':
-      #public key to bitcoin address
-       public_key = bytearray.fromhex(script_asm.split(" ")[0])
-       public_address = get_public_address(public_key)
-       address = base58_encode("00", public_address)
-    '''
+def script_asm_to_non_standard_address(script_asm): 
+    #public key to bitcoin address
+    public_key = bytearray.fromhex(script_asm.split(" ")[0])
+    public_address = get_public_address(public_key)
+    address = base58_encode("00", public_address)
+    """
     script_bytes = bytearray.fromhex(script_hex)
     script_hash = hashlib.sha256(script_bytes).hexdigest()[:40]
     address = 'nonstandard' + script_hash
-    '''
+    """
     return address
