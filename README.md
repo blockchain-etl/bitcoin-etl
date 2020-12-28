@@ -264,6 +264,8 @@ Use [enrich_transactions](#enrich_transactions) to populate those fields.
 
 #### enrich_transactions
 
+You need to run bitcoin daemon with option `txindex=1` for this command to work.
+
 ```bash
 > bitcoinetl enrich_transactions  \
   --provider-uri http://user:pass@localhost:8332 \
