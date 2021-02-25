@@ -27,7 +27,7 @@ from math import floor
 from datetime import datetime, timedelta
 
 
-CRYPTOCOMPARE_API_KEY = os.getenv("CRYPTOCOMPARE_API_KEY", "45440cef8b259c4891f26c696936a668c4304e48f19ed1f207eb142ca905c20a")
+CRYPTOCOMPARE_API_KEY = os.getenv("CRYPTOCOMPARE_API_KEY", "12e40a21ca4933874e0242bf0fde2b5d1f99304ca431dca5d541f3be03c0ef66")
 
 
 class CryptoCompareRequestException(Exception):
