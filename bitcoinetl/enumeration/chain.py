@@ -27,7 +27,7 @@ class Chain:
         return symbols.get(chain, None)
 
 
-class CoinPriceType:git statu
+class CoinPriceType:
 
     empty = 0
     daily = 1
