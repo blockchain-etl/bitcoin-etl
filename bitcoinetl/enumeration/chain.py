@@ -1,6 +1,7 @@
 class Chain:
     BITCOIN = 'bitcoin'
     BITCOIN_CASH = 'bitcoin_cash'
+    BITCOIN_SV = 'bitcoin_sv'
     DOGECOIN = 'dogecoin'
     LITECOIN = 'litecoin'
     DASH = 'dash'
@@ -16,6 +17,7 @@ class Chain:
         symbols = {
             'bitcoin': 'BTC',
             'bitcoin_cash': 'BCH',
+            'bitcoin_sv': 'BSV',
             'dogecoin': 'DOGE',
             'litecoin': 'LTC',
             'dash': 'DASH',
@@ -25,7 +27,7 @@ class Chain:
         return symbols.get(chain, None)
 
 
-class CoinPriceType:
+class CoinPriceType:git statu
 
     empty = 0
     daily = 1
