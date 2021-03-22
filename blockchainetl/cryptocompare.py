@@ -118,7 +118,7 @@ def get_coin_price(
 
     payload = response.json()
     if payload["Type"] != 100:
-        raise CryptoCompareRequestException(payload.get("Message", ""))
+        raise CryptoCompareRequestException(payload.get("Message", "") + access_token)
 
     data = payload["Data"]["Data"]
     avg_price = sum(item["open"] for item in data) / len(data)
