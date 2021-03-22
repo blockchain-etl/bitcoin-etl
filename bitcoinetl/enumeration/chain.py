@@ -1,14 +1,14 @@
 class Chain:
     BITCOIN = 'bitcoin'
     BITCOIN_CASH = 'bitcoin_cash'
-    BITCOIN_SV = 'bitcoin_sv'
+    BITCOIN_CASH_SV = 'bitcoin_cash_sv'
     DOGECOIN = 'dogecoin'
     LITECOIN = 'litecoin'
     DASH = 'dash'
     ZCASH = 'zcash'
     MONACOIN = 'monacoin'
 
-    ALL = [BITCOIN, BITCOIN_CASH, BITCOIN_SV, DOGECOIN, LITECOIN, DASH, ZCASH, MONACOIN]
+    ALL = [BITCOIN, BITCOIN_CASH, BITCOIN_CASH_SV, DOGECOIN, LITECOIN, DASH, ZCASH, MONACOIN]
     # Old API doesn't support verbosity for getblock which doesn't allow querying all transactions in a block in 1 go.
     HAVE_OLD_API = [BITCOIN_CASH, DOGECOIN, DASH, MONACOIN]
 
@@ -17,7 +17,7 @@ class Chain:
         symbols = {
             'bitcoin': 'BTC',
             'bitcoin_cash': 'BCH',
-            'bitcoin_sv': 'BSV',
+            'bitcoin_cash_sv': 'BSV',
             'dogecoin': 'DOGE',
             'litecoin': 'LTC',
             'dash': 'DASH',
