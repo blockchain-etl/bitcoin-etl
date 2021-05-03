@@ -50,11 +50,12 @@ logging_basic_config()
 @click.option('--log-file', default=None, type=str, help='Log file.')
 @click.option('--pid-file', default=None, type=str, help='pid file.')
 @click.option('--enrich', default=True, type=bool, help='Enable filling in transactions inputs fields.')
+@click.option('--retry_errors', default=True, type=bool, help='Enable Retry on streaming failures')
 @click.option('--coin-price-type', default=CoinPriceType.hourly, type=int,
               help='Enable querying CryptoCompare for coin prices. 0 for no price, 1 for daily price, 2 for hourly price.')
 def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.BITCOIN,
            period_seconds=1, batch_size=1, block_batch_size=10, max_workers=5, log_file=None, pid_file=None,
-           enrich=True, coin_price_type=CoinPriceType.hourly):
+           enrich=True, retry_errors=True, coin_price_type=CoinPriceType.hourly):
     """Streams all data types to console or Google Pub/Sub."""
     configure_logging(log_file)
     configure_signals()
@@ -80,5 +81,9 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
         period_seconds=period_seconds,
         block_batch_size=block_batch_size,
         pid_file=pid_file,
+        retry_errors=retry_errors
     )
     streamer.stream()
+
+
+

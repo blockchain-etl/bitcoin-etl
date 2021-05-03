@@ -74,7 +74,7 @@ class GooglePubSubItemExporter:
 
 def create_publisher():
     batch_settings = pubsub_v1.types.BatchSettings(
-        max_bytes=1024 * 10,  # 5 kilobytes
+        max_bytes=1024 * 50 * 1024,  # 50 kilobytes
         max_latency=0.01,  # 1 second
         max_messages=10000,
     )
