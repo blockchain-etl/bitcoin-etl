@@ -27,6 +27,7 @@ from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.jobs.enrich_transactions import EnrichTransactionsJob
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from bitcoinetl.service.btc_service import BtcService
+from bitcoinetl.streaming.btc_item_id_calculator import BtcItemIdCalculator
 from blockchainetl.jobs.exporters.console_item_exporter import ConsoleItemExporter
 from blockchainetl.jobs.exporters.in_memory_item_exporter import InMemoryItemExporter
 
@@ -47,6 +48,7 @@ class BtcStreamerAdapter:
         self.batch_size = batch_size
         self.enable_enrich = enable_enrich
         self.max_workers = max_workers
+        self.item_id_calculator = BtcItemIdCalculator()
 
     def open(self):
         self.item_exporter.open()
@@ -93,7 +95,16 @@ class BtcStreamerAdapter:
             transactions = enriched_transactions
 
         logging.info('Exporting with ' + type(self.item_exporter).__name__)
-        self.item_exporter.export_items(blocks + transactions)
+
+        all_items = blocks + transactions
+
+        self.calculate_item_ids(all_items)
+
+        self.item_exporter.export_items(all_items)
+
+    def calculate_item_ids(self, items):
+        for item in items:
+            item['item_id'] = self.item_id_calculator.calculate(item)
 
     def close(self):
         self.item_exporter.close()

@@ -21,6 +21,7 @@ Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_block
 Supported chains:
 - bitcoin
 - bitcoin_cash
+- bitcoin_gold
 - dogecoin
 - litecoin
 - dash
@@ -49,13 +50,24 @@ For the latest version, check out the repo and call
 
 ## Table of Contents
 
-- [Schema](#schema)
-  - [blocks.json](#blocksjson)
-  - [transactions.json](#transactionsjson)
-- [Exporting the Blockchain](#exporting-the-blockchain)
-  - [Running in Docker](#running-in-docker)
-  - [Command Reference](#command-reference)
-- [Public Datasets in BigQuery](#public-datasets-in-bigquery)
+- [Bitcoin ETL](#bitcoin-etl)
+  - [Table of Contents](#table-of-contents)
+  - [Schema](#schema)
+    - [blocks.json](#blocksjson)
+    - [transactions.json](#transactionsjson)
+    - [transaction_input](#transactioninput)
+    - [transaction_output](#transactionoutput)
+  - [Exporting the Blockchain](#exporting-the-blockchain)
+    - [Running in Docker](#running-in-docker)
+    - [Command Reference](#command-reference)
+      - [export_blocks_and_transactions](#exportblocksandtransactions)
+      - [enrich_transactions](#enrichtransactions)
+      - [get_block_range_for_date](#getblockrangefordate)
+      - [export_all](#exportall)
+      - [stream](#stream)
+    - [Running Tests](#running-tests)
+    - [Running Tox Tests](#running-tox-tests)
+    - [Public Datasets in BigQuery](#public-datasets-in-bigquery)
 
 
 ## Schema
@@ -188,7 +200,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 1. Run a container out of the image
     ```bash
     > docker run -v $HOME/output:/bitcoin-etl/output bitcoin-etl:latest export_blocks_and_transactions --start-block 0 --end-block 500000 \
-        --rpc-pass '' --rpc-host 'localhost' --rpc-user '' --blocks-output blocks.json --transactions-output transactions.json
+        --provider-uri http://user:pass@localhost:8332 --blocks-output output/blocks.json --transactions-output output/transactions.json
     ```
 
 1. Run streaming to console or Pub/Sub
@@ -251,6 +263,8 @@ Note that `required_signatures`, `type`, `addresses`, and `value` fields will be
 Use [enrich_transactions](#enrich_transactions) to populate those fields.
 
 #### enrich_transactions
+
+You need to run bitcoin daemon with option `txindex=1` for this command to work.
 
 ```bash
 > bitcoinetl enrich_transactions  \

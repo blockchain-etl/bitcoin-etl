@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, time, timezone, timedelta
 
 from bitcoinetl.service.btc_block_timestamp_graph import BlockTimestampGraph
 from blockchainetl.service.graph_operations import GraphOperations, OutOfBoundsError
@@ -34,8 +34,8 @@ class BtcBlockRangeService(object):
 
     def get_block_range_for_date(self, date, start_hour=0, end_hour=23):
         max_datetime = datetime(date.year, date.month, date.day, 23, 59, 59, tzinfo=timezone.utc)
-        start_datetime = (date + timedelta(hours=start_hour, minutes=0, seconds=0)).replace(tzinfo=timezone.utc)
-        end_datetime = (date + timedelta(hours=end_hour, minutes=59, seconds=59)).replace(tzinfo=timezone.utc)
+        start_datetime = datetime.combine(date, time(hour=start_hour, minute=0, second=0)).replace(tzinfo=timezone.utc)
+        end_datetime = datetime.combine(date,time(hour=end_hour, minute=59, second=59)).replace(tzinfo=timezone.utc)
         if end_datetime > max_datetime:
             end_datetime = max_datetime
         return self.get_block_range_for_timestamps(start_datetime.timestamp(), end_datetime.timestamp())

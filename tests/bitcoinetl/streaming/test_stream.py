@@ -24,10 +24,10 @@ import os
 import pytest
 
 from bitcoinetl.streaming.btc_streamer_adapter import BtcStreamerAdapter
+from blockchainetl.jobs.exporters.composite_item_exporter import CompositeItemExporter
 from blockchainetl.streaming.streamer import Streamer
 
 import tests.resources
-from bitcoinetl.jobs.exporters.blocks_and_transactions_item_exporter import blocks_and_transactions_item_exporter
 from blockchainetl.thread_local_proxy import ThreadLocalProxy
 from tests.bitcoinetl.job.helpers import get_bitcoin_rpc
 from tests.helpers import compare_lines_ignore_order, read_file, skip_if_slow_tests_disabled
@@ -59,7 +59,12 @@ def test_stream(tmpdir, start_block, end_block, batch_size, resource_group, prov
                 read_resource_lambda=lambda file: read_resource(resource_group, file),
                 chain=chain)),
         batch_size=batch_size,
-        item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file),
+        item_exporter=CompositeItemExporter(
+            filename_mapping={
+                'block': blocks_output_file,
+                'transaction': transactions_output_file,
+            }
+        ),
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,
