@@ -97,7 +97,6 @@ class BtcStreamerAdapter:
 
         logging.info('Exporting with ' + type(self.item_exporter).__name__)
         logging.info('Block number ' + str(len(blocks)))
-        logging.info('Blocks ' + str(blocks))
         logging.info('Transaction length ' + str(len(transactions)))
         self.item_exporter.export_items(blocks + transactions)
 
