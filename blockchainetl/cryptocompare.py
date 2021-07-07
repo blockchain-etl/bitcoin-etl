@@ -122,4 +122,4 @@ def get_coin_price(
 
     data = payload["Data"]["Data"]
     avg_price = sum(item["open"] for item in data) / len(data)
-    return round(avg_price, 2)
+    return round(avg_price, 8)
