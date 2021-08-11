@@ -60,8 +60,8 @@ class BtcTransactionOutputMapper(object):
                 'create_transaction_id': output.create_transaction_id,
                 'spending_transaction_id': None,
 
-                'script_asm': '' #output.script_asm,
-                'script_hex': '' #output.script_hex,
+                'script_asm': '', #output.script_asm
+                'script_hex': '', #output.script_hex
 
                 'type': output.type,
                 'addresses': output.addresses,

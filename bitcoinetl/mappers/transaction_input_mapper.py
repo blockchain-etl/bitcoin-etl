@@ -63,8 +63,8 @@ class BtcTransactionInputMapper(object):
                 'create_output_index': input.create_output_index,
                 'sequence': input.sequence,
 
-                'script_asm': '' #input.script_asm,
-                'script_hex': '' #input.script_hex,
+                'script_asm': '', #input.script_asm
+                'script_hex': '', #input.script_hex
 
                 'required_signatures': input.required_signatures,
                 'addresses': input.addresses,
