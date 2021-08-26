@@ -30,7 +30,7 @@ from timeout_decorator import timeout_decorator
 class GooglePubSubItemExporter:
 
     def __init__(self, item_type_to_topic_mapping, message_attributes=(),
-                 batch_max_bytes=1024 * 5, batch_max_latency=0.01, batch_max_messages=10000):
+                 batch_max_bytes=1024 * 5, batch_max_latency=0.01, batch_max_messages=1000):
         self.item_type_to_topic_mapping = item_type_to_topic_mapping
 
         self.batch_max_bytes = batch_max_bytes
