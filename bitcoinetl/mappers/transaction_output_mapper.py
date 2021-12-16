@@ -49,10 +49,12 @@ class BtcTransactionOutputMapper(object):
             output.required_signatures = script_pub_key.get('reqSigs')
             output.type = script_pub_key.get('type')
             #output.addresses = script_pub_key.get('addresses')
-            if script_pub_key.get('address') is None: 
-              output.addresses = []
+            if script_pub_key.get('addresses') is not None and len(script_pub_key.get('addresses')) > 0:
+                output.addresses = script_pub_key.get('addresses')
+            elif script_pub_key.get('address') is None:
+                output.addresses = []
             else:
-              output.addresses = [script_pub_key.get('address')]
+                output.addresses = [script_pub_key.get('address')]
 
         return output
 
