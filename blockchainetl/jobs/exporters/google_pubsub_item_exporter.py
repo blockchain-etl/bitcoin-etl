@@ -45,16 +45,21 @@ class GooglePubSubItemExporter:
         pass
 
     def export_items(self, items):
-        try:
-            self._export_items_with_timeout(items)
-        except timeout_decorator.TimeoutError as e:
-            # A bug in PubSub publisher that makes it stalled after running for some time.
-            # Exception in thread Thread-CommitBatchPublisher:
-            # details = "channel is in state TRANSIENT_FAILURE"
-            # https://stackoverflow.com/questions/55552606/how-can-one-catch-exceptions-in-python-pubsub-subscriber-that-are-happening-in-i?noredirect=1#comment97849067_55552606
-            logging.info('Recreating Pub/Sub publisher.')
-            self.publisher = self.create_publisher()
-            raise e
+        tot_steps = (len(items) // 1000) + 1
+        logging.info('Total publish loop steps'+str(tot_steps))
+        for i in range(0, len(items), 1000):
+            mini_batch = items[i:i + 1000]
+            logging.info('Current Loop Iteration' + str(i + 1)+ 'out of'+str(tot_steps))
+            try:
+                self._export_items_with_timeout(mini_batch)
+            except timeout_decorator.TimeoutError as e:
+                # A bug in PubSub publisher that makes it stalled after running for some time.
+                # Exception in thread Thread-CommitBatchPublisher:
+                # details = "channel is in state TRANSIENT_FAILURE"
+                # https://stackoverflow.com/questions/55552606/how-can-one-catch-exceptions-in-python-pubsub-subscriber-that-are-happening-in-i?noredirect=1#comment97849067_55552606
+                logging.info('Recreating Pub/Sub publisher.')
+                self.publisher = self.create_publisher()
+                raise e
 
     @timeout_decorator.timeout(300)
     def _export_items_with_timeout(self, items):
