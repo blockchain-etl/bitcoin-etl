@@ -178,7 +178,9 @@ class BtcService(object):
     def _add_non_standard_addresses(self, transaction):
         for output in transaction.outputs:
             if output.addresses is None or len(output.addresses) == 0:
-                output.type = 'nonstandard'
+                # output.type = 'nonstandard'
+                if output.type != 'multisig':
+                    output.type = 'nonstandard'
                 output.addresses = [script_hex_to_non_standard_address(output.script_hex)]
 
     def _add_shielded_inputs_and_outputs(self, transaction):
