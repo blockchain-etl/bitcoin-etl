@@ -31,9 +31,9 @@ setup(
     keywords='bitcoin',
     python_requires='>=3.5.0,<4',
     install_requires=[
-        'requests==2.20.0',
-        'python-dateutil==2.7.0',
-        'click==7.0'
+        'requests~=2.20',
+        'python-dateutil~=2.7',
+        'click~=7.0'
     ],
     extras_require={
         'streaming': [
