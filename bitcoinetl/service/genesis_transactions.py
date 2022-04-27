@@ -50,7 +50,7 @@ GENESIS_TRANSACTIONS = {
                     "reqSigs": 1,
                     "type": "pubkey",
                     "addresses": [
-                        "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+                        "bitcoincash:qp3wjpa3tjlj042z2wv7hahsldgwhwy0rq9sywjpyy"
                     ]
                 }
             }
