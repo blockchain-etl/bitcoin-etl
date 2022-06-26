@@ -69,7 +69,6 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
         batch_size=batch_size,
         enable_enrich=enrich,
         max_workers=max_workers,
-        coin_price_type=coin_price_type,
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,
