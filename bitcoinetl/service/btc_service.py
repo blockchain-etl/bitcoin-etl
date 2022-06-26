@@ -89,7 +89,6 @@ class BtcService(object):
 
             if block.has_full_transactions():
                 for transaction in block.transactions:
-                    self._add_coin_price_to_transaction(transaction, block.coin_price_usd)
                     self._add_non_standard_addresses(transaction)
                     if self.chain == Chain.ZCASH:
                         self._add_shielded_inputs_and_outputs(transaction)
@@ -212,43 +211,5 @@ class BtcService(object):
 
     def get_block_reward(self, block):
         return block.coinbase_tx.calculate_output_value()
-
-    def _add_coin_price_to_blocks(self, blocks, coin_price_type):
-        from_currency_code = Chain.ticker_symbol(self.chain)
-
-        if not from_currency_code or coin_price_type == CoinPriceType.empty:
-            return
-
-        elif coin_price_type == CoinPriceType.hourly:
-            block_hour_ids = list(set([get_hour_id_from_ts(block.timestamp) for block in blocks]))
-            block_hours_ts = {hour_id: get_ts_from_hour_id(hour_id) for hour_id in block_hour_ids}
-
-            for hour_id, hour_ts in block_hours_ts.items():
-                if hour_id in self.cached_prices:
-                    continue
-
-                self.cached_prices[hour_id] = get_coin_price(from_currency_code=from_currency_code, timestamp=hour_ts, resource="histohour")
-
-            for block in blocks:
-                block_hour_id = get_hour_id_from_ts(block.timestamp)
-                block.coin_price_usd = self.cached_prices[block_hour_id]
-
-        elif coin_price_type == CoinPriceType.daily:
-            block_day_ids = list(set([get_day_id_from_ts(block.timestamp) for block in blocks]))
-            block_days_ts = {day_id: get_ts_from_day_id(day_id) for day_id in block_day_ids}
-
-            for day_id, day_ts in block_days_ts.items():
-                if day_id in self.cached_prices:
-                    continue
-
-                self.cached_prices[day_id] = get_coin_price(from_currency_code=from_currency_code, timestamp=day_ts, resource="histoday")
-
-            for block in blocks:
-                block_day_id = get_day_id_from_ts(block.timestamp)
-                block.coin_price_usd = self.cached_prices[block_day_id]
-
-    def _add_coin_price_to_transaction(self, transaction, coin_price_usd):
-        transaction.coin_price_usd = coin_price_usd
-
 
 ADDRESS_TYPE_SHIELDED = 'shielded'

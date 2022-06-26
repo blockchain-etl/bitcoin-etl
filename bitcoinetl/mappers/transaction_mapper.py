@@ -72,8 +72,6 @@ class BtcTransactionMapper(object):
         transaction.join_splits = self.join_split_mapper.vjoinsplit_to_join_splits(json_dict.get('vjoinsplit'))
         transaction.value_balance = bitcoin_to_satoshi(json_dict.get('valueBalance'))
 
-        # New fields
-        transaction.coin_price_usd = coin_price_usd
         transaction.weight = json_dict.get('weight')
         transaction.output_addresses = self.get_output_addresses(transaction)
         return transaction
@@ -104,7 +102,6 @@ class BtcTransactionMapper(object):
             'input_value': transaction.calculate_input_value(),
             'output_value': transaction.calculate_output_value(),
             'fee': transaction.calculate_fee(),
-            'coin_price_usd': transaction.coin_price_usd,
             'weight': transaction.weight,
             'output_addresses': transaction.output_addresses
         }
@@ -123,7 +120,6 @@ class BtcTransactionMapper(object):
         transaction.block_timestamp = dict.get('block_timestamp')
         transaction.is_coinbase = dict.get('is_coinbase')
         transaction.index = dict.get('index')
-        transaction.coin_price_usd = dict.get('coin_price_usd')
         transaction.weight = dict.get('weight')
         transaction.output_addresses = dict.get('output_addresses')
         transaction.input_addresses = dict.get('input_addresses')

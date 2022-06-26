@@ -23,7 +23,7 @@
 
 import logging
 
-from bitcoinetl.enumeration.chain import Chain, CoinPriceType
+from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.jobs.enrich_transactions import EnrichTransactionsJob
 from bitcoinetl.jobs.export_blocks_job import ExportBlocksJob
 from bitcoinetl.service.btc_service import BtcService
@@ -40,8 +40,7 @@ class BtcStreamerAdapter:
             chain=Chain.BITCOIN,
             batch_size=2,
             enable_enrich=True,
-            max_workers=5,
-            coin_price_type=CoinPriceType.empty):
+            max_workers=5):
         self.bitcoin_rpc = bitcoin_rpc
         self.chain = chain
         self.btc_service = BtcService(bitcoin_rpc, chain)
@@ -49,7 +48,6 @@ class BtcStreamerAdapter:
         self.batch_size = batch_size
         self.enable_enrich = enable_enrich
         self.max_workers = max_workers
-        self.coin_price_type = coin_price_type
         self.item_id_calculator = BtcItemIdCalculator()
 
     def open(self):
@@ -71,8 +69,7 @@ class BtcStreamerAdapter:
             item_exporter=blocks_and_transactions_item_exporter,
             chain=self.chain,
             export_blocks=True,
-            export_transactions=True,
-            coin_price_type=self.coin_price_type
+            export_transactions=True
         )
         blocks_and_transactions_job.run()
 

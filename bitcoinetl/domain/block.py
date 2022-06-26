@@ -54,7 +54,6 @@ class BtcBlock(object):
 
         self.block_reward = None
         self.transaction_fees = None
-        self.coin_price_usd = None
         self.coinbase_txid = None
         self.coinbase_param_decoded = None
 
