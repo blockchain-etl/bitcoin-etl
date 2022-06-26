@@ -36,7 +36,7 @@ class BtcTransactionMapper(object):
         self.transaction_output_mapper = BtcTransactionOutputMapper()
         self.join_split_mapper = BtcJoinSplitMapper()
 
-    def json_dict_to_transaction(self, json_dict, block=None, index=None, coin_price_usd=None):
+    def json_dict_to_transaction(self, json_dict, block=None, index=None):
         transaction = BtcTransaction()
         transaction.hash = json_dict.get('hash')
         transaction.size = json_dict.get('size')

@@ -96,10 +96,7 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL),
               help='The type of chain.')
 @click.option('--enrich', default=False, type=bool, help='Enable filling in transactions inputs fields.')
-@click.option('--coin-price-type', default=CoinPriceType.empty, type=int,
-              help='Enable querying CryptoCompare for coin prices. 0 for no price, 1 for daily price, 2 for hourly price.')
-def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size, chain, enrich, coin_price_type):
+def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size, chain, enrich):
     """Exports all data for a range of blocks."""
     do_export_all(chain, get_partitions(start, end, partition_batch_size, provider_uri),
-                output_dir, provider_uri, max_workers, export_batch_size, enrich,
-                coin_price_type)
+                output_dir, provider_uri, max_workers, export_batch_size, enrich)

@@ -30,22 +30,14 @@ from bitcoinetl.mappers.transaction_mapper import BtcTransactionMapper
 from bitcoinetl.service.btc_script_service import script_hex_to_non_standard_address
 from bitcoinetl.service.genesis_transactions import GENESIS_TRANSACTIONS
 from blockchainetl.utils import rpc_response_batch_to_results, dynamic_batch_iterator
-from blockchainetl.cryptocompare import (
-    get_coin_price,
-    get_hour_id_from_ts,
-    get_day_id_from_ts,
-    get_ts_from_hour_id,
-    get_ts_from_day_id
-)
 
 
 class BtcService(object):
-    def __init__(self, bitcoin_rpc, chain=Chain.BITCOIN, coin_price_type=CoinPriceType.empty):
+    def __init__(self, bitcoin_rpc, chain=Chain.BITCOIN):
         self.bitcoin_rpc = bitcoin_rpc
         self.block_mapper = BtcBlockMapper()
         self.transaction_mapper = BtcTransactionMapper()
         self.chain = chain
-        self.coin_price_type = coin_price_type
         self.cached_prices = {}
 
     def get_block(self, block_number, with_transactions=False):
@@ -81,8 +73,6 @@ class BtcService(object):
 
         if self.chain in Chain.HAVE_OLD_API and with_transactions:
             self._fetch_transactions(blocks)
-
-        self._add_coin_price_to_blocks(blocks, self.coin_price_type)
 
         for block in blocks:
             self._remove_coinbase_input(block)

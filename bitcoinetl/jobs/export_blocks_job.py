@@ -42,8 +42,7 @@ class ExportBlocksJob(BaseJob):
             item_exporter,
             chain,
             export_blocks=True,
-            export_transactions=True,
-            coin_price_type=CoinPriceType.empty):
+            export_transactions=True):
         validate_range(start_block, end_block)
 
         self.start_block = start_block
