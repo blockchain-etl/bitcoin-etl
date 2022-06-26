@@ -11,7 +11,7 @@ long_description = read('README.md') if os.path.isfile("README.md") else ""
 
 setup(
     name='bitcoin-etl',
-    version='1.5.1',
+    version='1.5.2',
     author='Evgeny Medvedev',
     author_email='evge.medvedev@gmail.com',
     description='Tools for exporting Bitcoin blockchain data to JSON',
@@ -31,9 +31,9 @@ setup(
     keywords='bitcoin',
     python_requires='>=3.5.0,<4',
     install_requires=[
-        'requests==2.20.0',
-        'python-dateutil==2.7.0',
-        'click==7.0'
+        'requests~=2.20',
+        'python-dateutil~=2.7',
+        'click~=7.0'
     ],
     extras_require={
         'streaming': [
