@@ -56,7 +56,7 @@ class ExportBlocksJob(BaseJob):
         if not self.export_blocks and not self.export_transactions:
             raise ValueError('At least one of export_blocks or export_transactions must be True')
 
-        self.btc_service = BtcService(bitcoin_rpc, chain, coin_price_type)
+        self.btc_service = BtcService(bitcoin_rpc, chain)
         self.block_mapper = BtcBlockMapper()
         self.transaction_mapper = BtcTransactionMapper()
 
