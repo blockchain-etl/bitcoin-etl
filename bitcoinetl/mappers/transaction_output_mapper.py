@@ -38,16 +38,17 @@ class BtcTransactionOutputMapper(object):
 
         output.index = json_dict.get('n')
         output.addresses = json_dict.get('addresses')
-        output.txinwitness = json_dict.get('txinwitness')
+        output.witness = json_dict.get('txinwitness')
         output.value = bitcoin_to_satoshi(json_dict.get('value'))
         output.create_transaction_id = create_transaction_id
 
         if 'scriptPubKey' in json_dict:
             script_pub_key = json_dict.get('scriptPubKey')
-            output.script_asm = script_pub_key.get('asm')
-            output.script_hex = script_pub_key.get('hex')
+            output.script_asm = '' #script_pub_key.get('asm')
+            output.script_hex = '' #script_pub_key.get('hex')
             output.required_signatures = script_pub_key.get('reqSigs')
             output.type = script_pub_key.get('type')
+            #output.addresses = script_pub_key.get('addresses')
             if script_pub_key.get('addresses') is not None and len(script_pub_key.get('addresses')) > 0:
                 output.addresses = script_pub_key.get('addresses')
             elif script_pub_key.get('address') is None:
@@ -65,16 +66,16 @@ class BtcTransactionOutputMapper(object):
                 'create_transaction_id': output.create_transaction_id,
                 'spending_transaction_id': None,
 
-                'script_asm': output.script_asm,
-                'script_hex': output.script_hex,
+                'script_asm': '', #output.script_asm
+                'script_hex': '', #output.script_hex
 
                 'type': output.type,
                 'addresses': output.addresses,
                 'value': output.value,
                 'required_signatures': output.required_signatures,
             }
-            if output.txinwitness:
-                item['witness'] = output.txinwitness
+            if output.witness:
+                item['witness'] = output.witness
 
             result.append(item)
         return result
@@ -84,8 +85,8 @@ class BtcTransactionOutputMapper(object):
         for dict in dicts:
             input = BtcTransactionOutput()
             input.index = dict.get('index')
-            input.script_asm = dict.get('script_asm')
-            input.script_hex = dict.get('script_hex')
+            input.script_asm = '' #dict.get('script_asm')
+            input.script_hex = '' #dict.get('script_hex')
             input.required_signatures = dict.get('required_signatures')
             input.type = dict.get('type')
             input.addresses = dict.get('addresses')

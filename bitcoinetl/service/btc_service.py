@@ -30,22 +30,14 @@ from bitcoinetl.mappers.transaction_mapper import BtcTransactionMapper
 from bitcoinetl.service.btc_script_service import script_hex_to_non_standard_address
 from bitcoinetl.service.genesis_transactions import GENESIS_TRANSACTIONS
 from blockchainetl.utils import rpc_response_batch_to_results, dynamic_batch_iterator
-from blockchainetl.cryptocompare import (
-    get_coin_price,
-    get_hour_id_from_ts,
-    get_day_id_from_ts,
-    get_ts_from_hour_id,
-    get_ts_from_day_id
-)
 
 
 class BtcService(object):
-    def __init__(self, bitcoin_rpc, chain=Chain.BITCOIN, coin_price_type=CoinPriceType.empty):
+    def __init__(self, bitcoin_rpc, chain=Chain.BITCOIN):
         self.bitcoin_rpc = bitcoin_rpc
         self.block_mapper = BtcBlockMapper()
         self.transaction_mapper = BtcTransactionMapper()
         self.chain = chain
-        self.coin_price_type = coin_price_type
         self.cached_prices = {}
 
     def get_block(self, block_number, with_transactions=False):
@@ -82,14 +74,11 @@ class BtcService(object):
         if self.chain in Chain.HAVE_OLD_API and with_transactions:
             self._fetch_transactions(blocks)
 
-        self._add_coin_price_to_blocks(blocks, self.coin_price_type)
-
         for block in blocks:
             self._remove_coinbase_input(block)
 
             if block.has_full_transactions():
                 for transaction in block.transactions:
-                    self._add_coin_price_to_transaction(transaction, block.coin_price_usd)
                     self._add_non_standard_addresses(transaction)
                     if self.chain == Chain.ZCASH:
                         self._add_shielded_inputs_and_outputs(transaction)
@@ -178,6 +167,8 @@ class BtcService(object):
     def _add_non_standard_addresses(self, transaction):
         for output in transaction.outputs:
             if output.addresses is None or len(output.addresses) == 0:
+                # output.type = 'nonstandard'
+                # if output.type != 'multisig':
                 output.type = 'nonstandard'
                 output.addresses = [script_hex_to_non_standard_address(output.script_hex)]
 
@@ -210,43 +201,5 @@ class BtcService(object):
 
     def get_block_reward(self, block):
         return block.coinbase_tx.calculate_output_value()
-
-    def _add_coin_price_to_blocks(self, blocks, coin_price_type):
-        from_currency_code = Chain.ticker_symbol(self.chain)
-
-        if not from_currency_code or coin_price_type == CoinPriceType.empty:
-            return
-
-        elif coin_price_type == CoinPriceType.hourly:
-            block_hour_ids = list(set([get_hour_id_from_ts(block.timestamp) for block in blocks]))
-            block_hours_ts = {hour_id: get_ts_from_hour_id(hour_id) for hour_id in block_hour_ids}
-
-            for hour_id, hour_ts in block_hours_ts.items():
-                if hour_id in self.cached_prices:
-                    continue
-
-                self.cached_prices[hour_id] = get_coin_price(from_currency_code=from_currency_code, timestamp=hour_ts, resource="histohour")
-
-            for block in blocks:
-                block_hour_id = get_hour_id_from_ts(block.timestamp)
-                block.coin_price_usd = self.cached_prices[block_hour_id]
-
-        elif coin_price_type == CoinPriceType.daily:
-            block_day_ids = list(set([get_day_id_from_ts(block.timestamp) for block in blocks]))
-            block_days_ts = {day_id: get_ts_from_day_id(day_id) for day_id in block_day_ids}
-
-            for day_id, day_ts in block_days_ts.items():
-                if day_id in self.cached_prices:
-                    continue
-
-                self.cached_prices[day_id] = get_coin_price(from_currency_code=from_currency_code, timestamp=day_ts, resource="histoday")
-
-            for block in blocks:
-                block_day_id = get_day_id_from_ts(block.timestamp)
-                block.coin_price_usd = self.cached_prices[block_day_id]
-
-    def _add_coin_price_to_transaction(self, transaction, coin_price_usd):
-        transaction.coin_price_usd = coin_price_usd
-
 
 ADDRESS_TYPE_SHIELDED = 'shielded'

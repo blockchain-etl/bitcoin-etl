@@ -68,7 +68,6 @@ class BtcBlockMapper(object):
         block.chain_work = json_dict.get("chainwork")
         block.coinbase_txid = json_dict.get("coinbase_txid")
         block.previous_block_hash = json_dict.get("previousblockhash")
-        block.coin_price_usd = json_dict.get('coin_price_usd')
         return block
 
     def block_to_dict(self, block):
@@ -94,7 +93,6 @@ class BtcBlockMapper(object):
             'difficulty': block.difficulty,
             'chain_work': block.chain_work,
             'previous_block_hash': block.previous_block_hash,
-            "coin_price_usd": block.coin_price_usd,
             "transaction_ids": block.transaction_ids
         }
 

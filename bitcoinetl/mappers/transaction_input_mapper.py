@@ -48,8 +48,8 @@ class BtcTransactionInputMapper(object):
         input.sequence = json_dict.get('sequence')
 
         if 'scriptSig' in json_dict:
-            input.script_asm = (json_dict.get('scriptSig')).get('asm')
-            input.script_hex = (json_dict.get('scriptSig')).get('hex')
+            input.script_asm = '' #(json_dict.get('scriptSig')).get('asm')
+            input.script_hex = '' #(json_dict.get('scriptSig')).get('hex')
 
         return input
 
@@ -63,8 +63,8 @@ class BtcTransactionInputMapper(object):
                 'create_output_index': input.create_output_index,
                 'sequence': input.sequence,
 
-                'script_asm': input.script_asm,
-                'script_hex': input.script_hex,
+                'script_asm': '', #input.script_asm
+                'script_hex': '', #input.script_hex
 
                 'required_signatures': input.required_signatures,
                 'addresses': input.addresses,
@@ -83,8 +83,8 @@ class BtcTransactionInputMapper(object):
             input.index = dict.get('index')
             input.create_transaction_id = dict.get('create_transaction_id')
             input.create_output_index = dict.get('create_output_index')
-            input.script_asm = dict.get('script_asm')
-            input.script_hex = dict.get('script_hex')
+            input.script_asm = '' #dict.get('script_asm')
+            input.script_hex = '' #dict.get('script_hex')
             input.sequence = dict.get('sequence')
             input.required_signatures = dict.get('required_signatures')
             input.type = dict.get('type')

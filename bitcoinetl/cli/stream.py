@@ -43,16 +43,17 @@ logging_basic_config()
                    'If not specified will print to console.')
 @click.option('-s', '--start-block', default=None, type=int, help='Start block.')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain.')
-@click.option('--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs.')
-@click.option('-b', '--batch-size', default=2, type=int, help='How many blocks to batch in single request.')
+@click.option('--period-seconds', default=1, type=int, help='How many seconds to sleep between syncs.')
+@click.option('-b', '--batch-size', default=1, type=int, help='How many blocks to batch in single request.')
 @click.option('-B', '--block-batch-size', default=10, type=int, help='How many blocks to batch in single sync round.')
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers.')
 @click.option('--log-file', default=None, type=str, help='Log file.')
 @click.option('--pid-file', default=None, type=str, help='pid file.')
 @click.option('--enrich', default=True, type=bool, help='Enable filling in transactions inputs fields.')
+@click.option('--retry_errors', default=True, type=bool, help='Enable Retry on streaming failures')
 def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.BITCOIN,
-           period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5, log_file=None, pid_file=None,
-           enrich=True):
+           period_seconds=1, batch_size=1, block_batch_size=10, max_workers=5, log_file=None, pid_file=None,
+           enrich=True, retry_errors=True):
     """Streams all data types to console or Google Pub/Sub."""
     configure_logging(log_file)
     configure_signals()
@@ -67,7 +68,7 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
         chain=chain,
         batch_size=batch_size,
         enable_enrich=enrich,
-        max_workers=max_workers
+        max_workers=max_workers,
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,
@@ -77,5 +78,6 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
         period_seconds=period_seconds,
         block_batch_size=block_batch_size,
         pid_file=pid_file,
+        retry_errors=retry_errors
     )
     streamer.stream()

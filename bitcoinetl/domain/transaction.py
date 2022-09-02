@@ -50,7 +50,6 @@ class BtcTransaction(object):
         self.input_value = None
         self.output_count = None
         self.output_value = None
-        self.coin_price_usd = None
 
     def add_input(self, input):
         if len(self.inputs) > 0:
