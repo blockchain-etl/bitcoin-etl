@@ -19,6 +19,7 @@ Export blocks and transactions ([Schema](#blocksjson), [Reference](#export_block
 ```
 
 Supported chains:
+
 - bitcoin
 - bitcoin_cash
 - bitcoin_gold
@@ -43,6 +44,7 @@ Stream blockchain data continually to Google Pub/Sub ([Reference](#stream)):
 ```
 
 For the latest version, check out the repo and call
+
 ```bash
 > pip install -e .[streaming]
 > python bitcoinetl.py
@@ -55,20 +57,19 @@ For the latest version, check out the repo and call
   - [Schema](#schema)
     - [blocks.json](#blocksjson)
     - [transactions.json](#transactionsjson)
-    - [transaction_input](#transactioninput)
-    - [transaction_output](#transactionoutput)
+    - [transaction_input](#transaction_input)
+    - [transaction_output](#transaction_output)
   - [Exporting the Blockchain](#exporting-the-blockchain)
     - [Running in Docker](#running-in-docker)
     - [Command Reference](#command-reference)
-      - [export_blocks_and_transactions](#exportblocksandtransactions)
-      - [enrich_transactions](#enrichtransactions)
-      - [get_block_range_for_date](#getblockrangefordate)
-      - [export_all](#exportall)
+      - [export_blocks_and_transactions](#export_blocks_and_transactions)
+      - [enrich_transactions](#enrich_transactions)
+      - [get_block_range_for_date](#get_block_range_for_date)
+      - [export_all](#export_all)
       - [stream](#stream)
     - [Running Tests](#running-tests)
     - [Running Tox Tests](#running-tox-tests)
     - [Public Datasets in BigQuery](#public-datasets-in-bigquery)
-
 
 ## Schema
 
@@ -138,24 +139,22 @@ type                    | string                |
 addresses               | []string              |
 value                   | bigint                |
 
-
 You can find column descriptions in [schemas](https://github.com/blockchain-etl/bitcoin-etl-airflow/tree/master/dags/resources/stages/enrich/schemas)
 
 **Notes**:
 
 1. Output values returned by Dogecoin API had precision loss in the clients prior to version 1.14.
-It's caused by this issue https://github.com/dogecoin/dogecoin/issues/1558
+It's caused by this issue <https://github.com/dogecoin/dogecoin/issues/1558>
 The explorers that used older versions to export the data may show incorrect address balances and transaction amounts.
 
 1. For Zcash, `vjoinsplit` and `valueBalance` fields are converted to inputs and outputs with type 'shielded'
-https://zcash-rpc.github.io/getrawtransaction.html, https://zcash.readthedocs.io/en/latest/rtd_pages/zips/zip-0243.html
-
+<https://zcash-rpc.github.io/getrawtransaction.html>, <https://zcash.readthedocs.io/en/latest/rtd_pages/zips/zip-0243.html>
 
 ## Exporting the Blockchain
 
-1. Install python 3.5.3+ https://www.python.org/downloads/
+1. Install python 3.5.3+ <https://www.python.org/downloads/>
 
-1. Install Bitcoin node https://hackernoon.com/a-complete-beginners-guide-to-installing-a-bitcoin-full-node-on-linux-2018-edition-cb8e384479ea
+1. Install Bitcoin node <https://hackernoon.com/a-complete-beginners-guide-to-installing-a-bitcoin-full-node-on-linux-2018-edition-cb8e384479ea>
 
 1. Start Bitcoin.
 Make sure it downloaded the blocks that you need by executing `$ bitcoin-cli getblockchaininfo` in the terminal.
@@ -189,21 +188,24 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
 
 ### Running in Docker
 
-1. Install Docker https://docs.docker.com/install/
+1. Install Docker <https://docs.docker.com/install/>
 
 1. Build a docker image
+
     ```bash
     > docker build --platform linux/x86_64 -t bitcoin-etl:latest .
     > docker image ls
     ```
 
 1. Run a container out of the image
+
     ```bash
     > docker run --platform linux/x86_64 -v $HOME/output:/bitcoin-etl/output bitcoin-etl:latest export_blocks_and_transactions --start-block 0 --end-block 500000 \
         --provider-uri http://user:pass@localhost:8332 --blocks-output output/blocks.json --transactions-output output/transactions.json
     ```
 
 1. Run streaming to console or Pub/Sub
+
     ```bash
     > docker build --platform linux/x86_64 -t bitcoin-etl:latest-streaming -f Dockerfile_with_streaming .
     > echo "Stream to console"
@@ -212,7 +214,7 @@ You can export blocks below `blocks`, there is no need to wait until the full sy
     > docker run --platform linux/x86_64 -v /path_to_credentials_file/:/bitcoin-etl/ --env GOOGLE_APPLICATION_CREDENTIALS=/bitcoin-etl/credentials_file.json bitcoin-etl:latest-streaming stream -p http://user:pass@localhost:8332 --start-block 500000 --output projects/your-project/topics/crypto_bitcoin
     ```
 
-1. Refer to https://github.com/blockchain-etl/bitcoin-etl-streaming for deploying the streaming app to
+1. Refer to <https://github.com/blockchain-etl/bitcoin-etl-streaming> for deploying the streaming app to
 Google Kubernetes Engine.
 
 ### Command Reference
@@ -282,7 +284,7 @@ You can tune `--batch-size`, `--max-workers` for performance.
 
 This command is guaranteed to return the block range that covers all blocks with `block.time` on the specified
 date. However the returned block range may also contain blocks outside the specified date, because block times are not
-monotonic https://twitter.com/EvgeMedvedev/status/1073844856009576448. You can filter
+monotonic <https://twitter.com/EvgeMedvedev/status/1073844856009576448>. You can filter
 `blocks.json`/`transactions.json` with the below command:
 
 ```bash
@@ -317,7 +319,6 @@ handle chain reorganizations - they are less likely the further a block from the
 - Use the `--chain` option to specify the type of the chain, e.g. `bitcoin`, `litecoin`, `dash`, `zcash`, etc.
 - You can tune `--period-seconds`, `--batch-size`, `--max-workers` for performance.
 
-
 ### Running Tests
 
 ```bash
@@ -341,4 +342,4 @@ handle chain reorganizations - they are less likely the further a block from the
 
 ### Public Datasets in BigQuery
 
-https://cloud.google.com/blog/products/data-analytics/introducing-six-new-cryptocurrencies-in-bigquery-public-datasets-and-how-to-analyze-them
+<https://cloud.google.com/blog/products/data-analytics/introducing-six-new-cryptocurrencies-in-bigquery-public-datasets-and-how-to-analyze-them>
