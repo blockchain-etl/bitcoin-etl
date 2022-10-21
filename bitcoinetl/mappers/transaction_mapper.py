@@ -61,11 +61,9 @@ class BtcTransactionMapper(object):
 
         transaction.inputs = self.transaction_input_mapper.vin_to_inputs(
             vin=json_dict.get('vin'),
-            spending_transaction_id=transaction.transaction_id
         )
         transaction.outputs = self.transaction_output_mapper.vout_to_outputs(
             vout=json_dict.get('vout'),
-            create_transaction_id=transaction.transaction_id
         )
 
         # Only Zcash

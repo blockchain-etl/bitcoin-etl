@@ -23,12 +23,9 @@
 
 class BtcTransactionInput(object):
     def __init__(self):
-        self.create_transaction_id = None
-        self.create_output_index = None
-
-        self.spending_transaction_id = None
         self.index = None
-
+        self.spent_transaction_hash = None
+        self.spent_output_index = None
         self.script_asm = None
         self.script_hex = None
         self.coinbase_param = None
@@ -40,4 +37,4 @@ class BtcTransactionInput(object):
         self.value = None
 
     def is_coinbase(self):
-        return self.coinbase_param is not None or self.create_transaction_id is None
+        return self.coinbase_param is not None or self.spent_transaction_hash is None

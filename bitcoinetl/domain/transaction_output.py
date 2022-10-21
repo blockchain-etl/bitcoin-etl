@@ -31,7 +31,3 @@ class BtcTransactionOutput(object):
 
         self.addresses = []
         self.value = None
-        self.witness = []
-
-        self.create_transaction_id = None
-        self.spending_transaction_id = None

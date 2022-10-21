@@ -63,7 +63,7 @@ class EnrichTransactionsJob(BaseJob):
             input_transactions_map = self._get_input_transactions_as_map(transaction_input_batch)
             for input in transaction_input_batch:
                 output = self._get_output_for_input(input, input_transactions_map) \
-                    if input.create_transaction_id is not None else None
+                    if input.spent_transaction_hash is not None else None
                 if output is not None:
                     input.required_signatures = output.required_signatures
                     input.type = output.type
@@ -74,8 +74,8 @@ class EnrichTransactionsJob(BaseJob):
             self.item_exporter.export_item(self.transaction_mapper.transaction_to_dict(transaction))
 
     def _get_input_transactions_as_map(self, transaction_inputs):
-        transaction_hashes = [input.create_transaction_id for input in transaction_inputs
-                              if input.create_transaction_id is not None]
+        transaction_hashes = [input.spent_transaction_hash for input in transaction_inputs
+                              if input.spent_transaction_hash is not None]
 
         transaction_hashes = set(transaction_hashes)
         if len(transaction_hashes) > 0:
@@ -85,18 +85,18 @@ class EnrichTransactionsJob(BaseJob):
             return {}
 
     def _get_output_for_input(self, transaction_input, input_transactions_map):
-        create_transaction_id = transaction_input.create_transaction_id
-        input_transaction = input_transactions_map.get(create_transaction_id)
+        spent_transaction_hash = transaction_input.spent_transaction_hash
+        input_transaction = input_transactions_map.get(spent_transaction_hash)
         if input_transaction is None:
-            raise ValueError('Input transaction with hash {} not found'.format(create_transaction_id))
+            raise ValueError('Input transaction with hash {} not found'.format(spent_transaction_hash))
 
-        create_output_index = transaction_input.create_output_index
-        if input_transaction.outputs is None or len(input_transaction.outputs) < (create_output_index + 1):
+        spent_output_index = transaction_input.spent_output_index
+        if input_transaction.outputs is None or len(input_transaction.outputs) < (spent_output_index + 1):
             raise ValueError(
                 'There is no output with index {} in transaction with hash {}'.format(
-                    create_output_index, create_transaction_id))
+                    spent_output_index, spent_transaction_hash))
 
-        output = input_transaction.outputs[create_output_index]
+        output = input_transaction.outputs[spent_output_index]
         return output
 
     def _end(self):

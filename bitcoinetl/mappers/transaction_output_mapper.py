@@ -63,20 +63,13 @@ class BtcTransactionOutputMapper(object):
         for output in outputs:
             item = {
                 'index': output.index,
-                'create_transaction_id': output.create_transaction_id,
-                'spending_transaction_id': None,
-
-                'script_asm': '', #output.script_asm
-                'script_hex': '', #output.script_hex
-
+                'script_asm': '', #output.script_asm,
+                'script_hex': '', #output.script_hex,
+                'required_signatures': output.required_signatures,
                 'type': output.type,
                 'addresses': output.addresses,
-                'value': output.value,
-                'required_signatures': output.required_signatures,
+                'value': output.value
             }
-            if output.witness:
-                item['witness'] = output.witness
-
             result.append(item)
         return result
 
@@ -91,9 +84,6 @@ class BtcTransactionOutputMapper(object):
             input.type = dict.get('type')
             input.addresses = dict.get('addresses')
             input.value = dict.get('value')
-            input.witness = dict.get('witness')
-            input.create_transaction_id = dict.get('create_transaction_id')
-            input.spending_transaction_id = dict.get('spending_transaction_id')
 
             result.append(input)
         return result
