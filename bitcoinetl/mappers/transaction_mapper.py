@@ -68,6 +68,14 @@ class BtcTransactionMapper(object):
         return transaction
 
     def transaction_to_dict(self, transaction):
+        print("Converting raw Transaction to dict")
+        print("Validating that we aren't dropping transactions")
+        if len(transaction) != 1:
+            print("MORE THAN ONE TRANSACTION! DROPPING!")
+            print(transaction)
+            import sys; sys.exit(0)
+        transaction = transaction[0]
+
         result = {
             'type': 'transaction',
             'hash': transaction.hash,

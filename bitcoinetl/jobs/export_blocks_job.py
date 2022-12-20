@@ -78,7 +78,10 @@ class ExportBlocksJob(BaseJob):
         if self.export_blocks:
             self.item_exporter.export_item(self.block_mapper.block_to_dict(block))
         if self.export_transactions:
-            for tx in block.transactions:
+            for tx_hash in block.transactions:
+                print(f"tx_hash: {tx_hash}")
+                tx = self.btc_service.get_transactions_by_hashes([tx_hash])
+                print("tx_raw: ", tx)
                 self.item_exporter.export_item(self.transaction_mapper.transaction_to_dict(tx))
 
     def _end(self):

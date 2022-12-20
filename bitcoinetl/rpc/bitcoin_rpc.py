@@ -22,6 +22,7 @@
 
 import decimal
 import json
+import time
 
 from bitcoinetl.rpc.request import make_post_request
 
@@ -36,14 +37,23 @@ class BitcoinRpc:
         rpc_calls = []
         for command in commands:
             m = command.pop(0)
+            if m in ["getblockhash", "getblock"]:
+                if len(command) == 2 and command[1] == 2:
+                    # Set second arg of command to boolean instead of int
+                    command[1] = True
+                else:
+                    print(m)
+
             rpc_calls.append({"jsonrpc": "2.0", "method": m, "params": command, "id": "1"})
         text = json.dumps(rpc_calls)
+
         request_data = text.encode('utf-8')
         raw_response = make_post_request(
             self.provider_uri,
             request_data,
             timeout=self.timeout
         )
+        time.sleep(0.5)
 
         response = self._decode_rpc_response(raw_response)
 
@@ -52,6 +62,10 @@ class BitcoinRpc:
             if resp_item.get('result') is None:
                 raise ValueError('"result" is None in the JSON RPC response {}. Request: {}', resp_item.get('error'), text)
             result.append(resp_item.get('result'))
+
+        print(f"RPC calls: {text}")
+        print(f"Results: {result}")
+
         return result
 
     def getblockhash(self, param):
