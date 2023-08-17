@@ -38,7 +38,8 @@ setup(
     extras_require={
         'streaming': [
             'timeout-decorator==0.4.1',
-            'google-cloud-pubsub==0.39.1'
+            'google-cloud-pubsub==0.39.1',
+            'kafka-python==2.0.2'
         ],
         'dev': [
             'pytest~=4.3.0'
