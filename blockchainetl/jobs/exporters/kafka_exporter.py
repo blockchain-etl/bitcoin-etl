@@ -5,6 +5,7 @@ import logging
 from kafka import KafkaProducer
 
 from blockchainetl.jobs.exporters.converters.composite_item_converter import CompositeItemConverter
+from blockchainetl.jobs.exporters.bitcoin_flatten import flatten_transformation
 
 
 class KafkaItemExporter:
@@ -27,16 +28,22 @@ class KafkaItemExporter:
 
     def export_items(self, items):
         for item in items:
-            self.export_item(item)
+            item_type = item.get('type')
+            if item_type is not None and item_type in self.item_type_to_topic_mapping:
+                if(item_type == "transaction"):
+                    transformed_data = flatten_transformation(item)
+                    for data in transformed_data:
+                        self.export_item(data,item_type)
+                else:
+                    self.export_item(item,item_type)
+            else:
+                logging.warning('Topic for item type "{}" is not configured.'.format(item_type))
 
-    def export_item(self, item):
-        item_type = item.get('type')
-        if item_type is not None and item_type in self.item_type_to_topic_mapping:
-            data = json.dumps(item).encode('utf-8')
-            logging.debug(data)
-            return self.producer.send(self.item_type_to_topic_mapping[item_type], value=data)
-        else:
-            logging.warning('Topic for item type "{}" is not configured.'.format(item_type))
+    def export_item(self, item, item_type):
+        data = json.dumps(item).encode('utf-8')
+        logging.debug(data)
+        return self.producer.send(self.item_type_to_topic_mapping[item_type], value=data)
+              
 
     def convert_items(self, items):
         for item in items:

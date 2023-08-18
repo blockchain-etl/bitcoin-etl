@@ -19,8 +19,8 @@ def get_item_exporter(output):
     elif item_exporter_type == ItemExporterType.KAFKA:
         from blockchainetl.jobs.exporters.kafka_exporter import KafkaItemExporter
         item_exporter = KafkaItemExporter(output, item_type_to_topic_mapping={
-            'block': 'blocks',
-            'transaction': 'transactions',
+            'block': 'bitcoin.hot.blocks',
+            'transaction': 'bitcoin.hot.transactions',
         })
     else:
         raise ValueError('Unable to determine item exporter type for output ' + output)
