@@ -1,8 +1,10 @@
 import collections
 import json
 import logging
+import os
+import socket
 
-from kafka import KafkaProducer
+from confluent_kafka import Producer
 
 from blockchainetl.jobs.exporters.converters.composite_item_converter import CompositeItemConverter
 from blockchainetl.jobs.exporters.bitcoin_flatten import flatten_transformation
@@ -15,7 +17,17 @@ class KafkaItemExporter:
         self.converter = CompositeItemConverter(converters)
         self.connection_url = self.get_connection_url(output)
         print(self.connection_url)
-        self.producer = KafkaProducer(bootstrap_servers=self.connection_url)
+        conf = {
+            "bootstrap.servers": os.getenv("CONFLUENT_ENDPOINT"),
+            "security.protocol": "SASL_SSL",
+            "sasl.mechanisms": "PLAIN",
+            "client.id": socket.gethostname(),
+            "message.max.bytes": 5242880,
+            "sasl.username": os.getenv("BLOCKCHAIN_PRODUCER_KEY"),
+            "sasl.password": os.getenv("BLOCKCHAIN_PRODUCER_SECRET")
+        }
+
+        self.producer = Producer(conf)
 
     def get_connection_url(self, output):
         try:
@@ -42,7 +54,7 @@ class KafkaItemExporter:
     def export_item(self, item, item_type):
         data = json.dumps(item).encode('utf-8')
         logging.debug(data)
-        return self.producer.send(self.item_type_to_topic_mapping[item_type], value=data)
+        return self.producer.produce(self.item_type_to_topic_mapping[item_type], value=data)
               
 
     def convert_items(self, items):

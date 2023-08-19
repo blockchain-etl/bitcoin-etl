@@ -11,8 +11,8 @@ def flatten_transformation(payload_dict):
     TYPE_BLOCK_REWARD = 3
 
     transformed_transactions = []
-    for input in payload_dict["inputs"]:
-        for output in payload_dict["outputs"]:
+    for output in payload_dict["outputs"]:
+        for input in payload_dict["inputs"]:
             if not payload_dict["is_coinbase"]:
                     if output["value"] > 0:
                         token_outgoing_value = Decimal((1e-8 * input["value"]) * (1e-8 * output["value"]) / (1e-8 * payload_dict["output_value"]))
@@ -24,11 +24,6 @@ def flatten_transformation(payload_dict):
                         token_incoming_value = 0
                         
                     token_outgoing_fee = token_outgoing_value - token_incoming_value
-                    token_outgoing_fee = f'{float(token_outgoing_fee):.16f}'                    
-                    # token_outgoing_value = float(token_outgoing_value)
-                    # token_incoming_value = float(token_incoming_value)
-
-
 
                     transformed_transactions.append({
                         "block": payload_dict["block_number"],
@@ -40,10 +35,9 @@ def flatten_transformation(payload_dict):
                         "token_outgoing_value": float(token_outgoing_value),
                         "token_address": default_token_address,
                         "token_incoming_value": float(token_incoming_value),
-                        "token_outgoing_fee": token_outgoing_fee
+                        "token_outgoing_fee": float(token_outgoing_fee)
                     })
             else:
-                    
                     transformed_transactions.append({
                         "block": payload_dict["block_number"],
                         "transaction_id": payload_dict["hash"],
