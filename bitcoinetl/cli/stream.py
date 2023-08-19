@@ -41,8 +41,6 @@ logging_basic_config()
 @click.option('-o', '--output', type=str,
               help='Google PubSub topic path e.g. projects/your-project/topics/bitcoin_blockchain. '
                    'If not specified will print to console.')
-@click.option('-k', '--kafka_config', default=None, type=str,
-              help='pass the kafka config')
 @click.option('-s', '--start-block', default=None, type=int, help='Start block.')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain.')
 @click.option('--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs.')
@@ -52,7 +50,7 @@ logging_basic_config()
 @click.option('--log-file', default=None, type=str, help='Log file.')
 @click.option('--pid-file', default=None, type=str, help='pid file.')
 @click.option('--enrich', default=True, type=bool, help='Enable filling in transactions inputs fields.')
-def stream(last_synced_block_file, lag, provider_uri, output, kafka_config, start_block, chain=Chain.BITCOIN,
+def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.BITCOIN,
            period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5, log_file=None, pid_file=None,
            enrich=True):
     """Streams all data types to console or Google Pub/Sub."""
@@ -65,7 +63,7 @@ def stream(last_synced_block_file, lag, provider_uri, output, kafka_config, star
 
     streamer_adapter = BtcStreamerAdapter(
         bitcoin_rpc=ThreadLocalProxy(lambda: BitcoinRpc(provider_uri)),
-        item_exporter=get_item_exporter(output,kafka_config),
+        item_exporter=get_item_exporter(output),
         chain=chain,
         batch_size=batch_size,
         enable_enrich=enrich,
