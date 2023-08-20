@@ -54,7 +54,7 @@ class KafkaItemExporter:
     def export_item(self, item, item_type):
         data = json.dumps(item).encode('utf-8')
         logging.debug(data)
-        return self.producer.produce(self.item_type_to_topic_mapping[item_type], value=data)
+        return self.producer.produce(self.item_type_to_topic_mapping[item_type],key="0x0000",value=data)
               
 
     def convert_items(self, items):
