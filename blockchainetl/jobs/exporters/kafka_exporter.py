@@ -18,13 +18,13 @@ class KafkaItemExporter:
         self.connection_url = self.get_connection_url(output)
         print(self.connection_url)
         conf = {
-            "bootstrap.servers": os.getenv("CONFLUENT_ENDPOINT"),
+            "bootstrap.servers": os.getenv("CONFLUENT_BROKER"),
             "security.protocol": "SASL_SSL",
             "sasl.mechanisms": "PLAIN",
             "client.id": socket.gethostname(),
             "message.max.bytes": 5242880,
-            "sasl.username": os.getenv("BLOCKCHAIN_PRODUCER_KEY"),
-            "sasl.password": os.getenv("BLOCKCHAIN_PRODUCER_SECRET")
+            "sasl.username": os.getenv("CONFLUENT_USERNAME"),
+            "sasl.password": os.getenv("CONFLUENT_PASSWORD")
         }
 
         self.producer = Producer(conf)
