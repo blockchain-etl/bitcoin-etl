@@ -32,10 +32,10 @@ def flatten_transformation(payload_dict):
                         "transaction_type": TYPE_EXTERNAL,
                         "sender_address": "|".join(input["addresses"]),
                         "receiver_address": "|".join(output["addresses"]),
-                        "token_outgoing_value": float(token_outgoing_value),
+                        "token_outgoing_value": str(token_outgoing_value),
                         "token_address": default_token_address,
-                        "token_incoming_value": float(token_incoming_value),
-                        "token_outgoing_fee": float(token_outgoing_fee)
+                        "token_incoming_value": str(token_incoming_value),
+                        "token_outgoing_fee": str(token_outgoing_fee)
                     })
             else:
                     transformed_transactions.append({
@@ -45,10 +45,10 @@ def flatten_transformation(payload_dict):
                         "transaction_type": TYPE_BLOCK_REWARD,
                         "sender_address": f"{NULL_ADDRESS_MINT}_{datetime.datetime.fromtimestamp(payload_dict['block_timestamp']).month}",
                         "receiver_address": "|".join(output["addresses"]),
-                        "token_outgoing_value": 1e-8 * output["value"],
-                        "token_incoming_value": 1e-8 * output["value"],
+                        "token_outgoing_value": str(1e-8 * output["value"]),
+                        "token_incoming_value": str(1e-8 * output["value"]),
                         "token_address": default_token_address,
-                        "token_outgoing_fee": 0
+                        "token_outgoing_fee": str(0)
                     })
 
 
