@@ -38,6 +38,12 @@ class KafkaItemExporter:
     def open(self):
         pass
 
+    def acked(err, msg):
+        if err is not None:
+            logging.error("Failed to deliver message: %s: %s" % (str(msg), str(err)))
+        else:
+            logging.debug("Message produced: %s" % (str(msg)))     
+
     def export_items(self, items):
         for item in items:
             item_type = item.get('type')
@@ -54,8 +60,9 @@ class KafkaItemExporter:
     def export_item(self, item, item_type):
         data = json.dumps(item).encode('utf-8')
         logging.debug(data)
-        return self.producer.produce(self.item_type_to_topic_mapping[item_type],key="0x0000",value=data)
-              
+        return self.producer.produce(self.item_type_to_topic_mapping[item_type],key="0x0000",value=data, callback=self.acked)
+
+  
 
     def convert_items(self, items):
         for item in items:

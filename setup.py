@@ -39,7 +39,7 @@ setup(
         'streaming': [
             'timeout-decorator==0.4.1',
             'google-cloud-pubsub==0.39.1',
-            'kafka-python==2.0.2'
+            'confluent-kafka==2.2.0'
         ],
         'dev': [
             'pytest~=4.3.0'
