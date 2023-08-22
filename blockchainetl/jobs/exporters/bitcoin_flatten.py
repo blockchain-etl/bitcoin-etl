@@ -32,10 +32,10 @@ def flatten_transformation(payload_dict):
                         "transaction_type": TYPE_EXTERNAL,
                         "sender_address": "|".join(input["addresses"]),
                         "receiver_address": "|".join(output["addresses"]),
-                        "token_outgoing_value": str(token_outgoing_value),
+                        "token_outgoing_value": str(float(token_outgoing_value)),
                         "token_address": default_token_address,
-                        "token_incoming_value": str(token_incoming_value),
-                        "token_outgoing_fee": str(token_outgoing_fee)
+                        "token_incoming_value": str(float(token_incoming_value)),
+                        "token_outgoing_fee": str(float(token_outgoing_fee))
                     })
             else:
                     transformed_transactions.append({

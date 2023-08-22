@@ -1,7 +1,7 @@
 from blockchainetl.jobs.exporters.console_item_exporter import ConsoleItemExporter
 
 
-def get_item_exporter(output):
+def get_item_exporter(output,topic_mapping):
 
     item_exporter_type = determine_item_exporter_type(output)
     if item_exporter_type == ItemExporterType.PUBSUB:
@@ -18,10 +18,13 @@ def get_item_exporter(output):
     
     elif item_exporter_type == ItemExporterType.KAFKA:
         from blockchainetl.jobs.exporters.kafka_exporter import KafkaItemExporter
-        item_exporter = KafkaItemExporter(output, item_type_to_topic_mapping={
-            'block': 'producer.bitcoin.hot.blocks',
-            'transaction': 'producer.bitcoin.hot.transactions',
-        })
+        if (topic_mapping is None):
+            item_exporter = KafkaItemExporter(output, item_type_to_topic_mapping={
+                'block': 'producer.bitcoin.hot.blocks',
+                'transaction': 'producer.bitcoin.hot.transactions',
+            })
+        else:
+            item_exporter = KafkaItemExporter(output, item_type_to_topic_mapping =topic_mapping)
     else:
         raise ValueError('Unable to determine item exporter type for output ' + output)
     

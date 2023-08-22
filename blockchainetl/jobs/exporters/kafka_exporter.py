@@ -16,7 +16,7 @@ class KafkaItemExporter:
         self.item_type_to_topic_mapping = item_type_to_topic_mapping
         self.converter = CompositeItemConverter(converters)
         self.connection_url = self.get_connection_url(output)
-        print(self.connection_url)
+        # print(self.connection_url)
         conf = {
             "bootstrap.servers": os.getenv("CONFLUENT_BROKER"),
             "security.protocol": "SASL_SSL",
@@ -59,9 +59,19 @@ class KafkaItemExporter:
 
     def export_item(self, item, item_type):
         data = json.dumps(item).encode('utf-8')
-        logging.debug(data)
-        return self.producer.produce(self.item_type_to_topic_mapping[item_type],key="0x0000",value=data, callback=self.acked)
+        message_future = self.write_to_kafka(value=data,
+                                             topic=self.item_type_to_topic_mapping[item_type])
+        
+        return message_future
 
+
+    def write_to_kafka(self, value: str, topic: str):
+        try:
+            self.producer.produce(topic,key="0x0000",value=value, callback=self.acked)
+        except BufferError:
+            self.logging.error('%% Local producer queue is full (%d messages awaiting delivery): try again\n' %
+                             len(self.producer))
+        self.producer.poll(0)
   
 
     def convert_items(self, items):
