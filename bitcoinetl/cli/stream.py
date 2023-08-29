@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 import click
-
+import json
 from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
 
@@ -41,7 +41,7 @@ logging_basic_config()
 @click.option('-o', '--output', type=str,
               help='Google PubSub topic path e.g. projects/your-project/topics/bitcoin_blockchain. '
                    'If not specified will print to console.')
-@click.option('--topic-mapping', default=None, type=dict[str,str], help="Topic Mapping should be Python dict like {'block': 'producer.bitcoin.hot.blocks','transaction': 'producer.bitcoin.hot.transactions',}")
+@click.option('--topic-mapping', default=None, type=str, help="Topic Mapping should be json like {\"block\": \"producer-litcoin-blocks-hot\",\"transaction\": \"producer-litcoin-transactions-hot\"}")
 @click.option('-s', '--start-block', default=None, type=int, help='Start block.')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain.')
 @click.option('--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs.')
@@ -62,9 +62,12 @@ def stream(last_synced_block_file, lag, provider_uri, output, topic_mapping, sta
     from bitcoinetl.streaming.btc_streamer_adapter import BtcStreamerAdapter
     from blockchainetl.streaming.streamer import Streamer
 
+    if (topic_mapping is not None):
+        topic_mapping = json.loads(topic_mapping)
+
     streamer_adapter = BtcStreamerAdapter(
         bitcoin_rpc=ThreadLocalProxy(lambda: BitcoinRpc(provider_uri)),
-        item_exporter=get_item_exporter(output,topic_mapping),
+        item_exporter=get_item_exporter(output,topic_mapping,chain),
         chain=chain,
         batch_size=batch_size,
         enable_enrich=enrich,

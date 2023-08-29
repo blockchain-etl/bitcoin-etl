@@ -3,7 +3,6 @@ import json
 import logging
 import os
 import socket
-
 from confluent_kafka import Producer
 
 from blockchainetl.jobs.exporters.converters.composite_item_converter import CompositeItemConverter
@@ -15,7 +14,7 @@ class KafkaItemExporter:
     def __init__(self, output, item_type_to_topic_mapping, converters=()):
         self.item_type_to_topic_mapping = item_type_to_topic_mapping
         self.converter = CompositeItemConverter(converters)
-        self.connection_url = self.get_connection_url(output)
+        # self.connection_url = self.get_connection_url(output)
         # print(self.connection_url)
         conf = {
             "bootstrap.servers": os.getenv("CONFLUENT_BROKER"),
@@ -23,8 +22,9 @@ class KafkaItemExporter:
             "sasl.mechanisms": "PLAIN",
             "client.id": socket.gethostname(),
             "message.max.bytes": 5242880,
-            "sasl.username": os.getenv("CONFLUENT_USERNAME"),
-            "sasl.password": os.getenv("CONFLUENT_PASSWORD")
+            "sasl.username": os.getenv("KAFKA_PRODUCER_KEY"),
+            "sasl.password": os.getenv("KAFKA_PRODUCER_PASSWORD"),
+            "queue.buffering.max.messages": 10000000,
         }
 
         self.producer = Producer(conf)
@@ -38,11 +38,6 @@ class KafkaItemExporter:
     def open(self):
         pass
 
-    def acked(err, msg):
-        if err is not None:
-            logging.error("Failed to deliver message: %s: %s" % (str(msg), str(err)))
-        else:
-            logging.debug("Message produced: %s" % (str(msg)))     
 
     def export_items(self, items):
         for item in items:
@@ -66,12 +61,15 @@ class KafkaItemExporter:
 
 
     def write_to_kafka(self, value: str, topic: str):
+   #     def acked(err, msg):
+   #         if err is not None:
+   #             self.logging.error('%% Message failed delivery: %s\n' % err)
         try:
-            self.producer.produce(topic,key="0x0000",value=value, callback=self.acked)
+            self.producer.produce(topic,key="0x0000",value=value)
+            self.producer.poll(0)
         except BufferError:
-            self.logging.error('%% Local producer queue is full (%d messages awaiting delivery): try again\n' %
+            logging.error('%% Local producer queue is full (%d messages awaiting delivery): try again\n' %
                              len(self.producer))
-        self.producer.poll(0)
   
 
     def convert_items(self, items):
@@ -79,6 +77,7 @@ class KafkaItemExporter:
             yield self.converter.convert_item(item)
 
     def close(self):
+        self.producer.flush()
         pass
 
 
