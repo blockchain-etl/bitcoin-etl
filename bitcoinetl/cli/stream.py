@@ -44,8 +44,8 @@ logging_basic_config()
 @click.option('--topic-mapping', default=None, type=str, help="Topic Mapping should be json like {\"block\": \"producer-litcoin-blocks-hot\",\"transaction\": \"producer-litcoin-transactions-hot\"}")
 @click.option('-s', '--start-block', default=None, type=int, help='Start block.')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain.')
-@click.option('--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs.')
-@click.option('-b', '--batch-size', default=2, type=int, help='How many blocks to batch in single request.')
+@click.option('--period-seconds', default=1, type=int, help='How many seconds to sleep between syncs.')
+@click.option('-b', '--batch-size', default=1, type=int, help='How many blocks to batch in single request.')
 @click.option('-B', '--block-batch-size', default=10, type=int, help='How many blocks to batch in single sync round.')
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers.')
 @click.option('--log-file', default=None, type=str, help='Log file.')
@@ -71,7 +71,7 @@ def stream(last_synced_block_file, lag, provider_uri, output, topic_mapping, sta
         chain=chain,
         batch_size=batch_size,
         enable_enrich=enrich,
-        max_workers=max_workers
+        max_workers=max_workers,
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,
@@ -81,5 +81,6 @@ def stream(last_synced_block_file, lag, provider_uri, output, topic_mapping, sta
         period_seconds=period_seconds,
         block_batch_size=block_batch_size,
         pid_file=pid_file,
+        retry_errors=retry_errors
     )
     streamer.stream()

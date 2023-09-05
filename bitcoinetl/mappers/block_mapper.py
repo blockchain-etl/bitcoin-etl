@@ -52,12 +52,22 @@ class BtcBlockMapper(object):
                 block.transactions = [
                     self.transaction_mapper.json_dict_to_transaction(tx, block, idx) for idx, tx in enumerate(raw_transactions)
                 ]
+                block.transaction_ids = [tx.transaction_id for tx in block.transactions]
             else:
                 # Transaction hashes
                 block.transactions = raw_transactions
+                block.transaction_ids = raw_transactions
 
             block.transaction_count = len(raw_transactions)
 
+        # New fields
+        block.transaction_count = json_dict.get("nTx")
+        block.version_hex = json_dict.get("versionHex")
+        block.median_timestamp = json_dict.get("mediantime")
+        block.difficulty = int(json_dict.get("difficulty"))
+        block.chain_work = json_dict.get("chainwork")
+        block.coinbase_txid = json_dict.get("coinbase_txid")
+        block.previous_block_hash = json_dict.get("previousblockhash")
         return block
 
     def block_to_dict(self, block):
@@ -74,7 +84,16 @@ class BtcBlockMapper(object):
             'nonce': block.nonce,
             'bits': block.bits,
             'coinbase_param': block.coinbase_param,
-            'transaction_count': len(block.transactions)
+            'coinbase_param_decoded': block.coinbase_param_decoded,
+            'coinbase_txid': block.coinbase_txid,
+            'transaction_count': block.transaction_count,
+            'block_reward': block.block_reward,
+            'version_hex': block.version_hex,
+            'median_timestamp': block.median_timestamp,
+            'difficulty': block.difficulty,
+            'chain_work': block.chain_work,
+            'previous_block_hash': block.previous_block_hash,
+            "transaction_ids": block.transaction_ids
         }
 
 

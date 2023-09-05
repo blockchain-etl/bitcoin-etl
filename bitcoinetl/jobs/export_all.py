@@ -40,7 +40,9 @@ logging_basic_config()
 logger = logging.getLogger('export_all')
 
 
-def export_all(chain, partitions, output_dir, provider_uri, max_workers, batch_size, enrich):
+def export_all(
+        chain, partitions, output_dir, provider_uri, max_workers, batch_size, enrich,
+    ):
     for batch_start_block, batch_end_block, partition_dir, *args in partitions:
         # # # start # # #
 
@@ -101,7 +103,8 @@ def export_all(chain, partitions, output_dir, provider_uri, max_workers, batch_s
             max_workers=max_workers,
             item_exporter=blocks_and_transactions_item_exporter(blocks_file, transactions_file),
             export_blocks=blocks_file is not None,
-            export_transactions=transactions_file is not None)
+            export_transactions=transactions_file is not None,
+            )
         job.run()
 
         if enrich == True:

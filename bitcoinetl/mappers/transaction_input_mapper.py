@@ -25,27 +25,31 @@ from bitcoinetl.domain.transaction_input import BtcTransactionInput
 
 
 class BtcTransactionInputMapper(object):
-    def vin_to_inputs(self, vin):
+    def vin_to_inputs(self, vin, spending_transaction_id=None):
         inputs = []
         index = 0
         for item in (vin or []):
-            input = self.json_dict_to_input(item)
+            input = self.json_dict_to_input(json_dict=item, spending_transaction_id=spending_transaction_id)
             input.index = index
             index = index + 1
             inputs.append(input)
 
         return inputs
 
-    def json_dict_to_input(self, json_dict):
+    def json_dict_to_input(self, json_dict, spending_transaction_id=None):
         input = BtcTransactionInput()
 
-        input.spent_transaction_hash = json_dict.get('txid')
-        input.spent_output_index = json_dict.get('vout')
+        input.create_transaction_id = json_dict.get('txid')
+        input.create_output_index = json_dict.get('vout')
+
+        input.spending_transaction_id = spending_transaction_id
+
         input.coinbase_param = json_dict.get('coinbase')
         input.sequence = json_dict.get('sequence')
+
         if 'scriptSig' in json_dict:
-            input.script_asm = (json_dict.get('scriptSig')).get('asm')
-            input.script_hex = (json_dict.get('scriptSig')).get('hex')
+            input.script_asm = '' #(json_dict.get('scriptSig')).get('asm')
+            input.script_hex = '' #(json_dict.get('scriptSig')).get('hex')
 
         return input
 
@@ -54,16 +58,21 @@ class BtcTransactionInputMapper(object):
         for input in inputs:
             item = {
                 'index': input.index,
-                'spent_transaction_hash': input.spent_transaction_hash,
-                'spent_output_index': input.spent_output_index,
-                'script_asm': input.script_asm,
-                'script_hex': input.script_hex,
+                'create_transaction_id': input.create_transaction_id,
+                'spending_transaction_id': input.spending_transaction_id,
+                'create_output_index': input.create_output_index,
                 'sequence': input.sequence,
+
+                'script_asm': '', #input.script_asm
+                'script_hex': '', #input.script_hex
+
                 'required_signatures': input.required_signatures,
-                'type': input.type,
                 'addresses': input.addresses,
                 'value': input.value,
+                'type': input.type,
             }
+            if input.coinbase_param:
+                item['coinbase_param'] = input.coinbase_param
             result.append(item)
         return result
 
@@ -72,15 +81,16 @@ class BtcTransactionInputMapper(object):
         for dict in dicts:
             input = BtcTransactionInput()
             input.index = dict.get('index')
-            input.spent_transaction_hash = dict.get('spent_transaction_hash')
-            input.spent_output_index = dict.get('spent_output_index')
-            input.script_asm = dict.get('script_asm')
-            input.script_hex = dict.get('script_hex')
+            input.create_transaction_id = dict.get('create_transaction_id')
+            input.create_output_index = dict.get('create_output_index')
+            input.script_asm = '' #dict.get('script_asm')
+            input.script_hex = '' #dict.get('script_hex')
             input.sequence = dict.get('sequence')
             input.required_signatures = dict.get('required_signatures')
             input.type = dict.get('type')
             input.addresses = dict.get('addresses')
             input.value = dict.get('value')
+            input.spending_transaction_id = dict.get('spending_transaction_id')
 
             result.append(input)
         return result

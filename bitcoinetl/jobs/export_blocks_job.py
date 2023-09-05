@@ -27,6 +27,7 @@ from bitcoinetl.service.btc_service import BtcService
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
 from blockchainetl.utils import validate_range
+from bitcoinetl.enumeration.chain import CoinPriceType
 
 
 # Exports blocks and transactions
@@ -43,6 +44,7 @@ class ExportBlocksJob(BaseJob):
             export_blocks=True,
             export_transactions=True):
         validate_range(start_block, end_block)
+
         self.start_block = start_block
         self.end_block = end_block
 
