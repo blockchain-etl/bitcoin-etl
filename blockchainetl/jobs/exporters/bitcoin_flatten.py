@@ -15,11 +15,11 @@ def flatten_transformation(payload_dict):
         for input in payload_dict["inputs"]:
             if not payload_dict["is_coinbase"]:
                     if output["value"] > 0:
-                        token_outgoing_value = Decimal((1e-8 * input["value"]) * (1e-8 * output["value"]) / (1e-8 * payload_dict["output_value"]))
+                        token_outgoing_value = Decimal((input["value"]) * (output["value"]) / (payload_dict["output_value"]))
                     else:
-                        token_outgoing_value = Decimal((1e-8 * input["value"]) / payload_dict["output_count"])
+                        token_outgoing_value = Decimal((input["value"]) / payload_dict["output_count"])
                     if input["value"] > 0:
-                        token_incoming_value = Decimal((1e-8 * input["value"]) * (1e-8 * output["value"]) / (1e-8 * payload_dict["input_value"]))
+                        token_incoming_value = Decimal((input["value"]) * (output["value"]) / (payload_dict["input_value"]))
                     else:
                         token_incoming_value = 0
                         
@@ -45,8 +45,8 @@ def flatten_transformation(payload_dict):
                         "transaction_type": TYPE_BLOCK_REWARD,
                         "sender_address": f"{NULL_ADDRESS_MINT}_{datetime.datetime.fromtimestamp(payload_dict['block_timestamp']).month}",
                         "receiver_address": "|".join(output["addresses"]),
-                        "token_outgoing_value": str(1e-8 * output["value"]),
-                        "token_incoming_value": str(1e-8 * output["value"]),
+                        "token_outgoing_value": str(output["value"]),
+                        "token_incoming_value": str(output["value"]),
                         "token_address": default_token_address,
                         "token_outgoing_fee": str(0)
                     })
