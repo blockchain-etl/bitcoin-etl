@@ -28,7 +28,7 @@ from bitcoinetl.rpc.request import make_post_request
 
 class BitcoinRpc:
 
-    def __init__(self, provider_uri, timeout=60):
+    def __init__(self, provider_uri, timeout=180):
         self.provider_uri = provider_uri
         self.timeout = timeout
 

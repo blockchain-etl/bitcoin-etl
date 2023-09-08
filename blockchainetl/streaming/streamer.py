@@ -24,6 +24,7 @@
 import logging
 import os
 import time
+from google.api_core.exceptions import InvalidArgument
 
 from blockchainetl.streaming.streamer_adapter_stub import StreamerAdapterStub
 from blockchainetl.file_utils import smart_open
@@ -95,7 +96,12 @@ class Streamer:
             current_block, target_block, self.last_synced_block, blocks_to_sync))
 
         if blocks_to_sync != 0:
-            self.blockchain_streamer_adapter.export_all(self.last_synced_block + 1, target_block)
+
+            try:
+                self.blockchain_streamer_adapter.export_all(self.last_synced_block + 1, target_block)
+            except InvalidArgument as e:
+                logging.exception(f"An exception occurred while syncing block data - InvalidArgument, ERROR = {e.message}")
+
             logging.info('Writing last synced block {}'.format(target_block))
             write_last_synced_block(self.last_synced_block_file, target_block)
             self.last_synced_block = target_block

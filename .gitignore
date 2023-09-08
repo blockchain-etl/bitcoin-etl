@@ -48,3 +48,8 @@ coverage.xml
 .venv
 venv/
 ENV/
+
+.idea/
+
+*.json
+*.txt

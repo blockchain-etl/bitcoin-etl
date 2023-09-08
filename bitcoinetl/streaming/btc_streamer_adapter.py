@@ -95,6 +95,8 @@ class BtcStreamerAdapter:
             transactions = enriched_transactions
 
         logging.info('Exporting with ' + type(self.item_exporter).__name__)
+        logging.info('Block number ' + str(len(blocks)))
+        logging.info('Transaction length ' + str(len(transactions)))
 
         all_items = blocks + transactions
 

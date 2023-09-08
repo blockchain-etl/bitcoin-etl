@@ -23,41 +23,51 @@
 
 from blockchainetl.jobs.exporters.composite_item_exporter import CompositeItemExporter
 
+
 BLOCK_FIELDS_TO_EXPORT = [
-    'hash',
-    'size',
-    'stripped_size',
-    'weight',
-    'number',
-    'version',
-    'merkle_root',
-    'timestamp',
-    'nonce',
-    'bits',
-    'coinbase_param',
-    'transaction_count'
+    "hash",
+    "number",
+    "timestamp",
+    "median_timestamp",
+    "merkle_root",
+    "coinbase_param",
+    "coinbase_param_decoded",
+    "coinbase_txid",
+    "previous_block_hash",
+    "nonce",
+    "difficulty",
+    "chain_work",
+    "version",
+    "version_hex",
+    "size",
+    "stripped_size",
+    "weight",
+    "bits",
+    "transaction_count",
+    "block_reward",
+    "transaction_ids",
 ]
 
+
 TRANSACTION_FIELDS_TO_EXPORT = [
+    'transaction_id',
     'hash',
-    'size',
-    'virtual_size',
-    'version',
-    'lock_time',
     'block_number',
     'block_hash',
     'block_timestamp',
     'is_coinbase',
+    'lock_time',
+    'size',
+    'virtual_size',
+    'weight',
+    'version',
     'index',
-
-    'inputs',
-    'outputs',
-
     'input_count',
     'output_count',
     'input_value',
     'output_value',
-    'fee'
+    'inputs',
+    'outputs',
 ]
 
 
