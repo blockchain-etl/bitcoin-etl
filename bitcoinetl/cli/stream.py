@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 import click
-
+import json
 from bitcoinetl.enumeration.chain import Chain
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
 
@@ -41,16 +41,17 @@ logging_basic_config()
 @click.option('-o', '--output', type=str,
               help='Google PubSub topic path e.g. projects/your-project/topics/bitcoin_blockchain. '
                    'If not specified will print to console.')
+@click.option('--topic-mapping', default=None, type=str, help="Topic Mapping should be json like {\"block\": \"producer-litcoin-blocks-hot\",\"transaction\": \"producer-litcoin-transactions-hot\"}")
 @click.option('-s', '--start-block', default=None, type=int, help='Start block.')
 @click.option('-c', '--chain', default=Chain.BITCOIN, type=click.Choice(Chain.ALL), help='The type of chain.')
-@click.option('--period-seconds', default=10, type=int, help='How many seconds to sleep between syncs.')
-@click.option('-b', '--batch-size', default=2, type=int, help='How many blocks to batch in single request.')
+@click.option('--period-seconds', default=1, type=int, help='How many seconds to sleep between syncs.')
+@click.option('-b', '--batch-size', default=1, type=int, help='How many blocks to batch in single request.')
 @click.option('-B', '--block-batch-size', default=10, type=int, help='How many blocks to batch in single sync round.')
 @click.option('-w', '--max-workers', default=5, type=int, help='The number of workers.')
 @click.option('--log-file', default=None, type=str, help='Log file.')
 @click.option('--pid-file', default=None, type=str, help='pid file.')
 @click.option('--enrich', default=True, type=bool, help='Enable filling in transactions inputs fields.')
-def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain=Chain.BITCOIN,
+def stream(last_synced_block_file, lag, provider_uri, output, topic_mapping, start_block, chain=Chain.BITCOIN,
            period_seconds=10, batch_size=2, block_batch_size=10, max_workers=5, log_file=None, pid_file=None,
            enrich=True):
     """Streams all data types to console or Google Pub/Sub."""
@@ -61,13 +62,16 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
     from bitcoinetl.streaming.btc_streamer_adapter import BtcStreamerAdapter
     from blockchainetl.streaming.streamer import Streamer
 
+    if (topic_mapping is not None):
+        topic_mapping = json.loads(topic_mapping)
+
     streamer_adapter = BtcStreamerAdapter(
         bitcoin_rpc=ThreadLocalProxy(lambda: BitcoinRpc(provider_uri)),
-        item_exporter=get_item_exporter(output),
+        item_exporter=get_item_exporter(output,topic_mapping,chain),
         chain=chain,
         batch_size=batch_size,
         enable_enrich=enrich,
-        max_workers=max_workers
+        max_workers=max_workers,
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,
@@ -77,5 +81,6 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, chain
         period_seconds=period_seconds,
         block_batch_size=block_batch_size,
         pid_file=pid_file,
+        retry_errors=retry_errors
     )
     streamer.stream()

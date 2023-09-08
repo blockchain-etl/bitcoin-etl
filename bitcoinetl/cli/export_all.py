@@ -25,7 +25,7 @@ import click
 import re
 
 from datetime import datetime, timedelta
-from bitcoinetl.enumeration.chain import Chain
+from bitcoinetl.enumeration.chain import Chain, CoinPriceType
 from bitcoinetl.jobs.export_all import export_all as do_export_all
 from bitcoinetl.service.btc_block_range_service import BtcBlockRangeService
 from bitcoinetl.rpc.bitcoin_rpc import BitcoinRpc
@@ -99,4 +99,4 @@ def get_partitions(start, end, partition_batch_size, provider_uri):
 def export_all(start, end, partition_batch_size, provider_uri, output_dir, max_workers, export_batch_size, chain, enrich):
     """Exports all data for a range of blocks."""
     do_export_all(chain, get_partitions(start, end, partition_batch_size, provider_uri),
-                  output_dir, provider_uri, max_workers, export_batch_size, enrich)
+                output_dir, provider_uri, max_workers, export_batch_size, enrich)
