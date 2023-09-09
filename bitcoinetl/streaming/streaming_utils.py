@@ -13,7 +13,7 @@ def get_item_exporter(output,topic_mapping,chain):
                     'transaction': output + '.transactions'
                 },
                 message_attributes=('item_id',))
-        else:
+    elif item_exporter_type == ItemExporterType.CONSOLE:
             item_exporter = ConsoleItemExporter()
     
     elif item_exporter_type == ItemExporterType.KAFKA:
@@ -36,6 +36,8 @@ def determine_item_exporter_type(output):
         return ItemExporterType.PUBSUB
     if output is not None and output.startswith('kafka'):
         return ItemExporterType.KAFKA
+    if output is not None and output.startswith('console'):
+        return ItemExporterType.CONSOLE
     else:
         return ItemExporterType.UNKNOWN
 
@@ -44,3 +46,4 @@ class ItemExporterType:
     PUBSUB = 'pubsub'
     KAFKA = 'kafka'
     UNKNOWN = 'unknown'
+    CONSOLE = 'console'
