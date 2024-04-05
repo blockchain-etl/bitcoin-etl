@@ -1,8 +1,10 @@
-{ config, lib, pkgs, ... }:
+flake: { config, lib, pkgs, ... }:
 
 with lib;
 
 let
+  inherit (flake.packages.${pkgs.stdenv.hostPlatform.system}) bitcoin-etl;
+
   cfg = config.services.bitcoin-etl;
 in
 {
@@ -39,7 +41,7 @@ in
       # wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
       script = ''
-        ${cfg.package}/bin/bitcoin-etl \
+        ${bitcoin-etl}/bin/bitcoin-etl \
           ${if cfg.exportBlocks then "--export-blocks" else "--no-export-blocks"} \
       '';
 
