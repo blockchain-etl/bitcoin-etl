@@ -10,6 +10,12 @@ in
 {
   options.services.bitcoin-etl = {
     enable = mkEnableOption "Bitcoin ETL service";
+
+    exportBlocks = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Whether to export block data";
+    };
   };
 
   config = mkIf cfg.enable {
