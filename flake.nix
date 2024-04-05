@@ -16,12 +16,18 @@
       };
     in
     {
-      packages.bitcoin-etl = pkgs.python3Packages.buildPythonPackage {
-        pname = "bitcoin-etl";
-        version = "1.5.2";
-        src = self;
-        doCheck = false;
-      };
+      packages.bitcoin-etl = pkgs.python3Packages.buildPythonPackage
+        {
+          pname = "bitcoin-etl";
+          version = "1.5.2";
+          src = self;
+          doCheck = false;
+          propagatedBuildInputs = with pkgs.python3Packages; [
+            six
+            click
+            requests
+          ];
+        };
 
       defaultPackage = self.packages.${system}.bitcoin-etl;
 
