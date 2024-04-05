@@ -7,7 +7,7 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, ... }@inputs: {
-    nixosModules.etf-scraper = import ./module.nix;
+    nixosModules.bitcoin-etl = import ./module.nix;
   } //
   flake-utils.lib.eachDefaultSystem (system:
     let
