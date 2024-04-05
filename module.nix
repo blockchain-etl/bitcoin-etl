@@ -8,12 +8,6 @@ in
 {
   options.services.bitcoin-etl = {
     enable = mkEnableOption "Bitcoin ETL service";
-
-    package = mkOption {
-      type = types.package;
-      default = pkgs.bitcoin-etl;
-      description = "The bitcoin-etl package to use.";
-    };
   };
 
   config = mkIf cfg.enable {
