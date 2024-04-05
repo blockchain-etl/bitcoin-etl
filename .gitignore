@@ -48,3 +48,6 @@ coverage.xml
 .venv
 venv/
 ENV/
+
+# direnv cache
+.direnv
