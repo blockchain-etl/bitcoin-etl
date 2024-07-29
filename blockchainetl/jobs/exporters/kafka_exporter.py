@@ -25,6 +25,7 @@ class KafkaItemExporter:
             "sasl.username": os.getenv("KAFKA_PRODUCER_KEY"),
             "sasl.password": os.getenv("KAFKA_PRODUCER_PASSWORD"),
             "queue.buffering.max.messages": 10000000,
+            "compression.type": "gzip"
         }
 
         self.producer = Producer(conf)
