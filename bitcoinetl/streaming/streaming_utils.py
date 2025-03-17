@@ -22,6 +22,7 @@ def get_item_exporter(output,topic_mapping,chain):
             item_exporter = KafkaItemExporter(output, item_type_to_topic_mapping={
                 'block': f"producer-{chain}-blocks-hot",
                 'transaction': f"producer-{chain}-transactions-hot",
+                'transaction_raw': f"producer-{chain}-transactions-raw-hot",
             })
         else:
             item_exporter = KafkaItemExporter(output, item_type_to_topic_mapping=topic_mapping)

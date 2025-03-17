@@ -48,6 +48,7 @@ class KafkaItemExporter:
                     transformed_data = flatten_transformation(item)
                     for data in transformed_data:
                         self.export_item(data,item_type)
+                    self.export_item(item,"transaction_raw")
                 else:
                     self.export_item(item,item_type)
             else:
