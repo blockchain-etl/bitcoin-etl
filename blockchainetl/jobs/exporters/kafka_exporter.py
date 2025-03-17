@@ -25,6 +25,7 @@ class KafkaItemExporter:
             "sasl.username": os.getenv("KAFKA_PRODUCER_KEY"),
             "sasl.password": os.getenv("KAFKA_PRODUCER_PASSWORD"),
             "queue.buffering.max.messages": 10000000,
+            "compression.type": "gzip"
         }
 
         self.producer = Producer(conf)
@@ -47,6 +48,7 @@ class KafkaItemExporter:
                     transformed_data = flatten_transformation(item)
                     for data in transformed_data:
                         self.export_item(data,item_type)
+                    self.export_item(item,"transaction_raw")
                 else:
                     self.export_item(item,item_type)
             else:
