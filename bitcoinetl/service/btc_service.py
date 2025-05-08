@@ -22,7 +22,7 @@
 
 from bitcoinetl.domain.transaction_input import BtcTransactionInput
 from bitcoinetl.domain.transaction_output import BtcTransactionOutput
-from bitcoinetl.enumeration.chain import Chain
+from bitcoinetl.enumeration.chain import Chain, CoinPriceType
 from bitcoinetl.json_rpc_requests import generate_get_block_hash_by_number_json_rpc, \
     generate_get_block_by_hash_json_rpc, generate_get_transaction_by_id_json_rpc
 from bitcoinetl.mappers.block_mapper import BtcBlockMapper
@@ -38,6 +38,7 @@ class BtcService(object):
         self.block_mapper = BtcBlockMapper()
         self.transaction_mapper = BtcTransactionMapper()
         self.chain = chain
+        self.cached_prices = {}
 
     def get_block(self, block_number, with_transactions=False):
         block_hashes = self.get_block_hashes([block_number])
@@ -75,6 +76,7 @@ class BtcService(object):
 
         for block in blocks:
             self._remove_coinbase_input(block)
+
             if block.has_full_transactions():
                 for transaction in block.transactions:
                     self._add_non_standard_addresses(transaction)
@@ -144,6 +146,7 @@ class BtcService(object):
         if block.has_full_transactions():
             for transaction in block.transactions:
                 coinbase_inputs = [input for input in transaction.inputs if input.is_coinbase()]
+
                 if len(coinbase_inputs) > 1:
                     raise ValueError('There must be no more than 1 coinbase input in any transaction. Was {}, hash {}'
                                      .format(len(coinbase_inputs), transaction.hash))
@@ -153,9 +156,19 @@ class BtcService(object):
                     transaction.inputs = [input for input in transaction.inputs if not input.is_coinbase()]
                     transaction.is_coinbase = True
 
+                    block.coinbase_param = coinbase_input.coinbase_param
+                    block.coinbase_param_decoded = bytes.fromhex(coinbase_input.coinbase_param).decode('utf-8', 'replace')
+                    block.coinbase_tx = transaction
+                    block.coinbase_txid = transaction.transaction_id
+
+                    block.block_reward = self.get_block_reward(block)
+                    transaction.input_count = 0
+
     def _add_non_standard_addresses(self, transaction):
         for output in transaction.outputs:
             if output.addresses is None or len(output.addresses) == 0:
+                # output.type = 'nonstandard'
+                # if output.type != 'multisig':
                 output.type = 'nonstandard'
                 output.addresses = [script_hex_to_non_standard_address(output.script_hex)]
 
@@ -186,5 +199,7 @@ class BtcService(object):
                 output.value = -transaction.value_balance
                 transaction.add_output(output)
 
+    def get_block_reward(self, block):
+        return block.coinbase_tx.calculate_output_value()
 
 ADDRESS_TYPE_SHIELDED = 'shielded'

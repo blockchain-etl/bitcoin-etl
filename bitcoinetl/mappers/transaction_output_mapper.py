@@ -26,26 +26,29 @@ from bitcoinetl.domain.transaction_output import BtcTransactionOutput
 
 class BtcTransactionOutputMapper(object):
 
-    def vout_to_outputs(self, vout):
+    def vout_to_outputs(self, vout, create_transaction_id=None):
         outputs = []
         for item in (vout or []):
-            output = self.json_dict_to_output(item)
+            output = self.json_dict_to_output(json_dict=item, create_transaction_id=create_transaction_id)
             outputs.append(output)
         return outputs
 
-    def json_dict_to_output(self, json_dict):
+    def json_dict_to_output(self, json_dict, create_transaction_id=None):
         output = BtcTransactionOutput()
 
         output.index = json_dict.get('n')
         output.addresses = json_dict.get('addresses')
-        output.txinwitness = json_dict.get('txinwitness')
+        output.witness = json_dict.get('txinwitness')
         output.value = bitcoin_to_satoshi(json_dict.get('value'))
+        output.create_transaction_id = create_transaction_id
+
         if 'scriptPubKey' in json_dict:
             script_pub_key = json_dict.get('scriptPubKey')
-            output.script_asm = script_pub_key.get('asm')
-            output.script_hex = script_pub_key.get('hex')
+            output.script_asm = '' #script_pub_key.get('asm')
+            output.script_hex = '' #script_pub_key.get('hex')
             output.required_signatures = script_pub_key.get('reqSigs')
             output.type = script_pub_key.get('type')
+            #output.addresses = script_pub_key.get('addresses')
             if script_pub_key.get('addresses') is not None and len(script_pub_key.get('addresses')) > 0:
                 output.addresses = script_pub_key.get('addresses')
             elif script_pub_key.get('address') is None:
@@ -60,13 +63,20 @@ class BtcTransactionOutputMapper(object):
         for output in outputs:
             item = {
                 'index': output.index,
-                'script_asm': output.script_asm,
-                'script_hex': output.script_hex,
-                'required_signatures': output.required_signatures,
+                'create_transaction_id': output.create_transaction_id,
+                'spending_transaction_id': None,
+
+                'script_asm': '', #output.script_asm
+                'script_hex': '', #output.script_hex
+
                 'type': output.type,
                 'addresses': output.addresses,
-                'value': output.value
+                'value': output.value,
+                'required_signatures': output.required_signatures,
             }
+            if output.witness:
+                item['witness'] = output.witness
+
             result.append(item)
         return result
 
@@ -75,12 +85,15 @@ class BtcTransactionOutputMapper(object):
         for dict in dicts:
             input = BtcTransactionOutput()
             input.index = dict.get('index')
-            input.script_asm = dict.get('script_asm')
-            input.script_hex = dict.get('script_hex')
+            input.script_asm = '' #dict.get('script_asm')
+            input.script_hex = '' #dict.get('script_hex')
             input.required_signatures = dict.get('required_signatures')
             input.type = dict.get('type')
             input.addresses = dict.get('addresses')
             input.value = dict.get('value')
+            input.witness = dict.get('witness')
+            input.create_transaction_id = dict.get('create_transaction_id')
+            input.spending_transaction_id = dict.get('spending_transaction_id')
 
             result.append(input)
         return result
