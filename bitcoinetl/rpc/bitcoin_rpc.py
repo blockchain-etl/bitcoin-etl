@@ -35,8 +35,8 @@ class BitcoinRpc:
     def batch(self, commands):
         rpc_calls = []
         for command in commands:
-            m = command.pop(0)
-            rpc_calls.append({"jsonrpc": "2.0", "method": m, "params": command, "id": "1"})
+            m = command[0]
+            rpc_calls.append({"jsonrpc": "2.0", "method": m, "params": command[1:], "id": "1"})
         text = json.dumps(rpc_calls)
         request_data = text.encode('utf-8')
         raw_response = make_post_request(
