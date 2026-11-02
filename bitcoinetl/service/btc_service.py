@@ -105,11 +105,17 @@ class BtcService(object):
         all_transaction_hashes = [block.transactions for block in blocks]
         flat_transaction_hashes = [hash for transaction_hashes in all_transaction_hashes for hash in transaction_hashes]
         raw_transactions = self._get_raw_transactions_by_hashes_batched(flat_transaction_hashes)
+        raw_transactions_by_hash = {tx['txid']: tx for tx in raw_transactions}
 
         for block in blocks:
-            raw_block_transactions = [tx for tx in raw_transactions if tx.get('txid') in block.transactions]
-            block.transactions = [self.transaction_mapper.json_dict_to_transaction(tx, block)
-                                  for tx in raw_block_transactions]
+            transactions = []
+            for index, transaction_hash in enumerate(block.transactions):
+                if transaction_hash not in raw_transactions_by_hash:
+                    raise ValueError('Transaction {} not found while fetching block {}'
+                                     .format(transaction_hash, block.number))
+                transactions.append(self.transaction_mapper.json_dict_to_transaction(
+                    raw_transactions_by_hash[transaction_hash], block, index))
+            block.transactions = transactions
 
     def _get_raw_transactions_by_hashes_batched(self, hashes):
         if hashes is None or len(hashes) == 0:
